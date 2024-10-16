@@ -1,0 +1,27 @@
+<section id="dashboard">
+  <div class="dashboard">Dashboard</div>
+</section>
+
+<section id="dwmReport">
+  <div class="report-container">
+    <div class="report" *ngFor="let report of dwmReport">
+      <label class="label">{{ report.type }}</label>
+      <h5 class="m-0 d-flex justify-content-center">
+        <span class="currency-symbol">
+          <mat-icon>{{ report.currencyIcon }}</mat-icon>
+        </span>
+        <span class="amount">{{ report.amount }} </span>
+      </h5>
+    </div>
+  </div>
+</section>
+
+<section id="transactions">
+  <app-transactions></app-transactions>
+</section>
+
+<section id="new-transaction">
+  <button mat-fab aria-label="Example icon button with a delete icon">
+    <mat-icon>add</mat-icon>
+  </button>
+</section>

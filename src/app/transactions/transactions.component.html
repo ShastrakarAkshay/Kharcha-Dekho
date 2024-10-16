@@ -1,0 +1,24 @@
+<div class="transaction-list">
+  <div class="transaction" *ngFor="let txn of transactions">
+    <div class="left">
+      <div class="icon" [style.background]="txn.iconBg">
+        <mat-icon> {{ txn.icon }} </mat-icon>
+      </div>
+      <div>
+        <h3 class="label">{{ txn.categoryName }}</h3>
+        <p class="sub-label">{{ txn.transactionMethod }}</p>
+      </div>
+    </div>
+    <div class="right text-right">
+      <div class="d-flex">
+        <h3 class="label">
+          <span class="currency">
+            <mat-icon>currency_rupee</mat-icon>
+          </span>
+          {{ txn.amount }}
+        </h3>
+      </div>
+      <p class="sub-label">{{ txn.percent }}%</p>
+    </div>
+  </div>
+</div>
