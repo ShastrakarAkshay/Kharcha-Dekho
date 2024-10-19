@@ -1,0 +1,21 @@
+.menu {
+  display: flex;
+  gap: 20px;
+  border-top: 1px solid #5e5a5a;
+  position: fixed;
+  background: #131e29;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  .menu-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    padding: 10px;
+    color: white;
+  }
+}

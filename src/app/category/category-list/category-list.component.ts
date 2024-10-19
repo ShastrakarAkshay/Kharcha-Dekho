@@ -2,14 +2,29 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {
+  MatBottomSheet,
+  MatBottomSheetModule,
+} from '@angular/material/bottom-sheet';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { IconsComponent } from 'src/app/icons/icons.component';
+import {
   ITransaction,
   TransactionMethod,
-} from '../transactions/transactions.interface';
+} from 'src/app/transactions/transactions.interface';
+import { CreateCategoryComponent } from '../create-category/create-category.component';
 
 @Component({
   selector: 'app-category-list',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatBottomSheetModule,
+    MatButtonModule,
+    MatMenuModule,
+    CreateCategoryComponent,
+  ],
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
 })
@@ -97,4 +112,10 @@ export class CategoryListComponent {
       percent: 12,
     },
   ];
+
+  constructor(private _bottomSheet: MatBottomSheet) {}
+
+  addTransaction() {
+    this._bottomSheet.open(CreateCategoryComponent);
+  }
 }

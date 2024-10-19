@@ -6,7 +6,9 @@ import { provideRouter, Routes } from '@angular/router';
 import { ProfileComponent } from './app/profile/profile.component';
 import { AppComponent } from './app/app.component';
 import { IconsComponent } from './app/icons/icons.component';
-import { CategoryListComponent } from './app/category-list/category-list.component';
+import { importProvidersFrom } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CategoryListComponent } from './app/category/category-list/category-list.component';
 
 const routes: Routes = [
   {
@@ -33,5 +35,8 @@ const routes: Routes = [
 ];
 
 bootstrapApplication(AppComponent, {
-  providers: [provideRouter(routes)],
+  providers: [
+    provideRouter(routes),
+    importProvidersFrom(BrowserAnimationsModule),
+  ],
 }).catch((err) => console.log(err));

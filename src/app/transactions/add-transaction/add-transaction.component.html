@@ -1,0 +1,40 @@
+<div class="add-transaction">
+  <div class="option-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Method</mat-label>
+      <mat-select [(value)]="selectedMethod">
+        <mat-option *ngFor="let txn of transactionMethods" [value]="txn.id">
+          {{ txn.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <mat-select [(value)]="selectedCategory">
+        <!-- <mat-select-trigger>
+          <mat-icon matPrefix>home</mat-icon>&nbsp;{{ selectedCategory }}
+        </mat-select-trigger> -->
+        <mat-option *ngFor="let category of categories" [value]="category.name">
+          <!-- <mat-icon matPrefix class="option-icon">{{ category.icon }}</mat-icon> -->
+          {{ category.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="input-container">
+    <mat-form-field appearance="outline">
+      <mat-icon matPrefix>{{ currencyIcon }}</mat-icon>
+      <input
+        matInput
+        scrollToTopOnFocus
+        type="number"
+        placeholder="Enter Amount"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Add Comment</mat-label>
+      <input matInput placeholder="Add Comment" />
+    </mat-form-field>
+  </div>
+  <button class="btn-add" mat-flat-button>Add</button>
+</div>

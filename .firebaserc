@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "apna-paisa-vasool"
-  }
+    "default": "kharcha-dekho",
+    "staging": "kharcha-dekho"
+  },
+  "targets": {},
+  "etags": {}
 }

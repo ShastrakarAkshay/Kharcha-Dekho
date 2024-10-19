@@ -1,0 +1,33 @@
+.add-transaction {
+  padding: 30px 10px;
+
+  .option-container {
+    display: flex;
+    gap: 20px;
+
+    .option-icon {
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fefefe;
+      font-size: 14px;
+    }
+  }
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .btn-add {
+    width: 100%;
+    background: #3f3f3f;
+    color: white;
+    height: 53px;
+    font-size: 17px;
+  }
+}

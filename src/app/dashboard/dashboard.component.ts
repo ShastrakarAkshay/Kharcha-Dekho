@@ -4,7 +4,14 @@ import { TransactionsComponent } from '../transactions/transactions.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DWMReportType, IDWMReport } from './dashboard.interface';
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import {
+  MatBottomSheet,
+  MatBottomSheetModule,
+} from '@angular/material/bottom-sheet';
+import { IconsComponent } from '../icons/icons.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
+import { AddTransactionComponent } from '../transactions/add-transaction/add-transaction.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,9 +21,12 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
   imports: [
     CommonModule,
     TransactionsComponent,
+    IconsComponent,
     MatIconModule,
     MatButtonModule,
     MatBottomSheetModule,
+    AddTransactionComponent,
+    MatButtonModule,
   ],
 })
 export class DashboardComponent {
@@ -37,4 +47,9 @@ export class DashboardComponent {
       currencyIcon: 'currency_rupee',
     },
   ];
+  constructor(private _bottomSheet: MatBottomSheet) {}
+
+  addTransaction() {
+    this._bottomSheet.open(AddTransactionComponent);
+  }
 }

@@ -1,0 +1,11 @@
+<div class="menu">
+  <div
+    matRipple
+    class="menu-item"
+    *ngFor="let menu of menus"
+    (click)="navigate(menu)"
+  >
+    <mat-icon>{{ menu.icon }}</mat-icon>
+    <label>{{ menu.label }}</label>
+  </div>
+</div>
