@@ -32,8 +32,12 @@ import { IIcon } from '../icon-list/icon-list.interface';
   styleUrls: ['./create-category.component.scss'],
 })
 export class CreateCategoryComponent {
-  selectedIcon?: IIcon;
   showIconList: boolean = false;
+  selectedIcon: IIcon = {
+    icon: 'upload',
+    bgColor: '#ececec',
+    label: 'Select Icon',
+  };
 
   openIconList() {
     this.showIconList = true;

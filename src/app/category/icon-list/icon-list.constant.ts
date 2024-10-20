@@ -957,6 +957,7 @@ export const getIcons = (): IIcon[] => {
     }
     return {
       icon: item,
+      label: item.split('_').join(' '),
       bgColor: COLORS[count],
     };
   });

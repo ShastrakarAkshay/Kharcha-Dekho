@@ -10,13 +10,9 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./icon.component.scss'],
 })
 export class IconComponent implements OnInit {
-  iconLabel?: string;
-
   @Input({ required: true }) name: string = '';
   @Input() bgColor?: string;
-  @Input() showLabel: boolean = true;
+  @Input() label?: string;
 
-  ngOnInit(): void {
-    this.iconLabel = this.name.split('_').join(' ');
-  }
+  ngOnInit(): void {}
 }

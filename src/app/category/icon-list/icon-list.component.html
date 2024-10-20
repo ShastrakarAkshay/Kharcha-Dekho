@@ -3,6 +3,7 @@
   <app-icon
     *ngFor="let icon of icons"
     [name]="icon.icon"
+    [label]="icon.label"
     [bgColor]="icon.bgColor"
     (click)="onIconSelect(icon)"
   >

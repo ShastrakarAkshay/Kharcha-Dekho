@@ -3,8 +3,9 @@
     <div class="input-container">
       <div class="icon-field">
         <app-icon
-          [name]="selectedIcon?.icon ?? 'upload'"
-          [bgColor]="selectedIcon?.bgColor ?? '#f4f7d5'"
+          [name]="selectedIcon.icon"
+          [bgColor]="selectedIcon.bgColor"
+          [label]="selectedIcon.label"
           (click)="openIconList()"
         >
         </app-icon>
