@@ -1,7 +1,9 @@
-<div>search-bar</div>
+<div class="search-container">
+  <app-search (searchTextChange)="onSearch($event)"></app-search>
+</div>
 <div class="icon-list">
   <app-icon
-    *ngFor="let icon of icons"
+    *ngFor="let icon of icons | search : searchText : 'icon'"
     [name]="icon.icon"
     [label]="icon.label"
     [bgColor]="icon.bgColor"
