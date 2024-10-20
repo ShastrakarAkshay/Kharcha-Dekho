@@ -1,4 +1,6 @@
-export const ICONS = [
+import { Icon } from './icons.component';
+
+export const ICONS_NAMES = [
   '3d_rotation',
   'ac_unit',
   'access_alarm',
@@ -945,3 +947,19 @@ export const COLORS = [
   '#f4f7d5', // Lighter Lime
   '#ffdce0', // Lighter Red
 ];
+
+export const getIcons = (): Icon[] => {
+  let count = -1;
+  const icons = ICONS_NAMES.map((item) => {
+    count++;
+    if (count >= 10) {
+      count = 0;
+    }
+    return {
+      icon: item,
+      iconName: item.split('_').join(' '),
+      bgColor: COLORS[count],
+    };
+  });
+  return icons;
+};

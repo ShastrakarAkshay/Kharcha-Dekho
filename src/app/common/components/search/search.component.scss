@@ -1,0 +1,11 @@
+.search {
+  display: flex;
+  flex-direction: column;
+}
+
+:host {
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background-color: white;
+    border-radius: 5px;
+  }
+}

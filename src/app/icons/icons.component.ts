@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { COLORS, ICONS } from './icons.constant';
+import { getIcons } from './icons.constant';
 
 export interface Icon {
   icon: string;
@@ -21,27 +21,7 @@ export class IconsComponent implements OnInit {
   @Output() iconSelect = new EventEmitter<string>();
 
   ngOnInit(): void {
-    this.icons = this.getIcons();
-  }
-
-  getIcons(): Icon[] {
-    let count = -1;
-    const icons = ICONS.map((item) => {
-      count++;
-      if (count >= 10) {
-        count = 0;
-      }
-      return {
-        icon: item,
-        iconName: this.getLabel(item),
-        bgColor: COLORS[count],
-      };
-    });
-    return icons;
-  }
-
-  getLabel(icon: string) {
-    return icon.split('_').join(' ');
+    this.icons = getIcons();
   }
 
   onIconSelect(icon: string) {

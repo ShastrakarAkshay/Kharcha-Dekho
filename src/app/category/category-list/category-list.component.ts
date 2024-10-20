@@ -7,12 +7,14 @@ import {
 } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { IconsComponent } from 'src/app/icons/icons.component';
+import { Icon, IconsComponent } from 'src/app/icons/icons.component';
 import {
   ITransaction,
   TransactionMethod,
 } from 'src/app/transactions/transactions.interface';
 import { CreateCategoryComponent } from '../create-category/create-category.component';
+import { SearchComponent } from 'src/app/common/components/search/search.component';
+import { getIcons } from 'src/app/icons/icons.constant';
 
 @Component({
   selector: 'app-category-list',
@@ -24,11 +26,13 @@ import { CreateCategoryComponent } from '../create-category/create-category.comp
     MatButtonModule,
     MatMenuModule,
     CreateCategoryComponent,
+    SearchComponent,
   ],
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
 })
 export class CategoryListComponent {
+  icons: Icon[] = getIcons();
   transactions: ITransaction[] = [
     {
       icon: 'home',
