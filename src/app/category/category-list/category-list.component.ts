@@ -11,6 +11,7 @@ import { CreateCategoryComponent } from '../create-category/create-category.comp
 import { SearchComponent } from 'src/app/common/components/search/search.component';
 import { ICategory } from '../category.interface';
 import { CATEGORY_DATA } from '../category.constant';
+import { SearchPipe } from 'src/app/common/pipes/search.pipe';
 
 @Component({
   selector: 'app-category-list',
@@ -23,16 +24,22 @@ import { CATEGORY_DATA } from '../category.constant';
     MatMenuModule,
     CreateCategoryComponent,
     SearchComponent,
+    SearchPipe,
   ],
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
 })
 export class CategoryListComponent {
+  searchText: string = '';
   categories: ICategory[] = CATEGORY_DATA;
 
   constructor(private _bottomSheet: MatBottomSheet) {}
 
   addTransaction() {
     this._bottomSheet.open(CreateCategoryComponent);
+  }
+
+  onSearch(searchText: string) {
+    this.searchText = searchText;
   }
 }

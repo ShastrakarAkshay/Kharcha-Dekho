@@ -1,4 +1,4 @@
-<app-search></app-search>
+<app-search (searchTextChange)="onSearch($event)"></app-search>
 
 <!-- <div class="category-list">
   <div class="category" *ngFor="let txn of transactions">
@@ -27,7 +27,7 @@
 </div> -->
 
 <div class="category-list">
-  <div class="category" *ngFor="let cat of categories">
+  <div class="category" *ngFor="let cat of categories | search : searchText">
     <mat-icon class="category-icon" [style.backgroundColor]="cat.bgColor">
       {{ cat.icon }}
     </mat-icon>

@@ -1,11 +1,25 @@
 .search {
   display: flex;
   flex-direction: column;
+  position: relative;
+
+  .close-icon {
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    font-size: 17px;
+  }
 }
 
 :host {
-  ::ng-deep .mat-mdc-text-field-wrapper {
-    background-color: white;
-    border-radius: 5px;
+  ::ng-deep {
+    .mat-mdc-text-field-wrapper {
+      background-color: white;
+      border-radius: 5px;
+    }
+
+    .mat-mdc-input-element {
+      width: 90% !important;
+    }
   }
 }
