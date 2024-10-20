@@ -8,9 +8,6 @@ import {
   MatBottomSheet,
   MatBottomSheetModule,
 } from '@angular/material/bottom-sheet';
-import { IconsComponent } from '../icons/icons.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
 import { AddTransactionComponent } from '../transactions/add-transaction/add-transaction.component';
 
 @Component({
@@ -21,7 +18,6 @@ import { AddTransactionComponent } from '../transactions/add-transaction/add-tra
   imports: [
     CommonModule,
     TransactionsComponent,
-    IconsComponent,
     MatIconModule,
     MatButtonModule,
     MatBottomSheetModule,

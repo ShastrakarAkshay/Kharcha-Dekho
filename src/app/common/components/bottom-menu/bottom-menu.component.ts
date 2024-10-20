@@ -27,7 +27,7 @@ export class BottomMenuComponent {
     {
       icon: 'person',
       label: 'Account',
-      path: 'icons',
+      path: 'icon-list',
     },
   ];
 

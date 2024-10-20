@@ -7,9 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { TRANSACTION_METHODS } from '../../common/common.constants';
 import { FormsModule } from '@angular/forms';
-import { CATEGORIES } from './add-transaction.constant';
 import { ScrollToTopOnFocusDirective } from '../../common/directives/scroll-to-top.directive';
-import { ICategory } from 'src/app/category/category-list/category-list.interface';
+import { ICategory } from 'src/app/category/category.interface';
+import { CATEGORY_DATA } from 'src/app/category/category.constant';
 
 @Component({
   selector: 'app-add-transaction',
@@ -28,19 +28,11 @@ import { ICategory } from 'src/app/category/category-list/category-list.interfac
   styleUrls: ['./add-transaction.component.scss'],
 })
 export class AddTransactionComponent implements OnInit {
+  readonly currencyIcon = 'currency_rupee';
   transactionMethods = TRANSACTION_METHODS;
   selectedMethod = TRANSACTION_METHODS[0].id;
-  currencyIcon = 'currency_rupee';
-  categories: ICategory[] = CATEGORIES;
-  selectedCategory = CATEGORIES[0].name;
-  toppingList: string[] = [
-    'Extra cheese',
-    'Mushroom',
-    'Onion',
-    'Pepperoni',
-    'Sausage',
-    'Tomato',
-  ];
+  categories: ICategory[] = CATEGORY_DATA;
+  selectedCategory = CATEGORY_DATA[0].name;
 
   ngOnInit(): void {}
 }

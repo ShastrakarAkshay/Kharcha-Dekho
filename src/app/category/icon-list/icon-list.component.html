@@ -1,0 +1,10 @@
+<div>search-bar</div>
+<div class="icon-list">
+  <app-icon
+    *ngFor="let icon of icons"
+    [name]="icon.icon"
+    [bgColor]="icon.bgColor"
+    (click)="onIconSelect(icon)"
+  >
+  </app-icon>
+</div>

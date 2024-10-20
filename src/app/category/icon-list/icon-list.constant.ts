@@ -1,4 +1,4 @@
-import { Icon } from './icons.component';
+import { IIcon } from './icon-list.interface';
 
 export const ICONS_NAMES = [
   '3d_rotation',
@@ -948,7 +948,7 @@ export const COLORS = [
   '#ffdce0', // Lighter Red
 ];
 
-export const getIcons = (): Icon[] => {
+export const getIcons = (): IIcon[] => {
   let count = -1;
   const icons = ICONS_NAMES.map((item) => {
     count++;
@@ -957,7 +957,6 @@ export const getIcons = (): Icon[] => {
     }
     return {
       icon: item,
-      iconName: item.split('_').join(' '),
       bgColor: COLORS[count],
     };
   });

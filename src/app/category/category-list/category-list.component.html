@@ -27,11 +27,11 @@
 </div> -->
 
 <div class="category-list">
-  <div class="category" *ngFor="let item of icons">
-    <mat-icon class="category-icon" [style.backgroundColor]="item.bgColor">
-      {{ item.icon }}
+  <div class="category" *ngFor="let cat of categories">
+    <mat-icon class="category-icon" [style.backgroundColor]="cat.bgColor">
+      {{ cat.icon }}
     </mat-icon>
-    <span class="label">{{ item.iconName | titlecase }}</span>
+    <span class="label">{{ cat.name | titlecase }}</span>
     <mat-icon [matMenuTriggerFor]="menu" class="action-icon">
       more_vert
     </mat-icon>

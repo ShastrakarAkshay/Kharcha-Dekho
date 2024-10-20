@@ -1,13 +1,27 @@
-<div class="create-category">
-  <div class="input-container">
-    <mat-form-field appearance="outline">
-      <mat-label>Category Name</mat-label>
-      <input matInput placeholder="Category Name" />
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Description</mat-label>
-      <input matInput placeholder="Description" />
-    </mat-form-field>
+<ng-container *ngIf="!showIconList; else iconList">
+  <div class="create-category">
+    <div class="input-container">
+      <div class="icon-field">
+        <app-icon
+          [name]="selectedIcon?.icon ?? 'upload'"
+          [bgColor]="selectedIcon?.bgColor ?? '#f4f7d5'"
+          (click)="openIconList()"
+        >
+        </app-icon>
+      </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Category Name</mat-label>
+        <input matInput placeholder="Category Name" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <input matInput placeholder="Description" />
+      </mat-form-field>
+    </div>
+    <button class="btn-add" mat-flat-button>Create</button>
   </div>
-  <button class="btn-add" mat-flat-button>Create</button>
-</div>
+</ng-container>
+
+<ng-template #iconList>
+  <app-icon-list (iconSelect)="onIconSelect($event)"></app-icon-list>
+</ng-template>

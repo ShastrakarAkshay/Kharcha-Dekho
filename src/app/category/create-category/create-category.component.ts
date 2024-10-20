@@ -7,9 +7,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ScrollToTopOnFocusDirective } from 'src/app/common/directives/scroll-to-top.directive';
-import { TRANSACTION_METHODS } from 'src/app/common/common.constants';
-import { ICategory } from '../category-list/category-list.interface';
-import { CATEGORIES } from 'src/app/transactions/add-transaction/add-transaction.constant';
+import { IconComponent } from 'src/app/common/components/icon/icon.component';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { IconListComponent } from '../icon-list/icon-list.component';
+import { IIcon } from '../icon-list/icon-list.interface';
 
 @Component({
   selector: 'app-create-category',
@@ -23,24 +24,23 @@ import { CATEGORIES } from 'src/app/transactions/add-transaction/add-transaction
     MatButtonModule,
     FormsModule,
     ScrollToTopOnFocusDirective,
+    IconComponent,
+    MatBottomSheetModule,
+    IconListComponent,
   ],
   templateUrl: './create-category.component.html',
   styleUrls: ['./create-category.component.scss'],
 })
 export class CreateCategoryComponent {
-  transactionMethods = TRANSACTION_METHODS;
-  selectedMethod = TRANSACTION_METHODS[0].id;
-  currencyIcon = 'currency_rupee';
-  categories: ICategory[] = CATEGORIES;
-  selectedCategory = CATEGORIES[0].name;
-  toppingList: string[] = [
-    'Extra cheese',
-    'Mushroom',
-    'Onion',
-    'Pepperoni',
-    'Sausage',
-    'Tomato',
-  ];
+  selectedIcon?: IIcon;
+  showIconList: boolean = false;
 
-  ngOnInit(): void {}
+  openIconList() {
+    this.showIconList = true;
+  }
+
+  onIconSelect(icon: IIcon) {
+    this.showIconList = false;
+    this.selectedIcon = icon;
+  }
 }
