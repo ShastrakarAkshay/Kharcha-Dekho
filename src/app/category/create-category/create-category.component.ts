@@ -53,6 +53,7 @@ export class CreateCategoryComponent implements OnInit {
     bgColor: '#ececec',
     label: 'Select Icon',
   };
+  iconSelected: boolean = false;
 
   form = this._fb.group({
     name: ['', Validators.required],
@@ -95,7 +96,7 @@ export class CreateCategoryComponent implements OnInit {
     const id = this.isEdit ? this.data.id : new Date().getTime();
     const category: ICategory = {
       id,
-      icon: this.selectedIcon,
+      icon: this.iconSelected ? this.selectedIcon : null,
       ...this.form.value,
     } as ICategory;
     const $api = this.isEdit
