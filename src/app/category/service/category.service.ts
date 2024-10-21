@@ -19,4 +19,14 @@ export class CategoryService {
     this.categoryList.push(data);
     return of(data);
   }
+
+  updateCategory(data: ICategory): Observable<ICategory> {
+    this.categoryList = this.categoryList.map((item) => {
+      if (item.id === data.id) {
+        item = data;
+      }
+      return item;
+    });
+    return of(data);
+  }
 }

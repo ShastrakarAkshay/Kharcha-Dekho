@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ScrollToTopOnFocusDirective } from 'src/app/common/directives/scroll-to-top.directive';
 import { IconComponent } from 'src/app/common/components/icon/icon.component';
 import {
+  MAT_BOTTOM_SHEET_DATA,
   MatBottomSheetModule,
   MatBottomSheetRef,
 } from '@angular/material/bottom-sheet';
@@ -44,10 +45,11 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   templateUrl: './create-category.component.html',
   styleUrls: ['./create-category.component.scss'],
 })
-export class CreateCategoryComponent {
+export class CreateCategoryComponent implements OnInit {
   showIconList: boolean = false;
+  isEdit: boolean = false;
   selectedIcon: IIcon = {
-    icon: 'upload',
+    name: 'upload',
     bgColor: '#ececec',
     label: 'Select Icon',
   };
@@ -55,16 +57,29 @@ export class CreateCategoryComponent {
   form = this._fb.group({
     name: ['', Validators.required],
     description: [''],
-    icon: [''],
-    iconBgColor: [''],
   });
+
+  ngOnInit(): void {}
 
   constructor(
     private _categoryService: CategoryService,
     private _fb: FormBuilder,
     private _snackBar: MatSnackBar,
-    private _bottomSheetRef: MatBottomSheetRef<CreateCategoryComponent>
-  ) {}
+    private _bottomSheetRef: MatBottomSheetRef<CreateCategoryComponent>,
+    @Inject(MAT_BOTTOM_SHEET_DATA) private data: ICategory
+  ) {
+    this.onEdit(data);
+  }
+
+  onEdit(data: ICategory) {
+    if (!data) return;
+    this.isEdit = true;
+    this.form.patchValue({
+      name: data.name,
+      description: data.description,
+    });
+    this.selectedIcon = data.icon;
+  }
 
   openIconList() {
     this.showIconList = true;
@@ -73,19 +88,25 @@ export class CreateCategoryComponent {
   onIconSelect(icon: IIcon) {
     this.showIconList = false;
     this.selectedIcon = icon;
-    this.form.patchValue({
-      icon: icon.icon,
-      iconBgColor: icon.bgColor,
-    });
   }
 
   onCreate() {
     if (this.form.invalid) return;
-    const category: ICategory = this.form.value as ICategory;
-    this._categoryService.createCategory(category).subscribe({
+    const category: ICategory = {
+      id: new Date().getTime(),
+      icon: this.selectedIcon,
+      ...this.form.value,
+    } as ICategory;
+
+    const $api = this.isEdit
+      ? this._categoryService.updateCategory(category)
+      : this._categoryService.createCategory(category);
+
+    $api.subscribe({
       next: () => {
         this._bottomSheetRef.dismiss();
-        this._snackBar.open('Category Created', 'Success', {
+        const message = this.isEdit ? 'Category Updated' : 'Category Created';
+        this._snackBar.open(message, 'Success', {
           duration: 2000,
         });
       },

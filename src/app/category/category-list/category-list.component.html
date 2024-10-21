@@ -28,16 +28,20 @@
 
 <div class="category-list">
   <div class="category" *ngFor="let cat of categories | search : searchText">
-    <mat-icon class="category-icon" [style.backgroundColor]="cat.bgColor">
-      {{ cat.icon }}
+    <mat-icon
+      *ngIf="cat.icon"
+      class="category-icon"
+      [style.backgroundColor]="cat.icon.bgColor"
+    >
+      {{ cat.icon.name }}
     </mat-icon>
     <span class="label">{{ cat.name | titlecase }}</span>
     <mat-icon [matMenuTriggerFor]="menu" class="action-icon">
       more_vert
     </mat-icon>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item>
-        <mat-icon class="material-icons-outlined">edit</mat-icon>
+      <button mat-menu-item (click)="onEdit(cat)">
+        <mat-icon class="material-icons-outlined"> edit </mat-icon>
         <span>Edit</span>
       </button>
       <button mat-menu-item>

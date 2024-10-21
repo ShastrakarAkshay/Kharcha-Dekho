@@ -56,4 +56,10 @@ export class CategoryListComponent implements OnInit {
   onSearch(searchText: string) {
     this.searchText = searchText;
   }
+
+  onEdit(category: ICategory) {
+    this._bottomSheet.open(CreateCategoryComponent, {
+      data: category,
+    });
+  }
 }

@@ -1,7 +1,8 @@
+import { IIcon } from './icon-list/icon-list.interface';
+
 export interface ICategory {
-  id?: string;
+  id?: string | number;
   name: string;
-  icon: string;
-  iconBgColor: string;
+  icon: IIcon;
   description?: string;
 }

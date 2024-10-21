@@ -955,11 +955,12 @@ export const getIcons = (): IIcon[] => {
     if (count >= 10) {
       count = 0;
     }
-    return {
-      icon: item,
+    const icon: IIcon = {
+      name: item,
       label: item.split('_').join(' '),
       bgColor: COLORS[count],
     };
+    return icon;
   });
   return icons;
 };
