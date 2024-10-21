@@ -10,9 +10,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CreateCategoryComponent } from '../create-category/create-category.component';
 import { SearchComponent } from 'src/app/common/components/search/search.component';
 import { ICategory } from '../category.interface';
-import { CATEGORY_DATA } from '../category.constant';
 import { SearchPipe } from 'src/app/common/pipes/search.pipe';
 import { CategoryService } from '../service/category.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-category-list',
@@ -26,6 +26,7 @@ import { CategoryService } from '../service/category.service';
     CreateCategoryComponent,
     SearchComponent,
     SearchPipe,
+    MatSnackBarModule,
   ],
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
@@ -36,7 +37,8 @@ export class CategoryListComponent implements OnInit {
 
   constructor(
     private _bottomSheet: MatBottomSheet,
-    private _categoryService: CategoryService
+    private _categoryService: CategoryService,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -45,21 +47,43 @@ export class CategoryListComponent implements OnInit {
 
   getAllCategories() {
     this._categoryService.getAllCategories().subscribe({
-      next: (list) => (this.categories = list),
+      next: (list) => {
+        this.categories = list;
+      },
     });
   }
 
-  addTransaction() {
-    this._bottomSheet.open(CreateCategoryComponent);
+  openCreateCategoryComponent(data?: ICategory) {
+    this._bottomSheet
+      .open(CreateCategoryComponent, { data })
+      .afterDismissed()
+      .subscribe({
+        next: () => {
+          this.getAllCategories();
+        },
+      });
   }
 
   onSearch(searchText: string) {
     this.searchText = searchText;
   }
 
+  createCategory() {
+    this.openCreateCategoryComponent();
+  }
+
   onEdit(category: ICategory) {
-    this._bottomSheet.open(CreateCategoryComponent, {
-      data: category,
+    this.openCreateCategoryComponent(category);
+  }
+
+  onDelete(category: ICategory) {
+    this._categoryService.deleteCategory(category.id).subscribe({
+      next: () => {
+        this._snackBar.open('Category Deleted', 'Success', {
+          duration: 2000,
+        });
+        this.getAllCategories();
+      },
     });
   }
 }

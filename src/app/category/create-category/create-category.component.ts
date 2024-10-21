@@ -66,7 +66,7 @@ export class CreateCategoryComponent implements OnInit {
     private _fb: FormBuilder,
     private _snackBar: MatSnackBar,
     private _bottomSheetRef: MatBottomSheetRef<CreateCategoryComponent>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) private data: ICategory
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: ICategory
   ) {
     this.onEdit(data);
   }
@@ -74,9 +74,9 @@ export class CreateCategoryComponent implements OnInit {
   onEdit(data: ICategory) {
     if (!data) return;
     this.isEdit = true;
-    this.form.patchValue({
+    this.form.setValue({
       name: data.name,
-      description: data.description,
+      description: data.description || '',
     });
     this.selectedIcon = data.icon;
   }
@@ -92,12 +92,12 @@ export class CreateCategoryComponent implements OnInit {
 
   onCreate() {
     if (this.form.invalid) return;
+    const id = this.isEdit ? this.data.id : new Date().getTime();
     const category: ICategory = {
-      id: new Date().getTime(),
+      id,
       icon: this.selectedIcon,
       ...this.form.value,
     } as ICategory;
-
     const $api = this.isEdit
       ? this._categoryService.updateCategory(category)
       : this._categoryService.createCategory(category);
