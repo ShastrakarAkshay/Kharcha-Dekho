@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -12,6 +12,7 @@ import { SearchComponent } from 'src/app/common/components/search/search.compone
 import { ICategory } from '../category.interface';
 import { CATEGORY_DATA } from '../category.constant';
 import { SearchPipe } from 'src/app/common/pipes/search.pipe';
+import { CategoryService } from '../service/category.service';
 
 @Component({
   selector: 'app-category-list',
@@ -29,11 +30,24 @@ import { SearchPipe } from 'src/app/common/pipes/search.pipe';
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
 })
-export class CategoryListComponent {
+export class CategoryListComponent implements OnInit {
   searchText: string = '';
-  categories: ICategory[] = CATEGORY_DATA;
+  categories: ICategory[] = [];
 
-  constructor(private _bottomSheet: MatBottomSheet) {}
+  constructor(
+    private _bottomSheet: MatBottomSheet,
+    private _categoryService: CategoryService
+  ) {}
+
+  ngOnInit(): void {
+    this.getAllCategories();
+  }
+
+  getAllCategories() {
+    this._categoryService.getAllCategories().subscribe({
+      next: (list) => (this.categories = list),
+    });
+  }
 
   addTransaction() {
     this._bottomSheet.open(CreateCategoryComponent);

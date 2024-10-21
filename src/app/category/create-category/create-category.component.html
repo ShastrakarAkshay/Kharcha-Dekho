@@ -1,25 +1,33 @@
 <ng-container *ngIf="!showIconList; else iconList">
   <div class="create-category">
-    <div class="input-container">
-      <div class="icon-field">
-        <app-icon
-          [name]="selectedIcon.icon"
-          [bgColor]="selectedIcon.bgColor"
-          [label]="selectedIcon.label"
-          (click)="openIconList()"
-        >
-        </app-icon>
+    <form [formGroup]="form">
+      <div class="input-container">
+        <div class="icon-field">
+          <app-icon
+            [name]="selectedIcon.icon"
+            [bgColor]="selectedIcon.bgColor"
+            [label]="selectedIcon.label"
+            (click)="openIconList()"
+          >
+          </app-icon>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Category Name</mat-label>
+          <input matInput placeholder="Category Name" formControlName="name" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <input
+            matInput
+            placeholder="Description"
+            formControlName="description"
+          />
+        </mat-form-field>
       </div>
-      <mat-form-field appearance="outline">
-        <mat-label>Category Name</mat-label>
-        <input matInput placeholder="Category Name" />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Description</mat-label>
-        <input matInput placeholder="Description" />
-      </mat-form-field>
-    </div>
-    <button class="btn-add" mat-flat-button>Create</button>
+      <button class="btn-add" mat-flat-button (click)="onCreate()">
+        Create
+      </button>
+    </form>
   </div>
 </ng-container>
 
