@@ -11,7 +11,7 @@ export class AmountPipe implements PipeTransform {
     }
 
     // Convert the value to string if it's a number
-    let numStr = value.toString();
+    let numStr = Number(value).toFixed(2).toString();
 
     // Custom logic for Indian numbering system (2,36,788)
     let [integerPart, decimalPart] = numStr.split('.'); // Separate integer and decimal part

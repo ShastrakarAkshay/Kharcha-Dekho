@@ -21,10 +21,10 @@
     <div class="right text-right">
       <div class="d-flex">
         <h3 class="label">
+          {{ txn.amount | amount }}
           <span class="currency">
             <mat-icon>{{ currencySymbol }}</mat-icon>
           </span>
-          {{ txn.amount | amount }}
         </h3>
       </div>
       <p class="sub-label">{{ txn.percent }}%</p>

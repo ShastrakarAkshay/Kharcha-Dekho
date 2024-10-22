@@ -9,6 +9,7 @@ import {
 } from '@angular/material/bottom-sheet';
 import { AddTransactionComponent } from '../transactions/add-transaction/add-transaction.component';
 import { CategoryTransactionsComponent } from '../transactions/category-transactions/category-transactions.component';
+import { HeaderComponent } from '../common/components/header/header.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,6 +24,7 @@ import { CategoryTransactionsComponent } from '../transactions/category-transact
     AddTransactionComponent,
     MatButtonModule,
     CategoryTransactionsComponent,
+    HeaderComponent,
   ],
 })
 export class DashboardComponent {
