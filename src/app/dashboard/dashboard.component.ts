@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { TransactionsComponent } from '../transactions/transactions.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DWMReportType, IDWMReport } from './dashboard.interface';
@@ -9,6 +8,7 @@ import {
   MatBottomSheetModule,
 } from '@angular/material/bottom-sheet';
 import { AddTransactionComponent } from '../transactions/add-transaction/add-transaction.component';
+import { CategoryTransactionsComponent } from '../transactions/category-transactions/category-transactions.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,12 +17,12 @@ import { AddTransactionComponent } from '../transactions/add-transaction/add-tra
   standalone: true,
   imports: [
     CommonModule,
-    TransactionsComponent,
     MatIconModule,
     MatButtonModule,
     MatBottomSheetModule,
     AddTransactionComponent,
     MatButtonModule,
+    CategoryTransactionsComponent,
   ],
 })
 export class DashboardComponent {

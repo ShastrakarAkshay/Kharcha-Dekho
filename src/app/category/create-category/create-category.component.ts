@@ -79,7 +79,7 @@ export class CreateCategoryComponent implements OnInit {
       name: data.name,
       description: data.description || '',
     });
-    this.selectedIcon = data.icon;
+    this.selectedIcon = data.icon ?? this.selectedIcon;
   }
 
   openIconList() {
@@ -88,6 +88,7 @@ export class CreateCategoryComponent implements OnInit {
 
   onIconSelect(icon: IIcon) {
     this.showIconList = false;
+    this.iconSelected = true;
     this.selectedIcon = icon;
   }
 
@@ -95,9 +96,9 @@ export class CreateCategoryComponent implements OnInit {
     if (this.form.invalid) return;
     const id = this.isEdit ? this.data.id : new Date().getTime();
     const category: ICategory = {
-      id,
-      icon: this.iconSelected ? this.selectedIcon : null,
       ...this.form.value,
+      icon: this.iconSelected ? this.selectedIcon : null,
+      id,
     } as ICategory;
     const $api = this.isEdit
       ? this._categoryService.updateCategory(category)

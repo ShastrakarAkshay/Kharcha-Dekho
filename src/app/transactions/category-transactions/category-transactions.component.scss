@@ -37,13 +37,19 @@
       gap: 15px;
       align-items: center;
 
-      .icon {
+      .icon,
+      .letter-icon {
         border-radius: 50%;
         width: 45px;
         height: 45px;
         display: flex;
         justify-content: center;
         align-items: center;
+      }
+
+      .letter-icon {
+        background-color: #ffffff;
+        text-transform: capitalize;
       }
     }
   }

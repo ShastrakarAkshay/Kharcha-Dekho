@@ -3,7 +3,7 @@
 </div>
 <div class="icon-list">
   <app-icon
-    *ngFor="let icon of icons | search : searchText : 'icon'"
+    *ngFor="let icon of icons | search : searchText"
     [name]="icon.name"
     [label]="icon.label"
     [bgColor]="icon.bgColor"
