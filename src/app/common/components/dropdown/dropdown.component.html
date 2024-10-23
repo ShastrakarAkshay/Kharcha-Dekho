@@ -1,0 +1,16 @@
+<div class="dropdown">
+  <button matRipple class="dropdown-trigger" [matMenuTriggerFor]="menu">
+    <span class="trigger-label">{{ selectedMonth }}</span>
+    <mat-icon class="trigger-icon">keyboard_arrow_down</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button
+      class="dropdown-option"
+      mat-menu-item
+      *ngFor="let month of months"
+      (click)="onMonthSelect(month)"
+    >
+      {{ month }}
+    </button>
+  </mat-menu>
+</div>

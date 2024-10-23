@@ -1,0 +1,49 @@
+:host {
+  .dropdown {
+    position: relative;
+
+    .dropdown-trigger {
+      background: white;
+      width: 112px;
+      border-radius: 10px;
+      outline: none;
+      border: none;
+      height: 27px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 0 0 10px;
+      font-size: smaller;
+      background-color: #131e29;
+      color: wheat;
+      border: 1px solid;
+
+      .trigger-label {
+        flex-grow: 1;
+      }
+
+      .trigger-icon {
+        font-size: larger;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .dropdown-option {
+    padding: 5px 20px !important;
+    min-height: 30px !important;
+  }
+  .mat-mdc-menu-item-text {
+    font-size: smaller !important;
+  }
+  .mat-menu-below {
+    border-radius: 10px !important;
+    height: 300px !important;
+  }
+  .cdk-overlay-connected-position-bounding-box {
+    margin-top: 3px;
+  }
+}
