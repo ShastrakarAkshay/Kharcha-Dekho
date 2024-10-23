@@ -41,7 +41,7 @@
   }
   .mat-menu-below {
     border-radius: 10px !important;
-    height: 300px !important;
+    max-height: 300px !important;
   }
   .cdk-overlay-connected-position-bounding-box {
     margin-top: 3px;

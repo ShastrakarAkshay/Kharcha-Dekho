@@ -1,6 +1,6 @@
 <div class="transaction-list">
   <div class="transaction" *ngFor="let txn of transactions">
-    <div class="left">
+    <div class="left" *ngIf="txn.category">
       <div
         class="icon"
         *ngIf="txn.category.icon; else letterIcon"
