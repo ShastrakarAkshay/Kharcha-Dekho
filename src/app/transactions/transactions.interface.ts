@@ -1,15 +1,13 @@
 import { ICategory } from '../category/category.interface';
 
-export interface ITransactionPayload {
-  id: any;
+export interface ITransaction {
+  id?: any;
   amount: number;
   comment: string;
   transactionMethod: TransactionMethod;
+  userId?: any;
   categoryId?: any;
-}
-
-export interface ICategoryTransaction extends ITransactionPayload {
-  category: ICategory;
+  category?: ICategory;
   percent?: number;
 }
 

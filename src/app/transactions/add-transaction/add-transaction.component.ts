@@ -16,10 +16,7 @@ import {
 import { ScrollToTopOnFocusDirective } from '../../common/directives/scroll-to-top.directive';
 import { ICategory } from 'src/app/category/category.interface';
 import { CategoryService } from 'src/app/category/service/category.service';
-import {
-  ITransactionPayload,
-  TransactionMethod,
-} from '../transactions.interface';
+import { ITransaction, TransactionMethod } from '../transactions.interface';
 import { TransactionService } from '../service/transaction.service';
 import {
   MAT_BOTTOM_SHEET_DATA,
@@ -62,7 +59,7 @@ export class AddTransactionComponent implements OnInit {
     private _fb: FormBuilder,
     private _categoryService: CategoryService,
     private _transactionService: TransactionService,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: ITransactionPayload,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: ITransaction,
     private _bottomSheetRef: MatBottomSheetRef<AddTransactionComponent>,
     private _toasterService: ToasterService
   ) {
@@ -73,8 +70,7 @@ export class AddTransactionComponent implements OnInit {
     this.getAllCategories();
   }
 
-  onEdit(data: ITransactionPayload) {
-    console.log(data);
+  onEdit(data: ITransaction) {
     if (!data) return;
     this.isEdit = true;
     this.form.setValue({
@@ -96,13 +92,15 @@ export class AddTransactionComponent implements OnInit {
 
   addTransaction() {
     if (this.form.invalid) return;
-    const id = this.isEdit ? this.data.id : new Date().getTime();
-    const transaction: ITransactionPayload = {
-      ...this.form.value,
-      id,
+    const formData = this.form.value;
+    const transaction: ITransaction = {
+      amount: formData.amount,
+      comment: formData.comment,
+      categoryId: formData.categoryId,
+      transactionMethod: formData.transactionMethod,
     };
     const $api = this.isEdit
-      ? this._transactionService.updateTransaction(transaction)
+      ? this._transactionService.updateTransaction(transaction, this.data.id)
       : this._transactionService.createTransaction(transaction);
     $api.subscribe({
       next: () => {

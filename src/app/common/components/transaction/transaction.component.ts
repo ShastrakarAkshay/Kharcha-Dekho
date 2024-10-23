@@ -8,8 +8,8 @@ import { AddTransactionComponent } from 'src/app/transactions/add-transaction/ad
 import { AmountPipe } from '../../pipes/amount.pipe';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { HeaderComponent } from '../header/header.component';
-import { ITransaction } from './transaction.interface';
 import { ConfigService } from '../../service/config.service';
+import { ITransaction } from 'src/app/transactions/transactions.interface';
 
 @Component({
   selector: 'app-transactions',

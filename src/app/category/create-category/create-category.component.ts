@@ -93,7 +93,6 @@ export class CreateCategoryComponent implements OnInit {
       icon: this.selectedIcon ?? null,
       name: formData.name,
       description: formData.description,
-      userId: ConfigService.userId,
     } as ICategory;
     const $api = this.isEdit
       ? this._categoryService.updateCategory(category, this.data.id)

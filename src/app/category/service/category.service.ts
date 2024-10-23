@@ -44,6 +44,7 @@ export class CategoryService {
   }
 
   createCategory(data: ICategory): Observable<any> {
+    data.userId = this.userId;
     return from(addDoc(this.collectionRef(), data));
   }
 

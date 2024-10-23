@@ -3,19 +3,19 @@
     <div class="left">
       <div
         class="icon"
-        *ngIf="txn.icon; else letterIcon"
-        [style.background]="txn.iconBgColor"
+        *ngIf="txn.category?.icon; else letterIcon"
+        [style.background]="txn.category?.icon?.bgColor"
       >
-        <mat-icon> {{ txn.icon }} </mat-icon>
+        <mat-icon> {{ txn.category?.icon?.name }} </mat-icon>
       </div>
       <ng-template #letterIcon>
         <div class="letter-icon">
-          {{ txn.label.slice(0, 1) }}
+          {{ txn.category?.name?.slice(0, 1) }}
         </div>
       </ng-template>
       <div>
-        <h3 class="label">{{ txn.label }}</h3>
-        <p class="sub-label">{{ txn.subLabel }}</p>
+        <h3 class="label">{{ txn.category?.name }}</h3>
+        <p class="sub-label">{{ txn.transactionMethod }}</p>
       </div>
     </div>
     <div class="right">
