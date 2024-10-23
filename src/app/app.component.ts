@@ -16,6 +16,10 @@ export class AppComponent implements OnInit {
   title = 'kharcha dekho';
 
   ngOnInit() {
+    // this.initFirebaseApp();
+  }
+
+  initFirebaseApp() {
     const firebaseConfig = {
       apiKey: 'AIzaSyBCewB9DeINEAHb4xI7V8Rezzmb1HQtv2w',
       authDomain: 'kharcha-dekho.firebaseapp.com',
@@ -26,7 +30,6 @@ export class AppComponent implements OnInit {
       measurementId: 'G-C6WG9Y9Y41',
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
   }

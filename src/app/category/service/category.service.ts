@@ -1,33 +1,57 @@
 import { Injectable } from '@angular/core';
 import { ICategory } from '../category.interface';
-import { CATEGORY_DATA } from '../category.constant';
-import { delay, EMPTY, Observable, of } from 'rxjs';
-import { StorageService } from 'src/app/common/service/storage.service';
+import { from, Observable } from 'rxjs';
+import { collectionData, Firestore } from '@angular/fire/firestore';
+import {
+  addDoc,
+  collection,
+  CollectionReference,
+  deleteDoc,
+  doc,
+  DocumentReference,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
+import { COLLECTIONS } from 'src/app/common/common.constants';
+import { ConfigService } from 'src/app/common/service/config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  storageKey = 'category';
+  userId = ConfigService.userId;
 
-  constructor(private _storageService: StorageService) {}
+  constructor(private _firestore: Firestore) {}
+
+  private collectionRef(id?: any): CollectionReference {
+    const collectionName = id
+      ? `${COLLECTIONS.Categories}/${id}`
+      : COLLECTIONS.Categories;
+    return collection(this._firestore, collectionName);
+  }
+
+  private docRef(docId?: any): DocumentReference {
+    const collectionName = docId
+      ? `${COLLECTIONS.Categories}/${docId}`
+      : COLLECTIONS.Categories;
+    return doc(this._firestore, collectionName);
+  }
 
   getAllCategories(): Observable<ICategory[]> {
-    return of(this._storageService.getAll(this.storageKey));
+    const q = query(this.collectionRef(), where('userId', '==', this.userId));
+    return collectionData(q, { idField: 'id' }) as Observable<ICategory[]>;
   }
 
-  createCategory(data: ICategory): Observable<ICategory> {
-    this._storageService.create(this.storageKey, data);
-    return of(data);
+  createCategory(data: ICategory): Observable<any> {
+    return from(addDoc(this.collectionRef(), data));
   }
 
-  updateCategory(data: ICategory): Observable<ICategory> {
-    this._storageService.update(this.storageKey, data.id, data);
-    return of(data);
+  updateCategory(data: ICategory, id: string): Observable<any> {
+    return from(updateDoc(this.docRef(id), data as any));
   }
 
   deleteCategory(id: any): Observable<any> {
-    this._storageService.delete(this.storageKey, id);
-    return of({});
+    return from(deleteDoc(this.docRef(id)));
   }
 }

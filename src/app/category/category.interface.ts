@@ -1,8 +1,9 @@
 import { IIcon } from './icon-list/icon-list.interface';
 
 export interface ICategory {
-  id?: string | number;
+  id?: any;
   name: string;
   icon: IIcon;
   description?: string;
+  userId?: string;
 }

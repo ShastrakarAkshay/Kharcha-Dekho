@@ -7,4 +7,5 @@ import { ConfirmDialogComponent } from '../components/confirm-dialog/confirm-dia
 })
 export class ConfigService {
   static readonly currencySymbol = 'currency_rupee';
+  static readonly userId = 'expense_tracker_user_1';
 }

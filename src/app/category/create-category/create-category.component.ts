@@ -23,6 +23,7 @@ import { IIcon } from '../icon-list/icon-list.interface';
 import { CategoryService } from '../service/category.service';
 import { ICategory } from '../category.interface';
 import { ToasterService } from 'src/app/common/service/toaster.service';
+import { ConfigService } from 'src/app/common/service/config.service';
 
 @Component({
   selector: 'app-create-category',
@@ -87,18 +88,19 @@ export class CreateCategoryComponent implements OnInit {
 
   onCreate() {
     if (this.form.invalid) return;
-    const id = this.isEdit ? this.data.id : new Date().getTime();
+    const formData = this.form.value;
     const category: ICategory = {
-      ...this.form.value,
       icon: this.selectedIcon ?? null,
-      id,
+      name: formData.name,
+      description: formData.description,
+      userId: ConfigService.userId,
     } as ICategory;
     const $api = this.isEdit
-      ? this._categoryService.updateCategory(category)
+      ? this._categoryService.updateCategory(category, this.data.id)
       : this._categoryService.createCategory(category);
 
     $api.subscribe({
-      next: () => {
+      next: (res) => {
         this._bottomSheetRef.dismiss();
         const message = this.isEdit ? 'Category Updated' : 'Category Created';
         this._toasterService.showSuccess(message);

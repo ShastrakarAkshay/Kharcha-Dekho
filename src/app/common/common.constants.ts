@@ -6,3 +6,8 @@ export const TRANSACTION_METHODS = [
   { id: TransactionMethod.CHEQUE, name: TransactionMethod.CHEQUE },
   { id: TransactionMethod.UPI, name: TransactionMethod.UPI },
 ];
+
+export const COLLECTIONS = {
+  Categories: 'CATEGORIES',
+  Transactions: 'TRANSACTIONS',
+};
