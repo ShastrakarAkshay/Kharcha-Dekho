@@ -4,9 +4,9 @@
       <div class="input-container">
         <div class="icon-field">
           <app-icon
-            [name]="selectedIcon.name"
-            [bgColor]="selectedIcon.bgColor"
-            [label]="selectedIcon.label"
+            [name]="selectedIcon?.name || 'upload'"
+            [bgColor]="selectedIcon?.bgColor || '#ececec'"
+            [label]="selectedIcon?.label || 'Select Icon'"
             (click)="openIconList()"
           >
           </app-icon>

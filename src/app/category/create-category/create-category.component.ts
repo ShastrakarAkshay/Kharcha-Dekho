@@ -47,12 +47,7 @@ import { ToasterService } from 'src/app/common/service/toaster.service';
 export class CreateCategoryComponent implements OnInit {
   showIconList: boolean = false;
   isEdit: boolean = false;
-  selectedIcon: IIcon = {
-    name: 'upload',
-    bgColor: '#ececec',
-    label: 'Select Icon',
-  };
-  iconSelected: boolean = false;
+  selectedIcon?: IIcon;
 
   form = this._fb.group({
     name: ['', Validators.required],
@@ -78,7 +73,7 @@ export class CreateCategoryComponent implements OnInit {
       name: data.name,
       description: data.description || '',
     });
-    this.selectedIcon = data.icon ?? this.selectedIcon;
+    this.selectedIcon = data.icon;
   }
 
   openIconList() {
@@ -87,7 +82,6 @@ export class CreateCategoryComponent implements OnInit {
 
   onIconSelect(icon: IIcon) {
     this.showIconList = false;
-    this.iconSelected = true;
     this.selectedIcon = icon;
   }
 
@@ -96,7 +90,7 @@ export class CreateCategoryComponent implements OnInit {
     const id = this.isEdit ? this.data.id : new Date().getTime();
     const category: ICategory = {
       ...this.form.value,
-      icon: this.isEdit ? this.selectedIcon : null,
+      icon: this.selectedIcon ?? null,
       id,
     } as ICategory;
     const $api = this.isEdit
