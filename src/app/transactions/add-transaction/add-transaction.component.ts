@@ -22,7 +22,7 @@ import {
   MAT_BOTTOM_SHEET_DATA,
   MatBottomSheetRef,
 } from '@angular/material/bottom-sheet';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ToasterService } from 'src/app/common/service/toaster.service';
 
 @Component({
   selector: 'app-add-transaction',
@@ -37,7 +37,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     FormsModule,
     ScrollToTopOnFocusDirective,
     ReactiveFormsModule,
-    MatSnackBarModule,
   ],
   templateUrl: './add-transaction.component.html',
   styleUrls: ['./add-transaction.component.scss'],
@@ -57,11 +56,11 @@ export class AddTransactionComponent implements OnInit {
 
   constructor(
     private _fb: FormBuilder,
-    private _snackBar: MatSnackBar,
     private _categoryService: CategoryService,
     private _transactionService: TransactionService,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: ITransactionNew,
-    private _bottomSheetRef: MatBottomSheetRef<AddTransactionComponent>
+    private _bottomSheetRef: MatBottomSheetRef<AddTransactionComponent>,
+    private _toasterService: ToasterService
   ) {
     this.onEdit(data);
   }
@@ -71,6 +70,7 @@ export class AddTransactionComponent implements OnInit {
   }
 
   onEdit(data: ITransactionNew) {
+    console.log(data);
     if (!data) return;
     this.isEdit = true;
     this.form.setValue({
@@ -106,9 +106,7 @@ export class AddTransactionComponent implements OnInit {
         const message = this.isEdit
           ? 'Transaction Updated'
           : 'Transaction Created';
-        this._snackBar.open(message, 'Success', {
-          duration: 2000,
-        });
+        this._toasterService.showSuccess(message);
       },
     });
   }

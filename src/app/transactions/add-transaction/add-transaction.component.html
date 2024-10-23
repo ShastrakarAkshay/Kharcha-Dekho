@@ -34,7 +34,7 @@
       </mat-form-field>
     </div>
     <button class="btn-add" mat-flat-button (click)="addTransaction()">
-      Add
+      {{ isEdit ? "Update" : "Add" }}
     </button>
   </form>
 </div>

@@ -27,7 +27,7 @@ export class BottomMenuComponent {
     {
       icon: 'person',
       label: 'Account',
-      path: 'icon-list',
+      path: 'all-transactions',
     },
   ];
 

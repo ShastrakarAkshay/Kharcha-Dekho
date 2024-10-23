@@ -22,7 +22,7 @@ import { IconListComponent } from '../icon-list/icon-list.component';
 import { IIcon } from '../icon-list/icon-list.interface';
 import { CategoryService } from '../service/category.service';
 import { ICategory } from '../category.interface';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ToasterService } from 'src/app/common/service/toaster.service';
 
 @Component({
   selector: 'app-create-category',
@@ -40,7 +40,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatBottomSheetModule,
     IconListComponent,
     ReactiveFormsModule,
-    MatSnackBarModule,
   ],
   templateUrl: './create-category.component.html',
   styleUrls: ['./create-category.component.scss'],
@@ -65,9 +64,9 @@ export class CreateCategoryComponent implements OnInit {
   constructor(
     private _categoryService: CategoryService,
     private _fb: FormBuilder,
-    private _snackBar: MatSnackBar,
     private _bottomSheetRef: MatBottomSheetRef<CreateCategoryComponent>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: ICategory
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: ICategory,
+    private _toasterService: ToasterService
   ) {
     this.onEdit(data);
   }
@@ -97,7 +96,7 @@ export class CreateCategoryComponent implements OnInit {
     const id = this.isEdit ? this.data.id : new Date().getTime();
     const category: ICategory = {
       ...this.form.value,
-      icon: this.iconSelected ? this.selectedIcon : null,
+      icon: this.isEdit ? this.selectedIcon : null,
       id,
     } as ICategory;
     const $api = this.isEdit
@@ -108,9 +107,7 @@ export class CreateCategoryComponent implements OnInit {
       next: () => {
         this._bottomSheetRef.dismiss();
         const message = this.isEdit ? 'Category Updated' : 'Category Created';
-        this._snackBar.open(message, 'Success', {
-          duration: 2000,
-        });
+        this._toasterService.showSuccess(message);
       },
     });
   }

@@ -10,6 +10,7 @@ import {
 import { AddTransactionComponent } from '../transactions/add-transaction/add-transaction.component';
 import { CategoryTransactionsComponent } from '../transactions/category-transactions/category-transactions.component';
 import { HeaderComponent } from '../common/components/header/header.component';
+import { DropdownComponent } from '../common/components/dropdown/dropdown.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,6 +26,7 @@ import { HeaderComponent } from '../common/components/header/header.component';
     MatButtonModule,
     CategoryTransactionsComponent,
     HeaderComponent,
+    DropdownComponent,
   ],
 })
 export class DashboardComponent {
