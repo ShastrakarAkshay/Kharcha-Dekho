@@ -1,16 +1,6 @@
 import { ICategory } from '../category/category.interface';
 
-export interface ITransaction {
-  icon: string;
-  iconBg: string;
-  categoryName: string;
-  transactionMethod: TransactionMethod;
-  currencySymbol: string;
-  amount: number;
-  percent: number;
-}
-
-export interface ITransactionNew {
+export interface ITransactionPayload {
   id: any;
   amount: number;
   comment: string;
@@ -18,7 +8,7 @@ export interface ITransactionNew {
   categoryId?: any;
 }
 
-export interface ICategoryTransaction extends ITransactionNew {
+export interface ICategoryTransaction extends ITransactionPayload {
   category: ICategory;
   percent?: number;
 }

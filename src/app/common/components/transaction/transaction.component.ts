@@ -9,6 +9,7 @@ import { AmountPipe } from '../../pipes/amount.pipe';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { HeaderComponent } from '../header/header.component';
 import { ITransaction } from './transaction.interface';
+import { ConfigService } from '../../service/config.service';
 
 @Component({
   selector: 'app-transactions',
@@ -28,7 +29,7 @@ import { ITransaction } from './transaction.interface';
   styleUrls: ['./transaction.component.scss'],
 })
 export class TransactionComponent {
-  readonly currencySymbol = 'currency_rupee';
+  readonly currencySymbol = ConfigService.currencySymbol;
   @Input() transactions: ITransaction[] = [];
   @Input() showActions: boolean = false;
 

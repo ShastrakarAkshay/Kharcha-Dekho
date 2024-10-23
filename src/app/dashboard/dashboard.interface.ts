@@ -1,7 +1,6 @@
 export interface IDWMReport {
   type: DWMReportType;
   amount: number;
-  currencyIcon: string;
 }
 
 export enum DWMReportType {

@@ -16,13 +16,17 @@ import {
 import { ScrollToTopOnFocusDirective } from '../../common/directives/scroll-to-top.directive';
 import { ICategory } from 'src/app/category/category.interface';
 import { CategoryService } from 'src/app/category/service/category.service';
-import { ITransactionNew, TransactionMethod } from '../transactions.interface';
+import {
+  ITransactionPayload,
+  TransactionMethod,
+} from '../transactions.interface';
 import { TransactionService } from '../service/transaction.service';
 import {
   MAT_BOTTOM_SHEET_DATA,
   MatBottomSheetRef,
 } from '@angular/material/bottom-sheet';
 import { ToasterService } from 'src/app/common/service/toaster.service';
+import { ConfigService } from 'src/app/common/service/config.service';
 
 @Component({
   selector: 'app-add-transaction',
@@ -42,7 +46,7 @@ import { ToasterService } from 'src/app/common/service/toaster.service';
   styleUrls: ['./add-transaction.component.scss'],
 })
 export class AddTransactionComponent implements OnInit {
-  readonly currencyIcon = 'currency_rupee';
+  readonly currencyIcon = ConfigService.currencySymbol;
   categories: ICategory[] = [];
   transactionMethods = TRANSACTION_METHODS;
   isEdit: boolean = false;
@@ -58,7 +62,7 @@ export class AddTransactionComponent implements OnInit {
     private _fb: FormBuilder,
     private _categoryService: CategoryService,
     private _transactionService: TransactionService,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: ITransactionNew,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: ITransactionPayload,
     private _bottomSheetRef: MatBottomSheetRef<AddTransactionComponent>,
     private _toasterService: ToasterService
   ) {
@@ -69,7 +73,7 @@ export class AddTransactionComponent implements OnInit {
     this.getAllCategories();
   }
 
-  onEdit(data: ITransactionNew) {
+  onEdit(data: ITransactionPayload) {
     console.log(data);
     if (!data) return;
     this.isEdit = true;
@@ -93,7 +97,7 @@ export class AddTransactionComponent implements OnInit {
   addTransaction() {
     if (this.form.invalid) return;
     const id = this.isEdit ? this.data.id : new Date().getTime();
-    const transaction: ITransactionNew = {
+    const transaction: ITransactionPayload = {
       ...this.form.value,
       id,
     };

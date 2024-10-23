@@ -12,7 +12,7 @@
       <label class="label">{{ report.type }}</label>
       <h5 class="m-0 d-flex justify-content-center">
         <span class="currency-symbol">
-          <mat-icon>{{ report.currencyIcon }}</mat-icon>
+          <mat-icon>{{ currencySymbol }}</mat-icon>
         </span>
         <span class="amount">{{ report.amount }} </span>
       </h5>
@@ -21,7 +21,7 @@
 </section>
 
 <section id="transactions">
-  <app-category-transactions></app-category-transactions>
+  <app-transactions [transactions]="transactions"></app-transactions>
 </section>
 
 <section id="new-transaction">

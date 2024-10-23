@@ -14,6 +14,7 @@ import { SearchPipe } from 'src/app/common/pipes/search.pipe';
 import { CategoryService } from '../service/category.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HeaderComponent } from 'src/app/common/components/header/header.component';
+import { DialogService } from 'src/app/common/service/dialog.service';
 
 @Component({
   selector: 'app-category-list',
@@ -40,7 +41,8 @@ export class CategoryListComponent implements OnInit {
   constructor(
     private _bottomSheet: MatBottomSheet,
     private _categoryService: CategoryService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -79,13 +81,22 @@ export class CategoryListComponent implements OnInit {
   }
 
   onDelete(category: ICategory) {
-    this._categoryService.deleteCategory(category.id).subscribe({
-      next: () => {
-        this._snackBar.open('Category Deleted', 'Success', {
-          duration: 2000,
-        });
-        this.getAllCategories();
-      },
-    });
+    this._dialogService
+      .confirm()
+      .afterClosed()
+      .subscribe({
+        next: (isConfirm) => {
+          if (isConfirm) {
+            this._categoryService.deleteCategory(category.id).subscribe({
+              next: () => {
+                this._snackBar.open('Category Deleted', 'Success', {
+                  duration: 2000,
+                });
+                this.getAllCategories();
+              },
+            });
+          }
+        },
+      });
   }
 }

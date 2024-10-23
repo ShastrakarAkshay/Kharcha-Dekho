@@ -6,7 +6,7 @@
         *ngIf="txn.icon; else letterIcon"
         [style.background]="txn.iconBgColor"
       >
-        <mat-icon> {{ txn.label }} </mat-icon>
+        <mat-icon> {{ txn.icon }} </mat-icon>
       </div>
       <ng-template #letterIcon>
         <div class="letter-icon">

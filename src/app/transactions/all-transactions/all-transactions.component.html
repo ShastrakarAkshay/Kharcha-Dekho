@@ -1,4 +1,9 @@
 <app-header [heading]="'All Transactions'"></app-header>
 <div class="transaction-container">
-  <app-category-transactions [showActions]="true"></app-category-transactions>
+  <app-transactions
+    [transactions]="transactions"
+    [showActions]="true"
+    (deleteClick)="onDelete($event)"
+    (editClick)="onEdit($event)"
+  ></app-transactions>
 </div>
