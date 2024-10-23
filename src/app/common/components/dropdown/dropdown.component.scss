@@ -35,6 +35,11 @@
   .dropdown-option {
     padding: 5px 20px !important;
     min-height: 30px !important;
+
+    &.active {
+      background-color: var(--mat-option-selected-state-layer-color);
+      color: var(--mat-option-selected-state-label-text-color);
+    }
   }
   .mat-mdc-menu-item-text {
     font-size: smaller !important;

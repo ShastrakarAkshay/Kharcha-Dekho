@@ -1,16 +1,17 @@
 <div class="dropdown">
   <button matRipple class="dropdown-trigger" [matMenuTriggerFor]="menu">
-    <span class="trigger-label">{{ selectedMonth }}</span>
+    <span class="trigger-label">{{ selectedMonth.name }}</span>
     <mat-icon class="trigger-icon">keyboard_arrow_down</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
     <button
-      class="dropdown-option"
       mat-menu-item
+      class="dropdown-option"
       *ngFor="let month of months"
+      [class.active]="month.id === selectedMonth.id"
       (click)="onMonthSelect(month)"
     >
-      {{ month }}
+      {{ month.name }}
     </button>
   </mat-menu>
 </div>
