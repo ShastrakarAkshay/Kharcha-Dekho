@@ -13,6 +13,7 @@ import { ICategory } from '../category.interface';
 import { SearchPipe } from 'src/app/common/pipes/search.pipe';
 import { CategoryService } from '../service/category.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { HeaderComponent } from 'src/app/common/components/header/header.component';
 
 @Component({
   selector: 'app-category-list',
@@ -27,6 +28,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     SearchComponent,
     SearchPipe,
     MatSnackBarModule,
+    HeaderComponent,
   ],
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],

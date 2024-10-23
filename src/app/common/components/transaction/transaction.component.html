@@ -1,0 +1,48 @@
+<div class="transaction-list">
+  <div class="transaction" *ngFor="let txn of transactions">
+    <div class="left">
+      <div
+        class="icon"
+        *ngIf="txn.icon; else letterIcon"
+        [style.background]="txn.iconBgColor"
+      >
+        <mat-icon> {{ txn.label }} </mat-icon>
+      </div>
+      <ng-template #letterIcon>
+        <div class="letter-icon">
+          {{ txn.label.slice(0, 1) }}
+        </div>
+      </ng-template>
+      <div>
+        <h3 class="label">{{ txn.label }}</h3>
+        <p class="sub-label">{{ txn.subLabel }}</p>
+      </div>
+    </div>
+    <div class="right">
+      <div class="d-flex flex-column">
+        <h3 class="label">
+          {{ txn.amount | amount }}
+          <span class="currency">
+            <mat-icon>{{ currencySymbol }}</mat-icon>
+          </span>
+        </h3>
+        <p class="sub-label">23%</p>
+      </div>
+      <div *ngIf="showActions">
+        <mat-icon [matMenuTriggerFor]="menu" class="action-icon">
+          more_vert
+        </mat-icon>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onEdit(txn)">
+            <mat-icon class="material-icons-outlined">edit</mat-icon>
+            <span>Edit</span>
+          </button>
+          <button mat-menu-item (click)="onDelete(txn)">
+            <mat-icon class="material-icons-outlined">delete</mat-icon>
+            <span>Delete</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+</div>
