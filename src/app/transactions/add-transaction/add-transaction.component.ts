@@ -24,7 +24,8 @@ import {
 } from '@angular/material/bottom-sheet';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { ConfigService } from 'src/app/common/service/config.service';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
+import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-add-transaction',
@@ -39,15 +40,17 @@ import { Subscription } from 'rxjs';
     FormsModule,
     ScrollToTopOnFocusDirective,
     ReactiveFormsModule,
+    SpinnerComponent,
   ],
   templateUrl: './add-transaction.component.html',
   styleUrls: ['./add-transaction.component.scss'],
 })
 export class AddTransactionComponent implements OnInit, OnDestroy {
-  readonly currencyIcon = ConfigService.currencySymbol;
-  categories: ICategory[] = [];
-  transactionMethods = TRANSACTION_METHODS;
   isEdit: boolean = false;
+  isLoading: boolean = false;
+  readonly currencyIcon = ConfigService.currencySymbol;
+  transactionMethods = TRANSACTION_METHODS;
+  categories: ICategory[] = [];
   subscriptions: Subscription[] = [];
 
   form: FormGroup = this._fb.group({
@@ -84,12 +87,16 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
   }
 
   getAllCategories() {
-    const sub$ = this._categoryService.getAllCategories().subscribe({
-      next: (data) => {
-        this.categories = data;
-        this.form.patchValue({ categoryId: data.at(0)?.id });
-      },
-    });
+    this.isLoading = true;
+    const sub$ = this._categoryService
+      .getAllCategories()
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (data) => {
+          this.categories = data;
+          this.form.patchValue({ categoryId: data.at(0)?.id });
+        },
+      });
     this.subscriptions.push(sub$);
   }
 
@@ -102,10 +109,11 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
       categoryId: formData.categoryId,
       transactionMethod: formData.transactionMethod,
     };
+    this.isLoading = true;
     const $api = this.isEdit
       ? this._transactionService.updateTransaction(transaction, this.data.id)
       : this._transactionService.createTransaction(transaction);
-    const sub$ = $api.subscribe({
+    const sub$ = $api.pipe(finalize(() => (this.isLoading = false))).subscribe({
       next: () => {
         this._bottomSheetRef.dismiss();
         const message = this.isEdit

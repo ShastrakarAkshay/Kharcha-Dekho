@@ -6,4 +6,6 @@ export interface ICategory {
   icon: IIcon;
   description?: string;
   userId?: string;
+  createdDate?: string;
+  updatedDate?: string;
 }

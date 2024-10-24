@@ -45,14 +45,23 @@ export class CategoryService {
 
   createCategory(data: ICategory): Observable<any> {
     data.userId = this.userId;
-    return from(addDoc(this.collectionRef(), data));
+    return from(
+      addDoc(this.collectionRef(), {
+        ...data,
+        creationDate: new Date(),
+        updatedDate: new Date(),
+      })
+    );
   }
 
   updateCategory(data: ICategory, id: string): Observable<any> {
-    return from(updateDoc(this.docRef(id), data as any));
+    return from(
+      updateDoc(this.docRef(id), { ...data, updatedDate: new Date() })
+    );
   }
 
   deleteCategory(id: any): Observable<any> {
+    // @TODO soft delete and hard delete
     return from(deleteDoc(this.docRef(id)));
   }
 }

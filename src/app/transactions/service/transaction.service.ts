@@ -77,11 +77,19 @@ export class TransactionService {
 
   createTransaction(data: ITransaction): Observable<any> {
     data.userId = this.userId;
-    return from(addDoc(this.collectionRef(), data)) as Observable<any>;
+    return from(
+      addDoc(this.collectionRef(), {
+        ...data,
+        creationDate: new Date(),
+        updatedDate: new Date(),
+      })
+    ) as Observable<any>;
   }
 
   updateTransaction(data: ITransaction, id: any): Observable<any> {
-    return from(updateDoc(this.docRef(id), data as any)) as Observable<any>;
+    return from(
+      updateDoc(this.docRef(id), { ...data, updatedDate: new Date() })
+    ) as Observable<any>;
   }
 
   deleteTransaction(id: any): Observable<any> {

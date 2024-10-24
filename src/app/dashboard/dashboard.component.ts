@@ -15,7 +15,8 @@ import { TransactionComponent } from '../common/components/transaction/transacti
 import { DMA_REPORT_CONFIG } from './dashboard.constant';
 import { ConfigService } from '../common/service/config.service';
 import { ITransaction } from '../transactions/transactions.interface';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
+import { SpinnerComponent } from '../common/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,12 +33,14 @@ import { Subscription } from 'rxjs';
     HeaderComponent,
     DropdownComponent,
     TransactionComponent,
+    SpinnerComponent,
   ],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  isLoading: boolean = false;
   readonly currencySymbol = ConfigService.currencySymbol;
-  transactions: ITransaction[] = [];
   dwmReport: IDWMReport[] = DMA_REPORT_CONFIG;
+  transactions: ITransaction[] = [];
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -50,11 +53,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getAllTransactions() {
-    const sub$ = this._transactionService.getAllTransactions().subscribe({
-      next: (transactions) => {
-        this.transactions = transactions;
-      },
-    });
+    this.isLoading = true;
+    const sub$ = this._transactionService
+      .getAllTransactions()
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (transactions) => {
+          this.transactions = transactions;
+        },
+      });
     this.subscriptions.push(sub$);
   }
 

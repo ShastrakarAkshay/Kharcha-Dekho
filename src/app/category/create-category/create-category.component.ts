@@ -23,8 +23,8 @@ import { IIcon } from '../icon-list/icon-list.interface';
 import { CategoryService } from '../service/category.service';
 import { ICategory } from '../category.interface';
 import { ToasterService } from 'src/app/common/service/toaster.service';
-import { ConfigService } from 'src/app/common/service/config.service';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
+import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-create-category',
@@ -42,6 +42,7 @@ import { Subscription } from 'rxjs';
     MatBottomSheetModule,
     IconListComponent,
     ReactiveFormsModule,
+    SpinnerComponent,
   ],
   templateUrl: './create-category.component.html',
   styleUrls: ['./create-category.component.scss'],
@@ -49,6 +50,7 @@ import { Subscription } from 'rxjs';
 export class CreateCategoryComponent implements OnInit, OnDestroy {
   showIconList: boolean = false;
   isEdit: boolean = false;
+  isLoading: boolean = false;
   selectedIcon?: IIcon;
 
   form = this._fb.group({
@@ -100,8 +102,8 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
     const $api = this.isEdit
       ? this._categoryService.updateCategory(category, this.data.id)
       : this._categoryService.createCategory(category);
-
-    const sub$ = $api.subscribe({
+    this.isLoading = true;
+    const sub$ = $api.pipe(finalize(() => (this.isLoading = false))).subscribe({
       next: (res) => {
         this._bottomSheetRef.dismiss();
         const message = this.isEdit ? 'Category Updated' : 'Category Created';

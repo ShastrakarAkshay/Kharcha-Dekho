@@ -15,7 +15,8 @@ import { CategoryService } from '../service/category.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HeaderComponent } from 'src/app/common/components/header/header.component';
 import { DialogService } from 'src/app/common/service/dialog.service';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
+import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-category-list',
@@ -31,14 +32,15 @@ import { Subscription } from 'rxjs';
     SearchPipe,
     MatSnackBarModule,
     HeaderComponent,
+    SpinnerComponent,
   ],
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
 })
 export class CategoryListComponent implements OnInit, OnDestroy {
+  isLoading: boolean = false;
   searchText: string = '';
   categories: ICategory[] = [];
-
   subscription: Subscription[] = [];
 
   constructor(
@@ -53,11 +55,15 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   }
 
   getAllCategories() {
-    const sub$ = this._categoryService.getAllCategories().subscribe({
-      next: (list) => {
-        this.categories = list;
-      },
-    });
+    this.isLoading = true;
+    const sub$ = this._categoryService
+      .getAllCategories()
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (list) => {
+          this.categories = list;
+        },
+      });
     this.subscription.push(sub$);
   }
 
@@ -91,8 +97,10 @@ export class CategoryListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (isConfirm) => {
           if (isConfirm) {
+            this.isLoading = true;
             const sub$ = this._categoryService
               .deleteCategory(category.id)
+              .pipe(finalize(() => (this.isLoading = false)))
               .subscribe({
                 next: () => {
                   this._snackBar.open('Category Deleted', 'Success', {

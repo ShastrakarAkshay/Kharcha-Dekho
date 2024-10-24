@@ -8,7 +8,8 @@ import { ToasterService } from 'src/app/common/service/toaster.service';
 import { TransactionService } from '../service/transaction.service';
 import { ITransaction } from '../transactions.interface';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
+import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-all-transactions',
@@ -18,11 +19,13 @@ import { Subscription } from 'rxjs';
     HeaderComponent,
     TransactionComponent,
     TransactionComponent,
+    SpinnerComponent,
   ],
   templateUrl: './all-transactions.component.html',
   styleUrls: ['./all-transactions.component.scss'],
 })
 export class AllTransactionsComponent implements OnInit, OnDestroy {
+  isLoading: boolean = false;
   transactions: ITransaction[] = [];
   subscriptions: Subscription[] = [];
 
@@ -38,11 +41,15 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   }
 
   getAllTransactions() {
-    const sub$ = this._transactionService.getAllTransactions().subscribe({
-      next: (transactions) => {
-        this.transactions = transactions;
-      },
-    });
+    this.isLoading = true;
+    const sub$ = this._transactionService
+      .getAllTransactions()
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (transactions) => {
+          this.transactions = transactions;
+        },
+      });
     this.subscriptions.push(sub$);
   }
 
@@ -64,8 +71,10 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (isConfirm) => {
           if (isConfirm) {
+            this.isLoading = true;
             const sub$ = this._transactionService
               .deleteTransaction(txn.id)
+              .pipe(finalize(() => (this.isLoading = false)))
               .subscribe({
                 next: () => {
                   this._toasterService.showSuccess('Transaction Deleted');
