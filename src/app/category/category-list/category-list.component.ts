@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -15,6 +15,7 @@ import { CategoryService } from '../service/category.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HeaderComponent } from 'src/app/common/components/header/header.component';
 import { DialogService } from 'src/app/common/service/dialog.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-category-list',
@@ -34,9 +35,11 @@ import { DialogService } from 'src/app/common/service/dialog.service';
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
 })
-export class CategoryListComponent implements OnInit {
+export class CategoryListComponent implements OnInit, OnDestroy {
   searchText: string = '';
   categories: ICategory[] = [];
+
+  subscription: Subscription[] = [];
 
   constructor(
     private _bottomSheet: MatBottomSheet,
@@ -50,11 +53,12 @@ export class CategoryListComponent implements OnInit {
   }
 
   getAllCategories() {
-    this._categoryService.getAllCategories().subscribe({
+    const sub$ = this._categoryService.getAllCategories().subscribe({
       next: (list) => {
         this.categories = list;
       },
     });
+    this.subscription.push(sub$);
   }
 
   openCreateCategoryComponent(data?: ICategory) {
@@ -87,16 +91,23 @@ export class CategoryListComponent implements OnInit {
       .subscribe({
         next: (isConfirm) => {
           if (isConfirm) {
-            this._categoryService.deleteCategory(category.id).subscribe({
-              next: () => {
-                this._snackBar.open('Category Deleted', 'Success', {
-                  duration: 2000,
-                });
-                this.getAllCategories();
-              },
-            });
+            const sub$ = this._categoryService
+              .deleteCategory(category.id)
+              .subscribe({
+                next: () => {
+                  this._snackBar.open('Category Deleted', 'Success', {
+                    duration: 2000,
+                  });
+                  this.getAllCategories();
+                },
+              });
+            this.subscription.push(sub$);
           }
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.forEach((sub) => sub.unsubscribe());
   }
 }

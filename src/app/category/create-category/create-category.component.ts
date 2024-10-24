@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -24,6 +24,7 @@ import { CategoryService } from '../service/category.service';
 import { ICategory } from '../category.interface';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { ConfigService } from 'src/app/common/service/config.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-category',
@@ -45,7 +46,7 @@ import { ConfigService } from 'src/app/common/service/config.service';
   templateUrl: './create-category.component.html',
   styleUrls: ['./create-category.component.scss'],
 })
-export class CreateCategoryComponent implements OnInit {
+export class CreateCategoryComponent implements OnInit, OnDestroy {
   showIconList: boolean = false;
   isEdit: boolean = false;
   selectedIcon?: IIcon;
@@ -54,6 +55,8 @@ export class CreateCategoryComponent implements OnInit {
     name: ['', Validators.required],
     description: [''],
   });
+
+  subscription: Subscription[] = [];
 
   ngOnInit(): void {}
 
@@ -98,12 +101,17 @@ export class CreateCategoryComponent implements OnInit {
       ? this._categoryService.updateCategory(category, this.data.id)
       : this._categoryService.createCategory(category);
 
-    $api.subscribe({
+    const sub$ = $api.subscribe({
       next: (res) => {
         this._bottomSheetRef.dismiss();
         const message = this.isEdit ? 'Category Updated' : 'Category Created';
         this._toasterService.showSuccess(message);
       },
     });
+    this.subscription.push(sub$);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.forEach((sub) => sub.unsubscribe());
   }
 }

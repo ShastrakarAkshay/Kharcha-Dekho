@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from 'src/app/common/components/header/header.component';
 import { TransactionComponent } from 'src/app/common/components/transaction/transaction.component';
@@ -8,6 +8,7 @@ import { ToasterService } from 'src/app/common/service/toaster.service';
 import { TransactionService } from '../service/transaction.service';
 import { ITransaction } from '../transactions.interface';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-all-transactions',
@@ -21,8 +22,9 @@ import { AddTransactionComponent } from '../add-transaction/add-transaction.comp
   templateUrl: './all-transactions.component.html',
   styleUrls: ['./all-transactions.component.scss'],
 })
-export class AllTransactionsComponent implements OnInit {
+export class AllTransactionsComponent implements OnInit, OnDestroy {
   transactions: ITransaction[] = [];
+  subscriptions: Subscription[] = [];
 
   constructor(
     private _transactionService: TransactionService,
@@ -36,11 +38,12 @@ export class AllTransactionsComponent implements OnInit {
   }
 
   getAllTransactions() {
-    this._transactionService.getAllTransactions().subscribe({
+    const sub$ = this._transactionService.getAllTransactions().subscribe({
       next: (transactions) => {
         this.transactions = transactions;
       },
     });
+    this.subscriptions.push(sub$);
   }
 
   onEdit(txn: ITransaction) {
@@ -61,14 +64,21 @@ export class AllTransactionsComponent implements OnInit {
       .subscribe({
         next: (isConfirm) => {
           if (isConfirm) {
-            this._transactionService.deleteTransaction(txn.id).subscribe({
-              next: () => {
-                this._toasterService.showSuccess('Transaction Deleted');
-                this.getAllTransactions();
-              },
-            });
+            const sub$ = this._transactionService
+              .deleteTransaction(txn.id)
+              .subscribe({
+                next: () => {
+                  this._toasterService.showSuccess('Transaction Deleted');
+                  this.getAllTransactions();
+                },
+              });
+            this.subscriptions.push(sub$);
           }
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

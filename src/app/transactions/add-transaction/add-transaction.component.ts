@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -24,6 +24,7 @@ import {
 } from '@angular/material/bottom-sheet';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { ConfigService } from 'src/app/common/service/config.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-transaction',
@@ -42,11 +43,12 @@ import { ConfigService } from 'src/app/common/service/config.service';
   templateUrl: './add-transaction.component.html',
   styleUrls: ['./add-transaction.component.scss'],
 })
-export class AddTransactionComponent implements OnInit {
+export class AddTransactionComponent implements OnInit, OnDestroy {
   readonly currencyIcon = ConfigService.currencySymbol;
   categories: ICategory[] = [];
   transactionMethods = TRANSACTION_METHODS;
   isEdit: boolean = false;
+  subscriptions: Subscription[] = [];
 
   form: FormGroup = this._fb.group({
     amount: ['', Validators.required],
@@ -82,12 +84,13 @@ export class AddTransactionComponent implements OnInit {
   }
 
   getAllCategories() {
-    this._categoryService.getAllCategories().subscribe({
+    const sub$ = this._categoryService.getAllCategories().subscribe({
       next: (data) => {
         this.categories = data;
         this.form.patchValue({ categoryId: data.at(0)?.id });
       },
     });
+    this.subscriptions.push(sub$);
   }
 
   addTransaction() {
@@ -102,7 +105,7 @@ export class AddTransactionComponent implements OnInit {
     const $api = this.isEdit
       ? this._transactionService.updateTransaction(transaction, this.data.id)
       : this._transactionService.createTransaction(transaction);
-    $api.subscribe({
+    const sub$ = $api.subscribe({
       next: () => {
         this._bottomSheetRef.dismiss();
         const message = this.isEdit
@@ -111,5 +114,10 @@ export class AddTransactionComponent implements OnInit {
         this._toasterService.showSuccess(message);
       },
     });
+    this.subscriptions.push(sub$);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

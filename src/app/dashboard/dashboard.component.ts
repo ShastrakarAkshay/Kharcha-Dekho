@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { IDWMReport } from './dashboard.interface';
@@ -15,6 +15,7 @@ import { TransactionComponent } from '../common/components/transaction/transacti
 import { DMA_REPORT_CONFIG } from './dashboard.constant';
 import { ConfigService } from '../common/service/config.service';
 import { ITransaction } from '../transactions/transactions.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,10 +34,11 @@ import { ITransaction } from '../transactions/transactions.interface';
     TransactionComponent,
   ],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   readonly currencySymbol = ConfigService.currencySymbol;
   transactions: ITransaction[] = [];
   dwmReport: IDWMReport[] = DMA_REPORT_CONFIG;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private _bottomSheet: MatBottomSheet,
@@ -48,11 +50,12 @@ export class DashboardComponent implements OnInit {
   }
 
   getAllTransactions() {
-    this._transactionService.getAllTransactions().subscribe({
+    const sub$ = this._transactionService.getAllTransactions().subscribe({
       next: (transactions) => {
         this.transactions = transactions;
       },
     });
+    this.subscriptions.push(sub$);
   }
 
   addTransaction() {
@@ -64,5 +67,11 @@ export class DashboardComponent implements OnInit {
           this.getAllTransactions();
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => {
+      sub.unsubscribe();
+    });
   }
 }
