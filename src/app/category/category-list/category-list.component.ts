@@ -18,6 +18,7 @@ import { DialogService } from 'src/app/common/service/dialog.service';
 import { finalize, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { ToasterService } from 'src/app/common/service/toaster.service';
+import { SpinnerService } from 'src/app/common/service/spinner.service';
 
 @Component({
   selector: 'app-category-list',
@@ -39,7 +40,6 @@ import { ToasterService } from 'src/app/common/service/toaster.service';
   styleUrls: ['./category-list.component.scss'],
 })
 export class CategoryListComponent implements OnInit, OnDestroy {
-  isLoading: boolean = false;
   searchText: string = '';
   categories: ICategory[] = [];
   subscription: Subscription[] = [];
@@ -48,7 +48,8 @@ export class CategoryListComponent implements OnInit, OnDestroy {
     private _bottomSheet: MatBottomSheet,
     private _categoryService: CategoryService,
     private _dialogService: DialogService,
-    private _toaster: ToasterService
+    private _toaster: ToasterService,
+    private _spinner: SpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -56,10 +57,10 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   }
 
   getAllCategories() {
-    this.isLoading = true;
+    this._spinner.show();
     const sub$ = this._categoryService
       .getAllCategories()
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(finalize(() => this._spinner.hide()))
       .subscribe({
         next: (list) => {
           this.categories = list;
@@ -69,7 +70,15 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   }
 
   openCreateCategoryComponent(data?: ICategory) {
-    this._bottomSheet.open(CreateCategoryComponent, { data });
+    const sub$ = this._bottomSheet
+      .open(CreateCategoryComponent, { data })
+      .afterDismissed()
+      .subscribe({
+        next: () => {
+          this.getAllCategories();
+        },
+      });
+    this.subscription.push(sub$);
   }
 
   onSearch(searchText: string) {
@@ -85,25 +94,27 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(category: ICategory) {
-    this._dialogService
+    const sub$ = this._dialogService
       .confirm()
       .afterClosed()
       .subscribe({
         next: (isConfirm) => {
           if (isConfirm) {
-            this.isLoading = true;
+            this._spinner.show();
             const sub$ = this._categoryService
               .deleteCategory(category.id)
-              .pipe(finalize(() => (this.isLoading = false)))
+              .pipe(finalize(() => this._spinner.hide()))
               .subscribe({
                 next: () => {
                   this._toaster.showSuccess('Category Deleted');
+                  this.getAllCategories();
                 },
               });
             this.subscription.push(sub$);
           }
         },
       });
+    this.subscription.push(sub$);
   }
 
   ngOnDestroy(): void {

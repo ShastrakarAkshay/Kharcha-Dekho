@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ICategory } from '../category.interface';
-import { from, Observable } from 'rxjs';
-import { collectionData, Firestore } from '@angular/fire/firestore';
+import { from, map, Observable } from 'rxjs';
+import { Firestore } from '@angular/fire/firestore';
 import {
   addDoc,
   collection,
@@ -9,6 +9,7 @@ import {
   deleteDoc,
   doc,
   DocumentReference,
+  getDocs,
   query,
   updateDoc,
   where,
@@ -38,9 +39,16 @@ export class CategoryService {
     return doc(this._firestore, collectionName);
   }
 
-  getAllCategories(): Observable<ICategory[]> {
-    const q = query(this.collectionRef(), where('userId', '==', this.userId));
-    return collectionData(q, { idField: 'id' }) as Observable<ICategory[]>;
+  getAllCategories(): Observable<any> {
+    const categoryQuery = query(
+      this.collectionRef(),
+      where('userId', '==', this.userId)
+    );
+    return from(getDocs(categoryQuery)).pipe(
+      map((snapshot) =>
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      )
+    );
   }
 
   createCategory(data: ICategory): Observable<any> {
