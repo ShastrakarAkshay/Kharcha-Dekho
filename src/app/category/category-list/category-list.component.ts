@@ -17,6 +17,7 @@ import { HeaderComponent } from 'src/app/common/components/header/header.compone
 import { DialogService } from 'src/app/common/service/dialog.service';
 import { finalize, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
+import { ToasterService } from 'src/app/common/service/toaster.service';
 
 @Component({
   selector: 'app-category-list',
@@ -46,8 +47,8 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   constructor(
     private _bottomSheet: MatBottomSheet,
     private _categoryService: CategoryService,
-    private _snackBar: MatSnackBar,
-    private _dialogService: DialogService
+    private _dialogService: DialogService,
+    private _toaster: ToasterService
   ) {}
 
   ngOnInit(): void {
@@ -68,14 +69,7 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   }
 
   openCreateCategoryComponent(data?: ICategory) {
-    this._bottomSheet
-      .open(CreateCategoryComponent, { data })
-      .afterDismissed()
-      .subscribe({
-        next: () => {
-          this.getAllCategories();
-        },
-      });
+    this._bottomSheet.open(CreateCategoryComponent, { data });
   }
 
   onSearch(searchText: string) {
@@ -103,10 +97,7 @@ export class CategoryListComponent implements OnInit, OnDestroy {
               .pipe(finalize(() => (this.isLoading = false)))
               .subscribe({
                 next: () => {
-                  this._snackBar.open('Category Deleted', 'Success', {
-                    duration: 2000,
-                  });
-                  this.getAllCategories();
+                  this._toaster.showSuccess('Category Deleted');
                 },
               });
             this.subscription.push(sub$);

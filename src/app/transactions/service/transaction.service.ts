@@ -12,7 +12,13 @@ import {
 } from '@angular/fire/firestore';
 import { COLLECTIONS } from 'src/app/common/common.constants';
 import { ConfigService } from 'src/app/common/service/config.service';
-import { addDoc, deleteDoc, getDocs, updateDoc } from 'firebase/firestore';
+import {
+  addDoc,
+  deleteDoc,
+  getDocs,
+  Timestamp,
+  updateDoc,
+} from 'firebase/firestore';
 import { ICategory } from 'src/app/category/category.interface';
 
 @Injectable({
@@ -37,18 +43,46 @@ export class TransactionService {
     return doc(this._firestore, collectionName);
   }
 
-  getAllTransactions(): Observable<ITransaction[]> {
+  private getCurrentMonth(month: number) {
+    if (month >= 0) {
+      const year = new Date().getFullYear();
+      const firstDay = new Date(year, month, 1).getDate();
+      const lastDay = new Date(year, month + 1, 0).getDate();
+
+      const startDate = Timestamp.fromDate(new Date(year, month, firstDay));
+      const endDate = Timestamp.fromDate(
+        new Date(year, month, lastDay, 23, 59, 59)
+      );
+      return { startDate, endDate };
+    }
+    return { startDate: null, endDate: null };
+  }
+
+  getAllTransactions(filters?: any): Observable<ITransaction[]> {
+    const monthFilter: any = this.getCurrentMonth(filters?.month);
     const transactionRef = collection(
       this._firestore,
       COLLECTIONS.Transactions
     );
-    const transactionQuery = query(
+    let transactionQuery = query(
       transactionRef,
       where('userId', '==', this.userId)
     );
+
+    if (monthFilter?.startDate && monthFilter?.endDate) {
+      transactionQuery = query(
+        transactionRef,
+        where('createdAt', '>=', monthFilter?.startDate),
+        where('createdAt', '<=', monthFilter?.endDate)
+      );
+    }
+
     const transactions$ = from(getDocs(transactionQuery)).pipe(
       map((snapshot) =>
-        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+        snapshot.docs.map((doc) => {
+          const data: any = doc.data();
+          return { ...data, id: doc.id, createdAt: data.createdAt?.toDate() };
+        })
       )
     );
 
@@ -80,15 +114,15 @@ export class TransactionService {
     return from(
       addDoc(this.collectionRef(), {
         ...data,
-        creationDate: new Date(),
-        updatedDate: new Date(),
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
       })
     ) as Observable<any>;
   }
 
   updateTransaction(data: ITransaction, id: any): Observable<any> {
     return from(
-      updateDoc(this.docRef(id), { ...data, updatedDate: new Date() })
+      updateDoc(this.docRef(id), { ...data, updatedAt: Timestamp.now() })
     ) as Observable<any>;
   }
 

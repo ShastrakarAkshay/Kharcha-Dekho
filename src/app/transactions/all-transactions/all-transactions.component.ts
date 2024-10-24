@@ -48,20 +48,14 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (transactions) => {
           this.transactions = transactions;
+          console.log(transactions);
         },
       });
     this.subscriptions.push(sub$);
   }
 
   onEdit(txn: ITransaction) {
-    this._bottomSheet
-      .open(AddTransactionComponent, { data: txn })
-      .afterDismissed()
-      .subscribe({
-        next: () => {
-          this.getAllTransactions();
-        },
-      });
+    this._bottomSheet.open(AddTransactionComponent, { data: txn });
   }
 
   onDelete(txn: ITransaction) {

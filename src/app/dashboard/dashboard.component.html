@@ -1,5 +1,5 @@
 <app-header [heading]="'Expense Tracker'">
-  <app-dropdown></app-dropdown>
+  <app-dropdown (monthChange)="onMonthChange($event)"></app-dropdown>
 </app-header>
 
 <!-- <app-spinner [isLoading]="isLoading"></app-spinner> -->
@@ -16,7 +16,7 @@
         <span class="currency-symbol">
           <mat-icon>{{ currencySymbol }}</mat-icon>
         </span>
-        <span class="amount">{{ report.amount }} </span>
+        <span class="amount">{{ report.amount | amount }} </span>
       </h5>
     </div>
   </div>

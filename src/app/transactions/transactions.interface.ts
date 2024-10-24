@@ -9,6 +9,8 @@ export interface ITransaction {
   categoryId?: any;
   category?: ICategory;
   percent?: number;
+  createdAt?: any;
+  updatedAt?: any;
 }
 
 export enum TransactionMethod {

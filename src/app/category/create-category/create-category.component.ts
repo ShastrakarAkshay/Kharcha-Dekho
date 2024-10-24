@@ -103,13 +103,19 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
       ? this._categoryService.updateCategory(category, this.data.id)
       : this._categoryService.createCategory(category);
     this.isLoading = true;
-    const sub$ = $api.pipe(finalize(() => (this.isLoading = false))).subscribe({
-      next: (res) => {
-        this._bottomSheetRef.dismiss();
-        const message = this.isEdit ? 'Category Updated' : 'Category Created';
-        this._toasterService.showSuccess(message);
-      },
-    });
+    const sub$ = $api
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this._bottomSheetRef.dismiss();
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          const message = this.isEdit ? 'Category Updated' : 'Category Created';
+          this._toasterService.showSuccess(message);
+        },
+      });
     this.subscription.push(sub$);
   }
 

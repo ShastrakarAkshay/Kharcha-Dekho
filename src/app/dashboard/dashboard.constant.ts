@@ -6,11 +6,11 @@ export const DMA_REPORT_CONFIG = [
     amount: 10,
   },
   {
-    type: DWMReportType.MONTH,
-    amount: 20,
-  },
-  {
     type: DWMReportType.WEEK,
     amount: 50,
+  },
+  {
+    type: DWMReportType.MONTH,
+    amount: 20,
   },
 ];
