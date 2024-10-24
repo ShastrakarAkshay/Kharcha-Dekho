@@ -18,9 +18,10 @@ import { TransactionComponent } from '../common/components/transaction/transacti
 import { DMA_REPORT_CONFIG } from './dashboard.constant';
 import { ConfigService } from '../common/service/config.service';
 import { ITransaction } from '../transactions/transactions.interface';
-import { finalize, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { SpinnerComponent } from '../common/components/spinner/spinner.component';
 import { AmountPipe } from '../common/pipes/amount.pipe';
+import { SpinnerService } from '../common/service/spinner.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -54,7 +55,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private _bottomSheet: MatBottomSheet,
-    private _transactionService: TransactionService
+    private _transactionService: TransactionService,
+    private _spinnerService: SpinnerService
   ) {}
 
   ngOnInit(): void {}
@@ -65,24 +67,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getAllTransactions() {
-    this.isLoading = true;
+    this._spinnerService.show();
     const sub$ = this._transactionService
       .getAllTransactions(this.filters)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (transactions) => {
           this.transactions = transactions;
-          console.log(transactions);
           this.updateDayAmount();
           this.updateWeekAmount();
           this.updateMonthAmount();
+          this._spinnerService.hide();
         },
       });
     this.subscriptions.push(sub$);
   }
 
   addTransaction() {
-    this._bottomSheet
+    const sub$ = this._bottomSheet
       .open(AddTransactionComponent)
       .afterDismissed()
       .subscribe({
@@ -90,6 +91,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.getAllTransactions();
         },
       });
+    this.subscriptions.push(sub$);
   }
 
   updateDayAmount() {

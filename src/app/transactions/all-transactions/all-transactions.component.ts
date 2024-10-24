@@ -10,6 +10,7 @@ import { ITransaction } from '../transactions.interface';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
 import { finalize, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
+import { SpinnerService } from 'src/app/common/service/spinner.service';
 
 @Component({
   selector: 'app-all-transactions',
@@ -25,7 +26,6 @@ import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.comp
   styleUrls: ['./all-transactions.component.scss'],
 })
 export class AllTransactionsComponent implements OnInit, OnDestroy {
-  isLoading: boolean = false;
   transactions: ITransaction[] = [];
   subscriptions: Subscription[] = [];
 
@@ -33,7 +33,8 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
     private _transactionService: TransactionService,
     private _bottomSheet: MatBottomSheet,
     private _toasterService: ToasterService,
-    private _dialogService: DialogService
+    private _dialogService: DialogService,
+    private _spinnerService: SpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -41,10 +42,10 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   }
 
   getAllTransactions() {
-    this.isLoading = true;
+    this._spinnerService.show();
     const sub$ = this._transactionService
       .getAllTransactions()
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(finalize(() => this._spinnerService.hide()))
       .subscribe({
         next: (transactions) => {
           this.transactions = transactions;
@@ -59,16 +60,15 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   }
 
   onDelete(txn: ITransaction) {
-    this._dialogService
+    const sub$ = this._dialogService
       .confirm()
       .afterClosed()
       .subscribe({
         next: (isConfirm) => {
           if (isConfirm) {
-            this.isLoading = true;
+            this._spinnerService.show();
             const sub$ = this._transactionService
               .deleteTransaction(txn.id)
-              .pipe(finalize(() => (this.isLoading = false)))
               .subscribe({
                 next: () => {
                   this._toasterService.showSuccess('Transaction Deleted');
@@ -79,6 +79,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
           }
         },
       });
+    this.subscriptions.push(sub$);
   }
 
   ngOnDestroy(): void {

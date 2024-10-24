@@ -26,6 +26,7 @@ import { ToasterService } from 'src/app/common/service/toaster.service';
 import { ConfigService } from 'src/app/common/service/config.service';
 import { finalize, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
+import { SpinnerService } from 'src/app/common/service/spinner.service';
 
 @Component({
   selector: 'app-add-transaction',
@@ -47,7 +48,6 @@ import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.comp
 })
 export class AddTransactionComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
-  isLoading: boolean = false;
   readonly currencyIcon = ConfigService.currencySymbol;
   transactionMethods = TRANSACTION_METHODS;
   categories: ICategory[] = [];
@@ -66,7 +66,8 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
     private _transactionService: TransactionService,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: ITransaction,
     private _bottomSheetRef: MatBottomSheetRef<AddTransactionComponent>,
-    private _toasterService: ToasterService
+    private _toasterService: ToasterService,
+    private _spinner: SpinnerService
   ) {
     this.onEdit(data);
   }
@@ -87,10 +88,10 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
   }
 
   getAllCategories() {
-    this.isLoading = true;
+    this._spinner.show();
     const sub$ = this._categoryService
       .getAllCategories()
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(finalize(() => this._spinner.hide()))
       .subscribe({
         next: (data) => {
           this.categories = data;
@@ -109,17 +110,18 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
       categoryId: formData.categoryId,
       transactionMethod: formData.transactionMethod,
     };
-    this.isLoading = true;
+    this._spinner.show();
     const $api = this.isEdit
       ? this._transactionService.updateTransaction(transaction, this.data.id)
       : this._transactionService.createTransaction(transaction);
-    const sub$ = $api.pipe(finalize(() => (this.isLoading = false))).subscribe({
+    const sub$ = $api.subscribe({
       next: () => {
         this._bottomSheetRef.dismiss();
         const message = this.isEdit
           ? 'Transaction Updated'
           : 'Transaction Created';
         this._toasterService.showSuccess(message);
+        this._spinner.hide();
       },
     });
     this.subscriptions.push(sub$);

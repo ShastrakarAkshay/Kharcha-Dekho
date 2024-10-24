@@ -3,14 +3,14 @@ import { DWMReportType } from './dashboard.interface';
 export const DMA_REPORT_CONFIG = [
   {
     type: DWMReportType.DAY,
-    amount: 10,
+    amount: 0,
   },
   {
     type: DWMReportType.WEEK,
-    amount: 50,
+    amount: 0,
   },
   {
     type: DWMReportType.MONTH,
-    amount: 20,
+    amount: 0,
   },
 ];
