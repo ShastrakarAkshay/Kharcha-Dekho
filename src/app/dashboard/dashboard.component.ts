@@ -79,20 +79,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (transactions) => {
           this.transactions = transactions;
-          this.transactionItems = this.transactions.map((item) => {
-            return {
-              id: item.id,
-              label: item.category?.name,
-              subText: this._datePipe.transform(
-                new Date(item.createdAt),
-                'dd MMM yyyy'
-              ),
-              amount: item.amount,
-              icon: item.category?.icon?.name,
-              color: item.category?.icon?.bgColor,
-              rightSubText: '',
-            } as ITransactionItem;
-          });
+          this.updateCategoryWiseTransactions();
           this.updateDayAmount();
           this.updateWeekAmount();
           this.updateMonthAmount();
@@ -112,6 +99,39 @@ export class DashboardComponent implements OnInit, OnDestroy {
         },
       });
     this.subscriptions.push(sub$);
+  }
+
+  updateCategoryWiseTransactions() {
+    const categories: any = {};
+    this.transactions.forEach((item) => {
+      if (categories[item.categoryId as any]) {
+        categories[item.categoryId as any].amounts.push(item.amount);
+      } else {
+        categories[item.categoryId as any] = {
+          name: item.category?.name,
+          icon: item.category?.icon?.name,
+          bgColor: item.category?.icon?.bgColor,
+          amounts: [item.amount],
+        };
+      }
+    });
+    const txns: ITransactionItem[] = [];
+    for (let key in categories) {
+      const value = categories[key];
+      const amount = value.amounts.reduce(
+        (acc: any, item: any) => (acc += item),
+        0
+      );
+      txns.push({
+        id: '',
+        label: value.name,
+        subText: '',
+        iconName: value.icon,
+        iconBgColor: value.bgColor,
+        amount,
+      });
+    }
+    this.transactionItems = txns;
   }
 
   updateDayAmount() {
