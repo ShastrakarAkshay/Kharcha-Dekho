@@ -1,7 +1,7 @@
 <app-header [heading]="'All Transactions'"></app-header>
 <div class="transaction-container">
   <app-transactions
-    [transactions]="transactions"
+    [transactions]="transactionItems"
     [showActions]="true"
     (deleteClick)="onDelete($event)"
     (editClick)="onEdit($event)"

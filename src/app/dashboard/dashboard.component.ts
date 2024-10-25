@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +14,10 @@ import {
   IMonth,
 } from '../common/components/dropdown/dropdown.component';
 import { TransactionService } from '../transactions/service/transaction.service';
-import { TransactionComponent } from '../common/components/transaction/transaction.component';
+import {
+  ITransactionItem,
+  TransactionComponent,
+} from '../common/components/transaction/transaction.component';
 import { DMA_REPORT_CONFIG } from './dashboard.constant';
 import { ConfigService } from '../common/service/config.service';
 import { ITransaction } from '../transactions/transactions.interface';
@@ -41,12 +44,14 @@ import { SpinnerService } from '../common/service/spinner.service';
     SpinnerComponent,
     AmountPipe,
   ],
+  providers: [DatePipe],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   readonly currencySymbol = ConfigService.currencySymbol;
   dwmReport: IDWMReport[] = DMA_REPORT_CONFIG;
   transactions: ITransaction[] = [];
+  transactionItems: ITransactionItem[] = [];
   subscriptions: Subscription[] = [];
 
   filters = {
@@ -56,7 +61,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private _bottomSheet: MatBottomSheet,
     private _transactionService: TransactionService,
-    private _spinnerService: SpinnerService
+    private _spinnerService: SpinnerService,
+    private _datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {}
@@ -73,6 +79,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (transactions) => {
           this.transactions = transactions;
+          this.transactionItems = this.transactions.map((item) => {
+            return {
+              id: item.id,
+              label: item.category?.name,
+              subText: this._datePipe.transform(
+                new Date(item.createdAt),
+                'dd MMM yyyy'
+              ),
+              amount: item.amount,
+              icon: item.category?.icon?.name,
+              color: item.category?.icon?.bgColor,
+              rightSubText: '',
+            } as ITransactionItem;
+          });
           this.updateDayAmount();
           this.updateWeekAmount();
           this.updateMonthAmount();

@@ -11,6 +11,16 @@ import { HeaderComponent } from '../header/header.component';
 import { ConfigService } from '../../service/config.service';
 import { ITransaction } from 'src/app/transactions/transactions.interface';
 
+export interface ITransactionItem {
+  id: any;
+  label: string;
+  subText: string;
+  iconName?: any;
+  iconBgColor?: any;
+  amount: number;
+  rightSubText?: any;
+}
+
 @Component({
   selector: 'app-transactions',
   standalone: true,
@@ -30,19 +40,19 @@ import { ITransaction } from 'src/app/transactions/transactions.interface';
 })
 export class TransactionComponent {
   readonly currencySymbol = ConfigService.currencySymbol;
-  @Input() transactions: ITransaction[] = [];
+  @Input() transactions: ITransactionItem[] = [];
   @Input() showActions: boolean = false;
 
-  @Output() editClick = new EventEmitter<ITransaction>();
-  @Output() deleteClick = new EventEmitter<ITransaction>();
+  @Output() editClick = new EventEmitter<string>();
+  @Output() deleteClick = new EventEmitter<string>();
 
   constructor() {}
 
-  onEdit(txn: ITransaction) {
+  onEdit(txn: string) {
     this.editClick.emit(txn);
   }
 
-  onDelete(txn: ITransaction) {
+  onDelete(txn: string) {
     this.deleteClick.emit(txn);
   }
 }

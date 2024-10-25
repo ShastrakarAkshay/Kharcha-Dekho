@@ -16,6 +16,7 @@ import {
   addDoc,
   deleteDoc,
   getDocs,
+  orderBy,
   Timestamp,
   updateDoc,
 } from 'firebase/firestore';
@@ -66,7 +67,8 @@ export class TransactionService {
     );
     let transactionQuery = query(
       transactionRef,
-      where('userId', '==', this.userId)
+      where('userId', '==', this.userId),
+      orderBy('createdAt', 'desc')
     );
 
     if (monthFilter?.startDate && monthFilter?.endDate) {
