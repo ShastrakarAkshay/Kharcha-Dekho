@@ -26,7 +26,7 @@
             <mat-icon>{{ currencySymbol }}</mat-icon>
           </span>
         </h3>
-        <p class="sub-label">23%</p>
+        <p class="sub-label">{{ txn.rightSubText }}</p>
       </div>
       <div *ngIf="showActions">
         <mat-icon [matMenuTriggerFor]="menu" class="action-icon">

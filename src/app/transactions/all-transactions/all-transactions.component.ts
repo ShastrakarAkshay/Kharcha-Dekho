@@ -25,6 +25,7 @@ import { SpinnerService } from 'src/app/common/service/spinner.service';
     TransactionComponent,
     SpinnerComponent,
   ],
+  providers: [DatePipe],
   templateUrl: './all-transactions.component.html',
   styleUrls: ['./all-transactions.component.scss'],
 })
@@ -38,18 +39,12 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
     private _bottomSheet: MatBottomSheet,
     private _toasterService: ToasterService,
     private _dialogService: DialogService,
-    private _spinnerService: SpinnerService
+    private _spinnerService: SpinnerService,
+    private _datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
     this.getAllTransactions();
-  }
-
-  formatDate(date: Date) {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
   }
 
   getAllTransactions() {
@@ -64,11 +59,14 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
             return {
               id: item.id,
               label: item.category?.name,
-              subText: item.transactionMethod,
+              subText: this._datePipe.transform(
+                new Date(item.createdAt),
+                'dd MMM yyyy'
+              ),
               amount: item.amount,
               icon: item.category?.icon?.name,
               color: item.category?.icon?.bgColor,
-              rightSubText: '',
+              rightSubText: item.transactionMethod,
             } as ITransactionItem;
           });
         },
