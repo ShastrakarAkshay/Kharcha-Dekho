@@ -1,6 +1,6 @@
 <div class="icon" [style.backgroundColor]="bgColor">
   <mat-icon>{{ name }}</mat-icon>
-  <span class="label" *ngIf="label">
-    {{ label | titlecase }}
-  </span>
+  @if (label) {
+  <span class="label"> {{ label | titlecase }} </span>
+  }
 </div>

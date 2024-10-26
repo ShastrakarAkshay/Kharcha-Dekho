@@ -1,11 +1,8 @@
 <div class="menu">
-  <div
-    matRipple
-    class="menu-item"
-    *ngFor="let menu of menus"
-    (click)="navigate(menu)"
-  >
+  @for (menu of menus; track $index) {
+  <div matRipple class="menu-item" (click)="navigate(menu)">
     <mat-icon>{{ menu.icon }}</mat-icon>
     <label>{{ menu.label }}</label>
   </div>
+  }
 </div>

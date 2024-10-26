@@ -8,7 +8,8 @@
 
 <section id="dwmReport">
   <div class="report-container">
-    <div class="report" *ngFor="let report of dwmReport">
+    @for (report of dwmReport; track $index) {
+    <div class="report">
       <label class="label">{{ report.type }}</label>
       <h5 class="m-0 d-flex justify-content-center">
         <span class="currency-symbol">
@@ -17,6 +18,7 @@
         <span class="amount">{{ report.amount | amount }} </span>
       </h5>
     </div>
+    }
   </div>
 </section>
 
