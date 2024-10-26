@@ -1,0 +1,23 @@
+.login-container {
+  .login-page {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 50px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 20px;
+
+    .label {
+      font-size: 20px;
+    }
+
+    h2 {
+      margin-top: 20px;
+    }
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

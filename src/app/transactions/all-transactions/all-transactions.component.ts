@@ -64,8 +64,8 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
                 'dd MMM yyyy'
               ),
               amount: item.amount,
-              icon: item.category?.icon?.name,
-              color: item.category?.icon?.bgColor,
+              iconName: item.category?.icon?.name,
+              iconBgColor: item.category?.icon?.bgColor,
               rightSubText: item.transactionMethod,
             } as ITransactionItem;
           });
