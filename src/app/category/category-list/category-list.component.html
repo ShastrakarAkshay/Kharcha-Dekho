@@ -1,17 +1,15 @@
 <app-header [heading]="'Categories'"></app-header>
 <app-search (searchTextChange)="onSearch($event)"></app-search>
 <div class="category-list">
-  <div class="category" *ngFor="let cat of categories | search : searchText">
-    <mat-icon
-      *ngIf="cat.icon; else letterIcon"
-      class="category-icon"
-      [style.backgroundColor]="cat.icon.bgColor"
-    >
+  @for (cat of categories | search: searchText; track $index) {
+  <div class="category">
+    @if(cat.icon) {
+    <mat-icon class="category-icon" [style.backgroundColor]="cat.icon.bgColor">
       {{ cat.icon.name }}
     </mat-icon>
-    <ng-template #letterIcon>
-      <div class="letter-icon text-capitalize">{{ cat.name.slice(0, 1) }}</div>
-    </ng-template>
+    } @else {
+    <div class="letter-icon text-capitalize">{{ cat.name.slice(0, 1) }}</div>
+    }
     <span class="label">{{ cat.name | titlecase }}</span>
     <mat-icon [matMenuTriggerFor]="menu" class="action-icon">
       more_vert
@@ -27,6 +25,7 @@
       </button>
     </mat-menu>
   </div>
+  }
 </div>
 
 <section id="new-transaction">

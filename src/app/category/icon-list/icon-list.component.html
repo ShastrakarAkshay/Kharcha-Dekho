@@ -2,12 +2,19 @@
   <app-search (searchTextChange)="onSearch($event)"></app-search>
 </div>
 <div class="icon-list">
-  <app-icon
-    *ngFor="let icon of icons | search : searchText"
-    [name]="icon.name"
-    [label]="icon.label"
-    [bgColor]="icon.bgColor"
-    (click)="onIconSelect(icon)"
-  >
-  </app-icon>
+  @for (icon of icons | search : searchText; track $index) {
+  <ng-container>
+    @defer (on viewport) {
+    <app-icon
+      [name]="icon.name"
+      [label]="icon.label"
+      [bgColor]="icon.bgColor"
+      (click)="onIconSelect(icon)"
+    >
+    </app-icon>
+    } @placeholder {
+    <app-icon [name]="''" [label]="''" [bgColor]="'#ececec'"> </app-icon>
+    }
+  </ng-container>
+  }
 </div>
