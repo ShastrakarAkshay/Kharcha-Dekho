@@ -58,6 +58,5 @@ bootstrapApplication(AppComponent, {
       provideAuth(() => getAuth())
     ),
     ConfirmDialogComponent,
-    LoginComponent,
   ],
 }).catch((err) => console.log(err));

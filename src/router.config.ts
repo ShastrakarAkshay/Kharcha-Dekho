@@ -7,28 +7,33 @@ import { AllTransactionsComponent } from './app/transactions/all-transactions/al
 import { LoginComponent } from './app/login/login.component';
 import { AuthService } from './app/common/service/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AuthGuard } from './app/common/guards/auth.guard';
 
 export const ROUTES: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'icon-list',
     component: IconListComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'category',
     component: CategoryListComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'all-transactions',
     component: AllTransactionsComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'login',
