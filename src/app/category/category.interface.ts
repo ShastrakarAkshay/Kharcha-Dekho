@@ -8,4 +8,5 @@ export interface ICategory {
   userId?: string;
   createdDate?: string;
   updatedDate?: string;
+  active?: boolean;
 }

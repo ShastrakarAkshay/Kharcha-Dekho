@@ -39,10 +39,18 @@ export class CategoryService {
     return doc(this._firestore, collectionName);
   }
 
+  private async isCategoryExist(id: string) {
+    const collectionRef = collection(this._firestore, COLLECTIONS.Transactions);
+    const q = query(collectionRef, where('categoryId', '==', id));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+  }
+
   getAllCategories(): Observable<any> {
     const categoryQuery = query(
       this.collectionRef(),
-      where('userId', '==', this.userId)
+      where('userId', '==', this.userId),
+      where('active', '==', true)
     );
     return from(getDocs(categoryQuery)).pipe(
       map((snapshot) =>
@@ -53,6 +61,7 @@ export class CategoryService {
 
   createCategory(data: ICategory): Observable<any> {
     data.userId = this.userId;
+    data.active = true;
     return from(
       addDoc(this.collectionRef(), {
         ...data,
@@ -68,8 +77,12 @@ export class CategoryService {
     );
   }
 
-  deleteCategory(id: any): Observable<any> {
-    // @TODO soft delete and hard delete
-    return from(deleteDoc(this.docRef(id)));
+  async deleteCategory(id: any): Promise<any> {
+    const isExist = await this.isCategoryExist(id);
+    if (isExist) {
+      return updateDoc(this.docRef(id), { active: false });
+    } else {
+      return deleteDoc(this.docRef(id));
+    }
   }
 }

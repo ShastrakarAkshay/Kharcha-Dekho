@@ -27,6 +27,8 @@ import { ConfigService } from 'src/app/common/service/config.service';
 import { finalize, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-add-transaction',
@@ -42,7 +44,9 @@ import { SpinnerService } from 'src/app/common/service/spinner.service';
     ScrollToTopOnFocusDirective,
     ReactiveFormsModule,
     SpinnerComponent,
+    MatDatepickerModule,
   ],
+  providers: [provideNativeDateAdapter()],
   templateUrl: './add-transaction.component.html',
   styleUrls: ['./add-transaction.component.scss'],
 })
@@ -55,6 +59,7 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
 
   form: FormGroup = this._fb.group({
     amount: ['', Validators.required],
+    createdAt: [new Date(), Validators.required],
     comment: [''],
     categoryId: ['', Validators.required],
     transactionMethod: [TransactionMethod.CASH, Validators.required],
@@ -109,6 +114,7 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
       comment: formData.comment,
       categoryId: formData.categoryId,
       transactionMethod: formData.transactionMethod,
+      createdAt: formData.createdAt,
     };
     this._spinner.show();
     const $api = this.isEdit

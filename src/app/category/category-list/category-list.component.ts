@@ -101,16 +101,11 @@ export class CategoryListComponent implements OnInit, OnDestroy {
         next: (isConfirm) => {
           if (isConfirm) {
             this._spinner.show();
-            const sub$ = this._categoryService
-              .deleteCategory(category.id)
-              .pipe(finalize(() => this._spinner.hide()))
-              .subscribe({
-                next: () => {
-                  this._toaster.showSuccess('Category Deleted');
-                  this.getAllCategories();
-                },
-              });
-            this.subscription.push(sub$);
+            this._categoryService.deleteCategory(category.id).then(() => {
+              this._toaster.showSuccess('Category Deleted');
+              this.getAllCategories();
+              this._spinner.hide();
+            });
           }
         },
       });

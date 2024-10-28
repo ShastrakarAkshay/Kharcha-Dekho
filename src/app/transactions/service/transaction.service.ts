@@ -116,7 +116,7 @@ export class TransactionService {
     return from(
       addDoc(this.collectionRef(), {
         ...data,
-        createdAt: Timestamp.now(),
+        createdAt: Timestamp.fromDate(data.createdAt),
         updatedAt: Timestamp.now(),
       })
     ) as Observable<any>;

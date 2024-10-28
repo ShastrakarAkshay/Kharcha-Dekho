@@ -55,6 +55,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (transactions) => {
           this.transactions = transactions;
+          console.log(transactions);
           this.transactionItems = this.transactions.map((item) => {
             return {
               id: item.id,
@@ -76,7 +77,15 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
 
   onEdit(id: string) {
     const txn = this.transactions.find((x) => x.id === id);
-    this._bottomSheet.open(AddTransactionComponent, { data: txn });
+    const sub$ = this._bottomSheet
+      .open(AddTransactionComponent, { data: txn })
+      .afterDismissed()
+      .subscribe({
+        next: () => {
+          this.getAllTransactions();
+        },
+      });
+    this.subscriptions.push(sub$);
   }
 
   onDelete(id: string) {
