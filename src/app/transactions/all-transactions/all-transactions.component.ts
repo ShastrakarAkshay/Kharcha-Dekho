@@ -121,8 +121,10 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
       .open(AddTransactionComponent, { data: txn })
       .afterDismissed()
       .subscribe({
-        next: () => {
-          this.getAllTransactions();
+        next: (refresh: boolean) => {
+          if (refresh) {
+            this.getAllTransactions();
+          }
         },
       });
     this.subscriptions.push(sub$);

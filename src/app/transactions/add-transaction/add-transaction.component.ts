@@ -90,6 +90,7 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
       comment: data.comment,
       categoryId: data.categoryId,
       transactionMethod: data.transactionMethod,
+      createdAt: new Date(data.createdAt),
     });
   }
 
