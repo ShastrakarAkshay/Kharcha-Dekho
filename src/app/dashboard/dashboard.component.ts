@@ -94,8 +94,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .open(AddTransactionComponent)
       .afterDismissed()
       .subscribe({
-        next: () => {
-          this.getAllTransactions();
+        next: (refresh: boolean) => {
+          if (refresh) {
+            this.getAllTransactions();
+          }
         },
       });
     this.subscriptions.push(sub$);

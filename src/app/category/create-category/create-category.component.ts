@@ -109,7 +109,7 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
       .pipe(
         finalize(() => {
           this.isLoading = false;
-          this._bottomSheetRef.dismiss();
+          this._bottomSheetRef.dismiss(true);
         })
       )
       .subscribe({

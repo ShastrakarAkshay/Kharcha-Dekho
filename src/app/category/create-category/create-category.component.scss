@@ -12,13 +12,11 @@
     justify-content: center;
 
     .icon-field {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
 
       app-icon {
         display: block;
-        width: 150px;
+        width: 100%;
       }
     }
   }
@@ -30,4 +28,8 @@
     height: 53px;
     font-size: 17px;
   }
+}
+
+.icon-container {
+  min-height: 74.5vh;
 }

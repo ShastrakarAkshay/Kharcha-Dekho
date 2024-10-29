@@ -71,11 +71,15 @@ export class CategoryListComponent implements OnInit, OnDestroy {
 
   openCreateCategoryComponent(data?: ICategory) {
     const sub$ = this._bottomSheet
-      .open(CreateCategoryComponent, { data })
+      .open(CreateCategoryComponent, {
+        data,
+      })
       .afterDismissed()
       .subscribe({
-        next: () => {
-          this.getAllCategories();
+        next: (refresh: boolean) => {
+          if (refresh) {
+            this.getAllCategories();
+          }
         },
       });
     this.subscription.push(sub$);

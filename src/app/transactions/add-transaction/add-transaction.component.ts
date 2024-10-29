@@ -124,7 +124,7 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
       : this._transactionService.createTransaction(transaction);
     const sub$ = $api.subscribe({
       next: () => {
-        this._bottomSheetRef.dismiss();
+        this._bottomSheetRef.dismiss(true);
         const message = this.isEdit
           ? 'Transaction Updated'
           : 'Transaction Created';

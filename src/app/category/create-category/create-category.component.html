@@ -36,5 +36,7 @@
 </ng-container>
 
 <ng-template #iconList>
-  <app-icon-list (iconSelect)="onIconSelect($event)"></app-icon-list>
+  <div class="icon-container">
+    <app-icon-list (iconSelect)="onIconSelect($event)"></app-icon-list>
+  </div>
 </ng-template>
