@@ -75,7 +75,6 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (transactions) => {
           this.transactions = transactions;
-          this.categoryName = transactions?.at(0)?.category?.name || '';
           this.groupByCreatedDate();
         },
       });

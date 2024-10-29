@@ -10,6 +10,7 @@ import {
   doc,
   DocumentReference,
   getDocs,
+  orderBy,
   query,
   updateDoc,
   where,
@@ -50,7 +51,8 @@ export class CategoryService {
     const categoryQuery = query(
       this.collectionRef(),
       where('userId', '==', this.userId),
-      where('active', '==', true)
+      where('active', '==', true),
+      orderBy('name', 'asc')
     );
     return from(getDocs(categoryQuery)).pipe(
       map((snapshot) =>

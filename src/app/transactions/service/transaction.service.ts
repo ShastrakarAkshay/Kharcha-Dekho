@@ -84,7 +84,8 @@ export class TransactionService {
     if (filters?.categoryId) {
       transactionQuery = query(
         transactionRef,
-        where('categoryId', '==', filters.categoryId)
+        where('categoryId', '==', filters.categoryId),
+        orderBy('createdAt', 'desc')
       );
     }
 
@@ -133,7 +134,11 @@ export class TransactionService {
 
   updateTransaction(data: ITransaction, id: any): Observable<any> {
     return from(
-      updateDoc(this.docRef(id), { ...data, updatedAt: Timestamp.now() })
+      updateDoc(this.docRef(id), {
+        ...data,
+        updatedAt: Timestamp.now(),
+        createdAt: Timestamp.fromDate(data.createdAt),
+      })
     ) as Observable<any>;
   }
 
