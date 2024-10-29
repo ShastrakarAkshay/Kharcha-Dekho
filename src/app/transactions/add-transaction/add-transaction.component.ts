@@ -52,6 +52,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 })
 export class AddTransactionComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
+  formSubmitted: boolean = false;
   readonly currencyIcon = ConfigService.currencySymbol;
   transactionMethods = TRANSACTION_METHODS;
   categories: ICategory[] = [];
@@ -107,7 +108,8 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
   }
 
   addTransaction() {
-    if (this.form.invalid) return;
+    if (this.form.invalid || this.formSubmitted) return;
+    this.formSubmitted = true;
     const formData = this.form.value;
     const transaction: ITransaction = {
       amount: formData.amount,

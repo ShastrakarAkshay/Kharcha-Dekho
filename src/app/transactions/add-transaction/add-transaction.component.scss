@@ -1,6 +1,11 @@
 .add-transaction {
   padding: 30px 10px;
 
+  .title {
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
+
   .option-container {
     display: flex;
     gap: 20px;
@@ -25,7 +30,7 @@
 
   .btn-add {
     width: 100%;
-    background: #3f3f3f;
+    background: #121e29;
     color: white;
     height: 53px;
     font-size: 17px;

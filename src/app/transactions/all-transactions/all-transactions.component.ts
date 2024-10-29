@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  viewChild,
+} from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HeaderComponent } from 'src/app/common/components/header/header.component';
 import {
@@ -14,6 +20,8 @@ import { AddTransactionComponent } from '../add-transaction/add-transaction.comp
 import { finalize, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-all-transactions',
@@ -24,14 +32,16 @@ import { SpinnerService } from 'src/app/common/service/spinner.service';
     TransactionComponent,
     TransactionComponent,
     SpinnerComponent,
+    MatExpansionModule,
+    MatAccordion,
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, provideNativeDateAdapter()],
   templateUrl: './all-transactions.component.html',
   styleUrls: ['./all-transactions.component.scss'],
 })
 export class AllTransactionsComponent implements OnInit, OnDestroy {
   transactions: ITransaction[] = [];
-  transactionItems: ITransactionItem[] = [];
+  transactionList: any[] = [];
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -55,24 +65,43 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (transactions) => {
           this.transactions = transactions;
-          console.log(transactions);
-          this.transactionItems = this.transactions.map((item) => {
-            return {
-              id: item.id,
-              label: item.category?.name,
-              subText: this._datePipe.transform(
-                new Date(item.createdAt),
-                'dd MMM yyyy'
-              ),
-              amount: item.amount,
-              iconName: item.category?.icon?.name,
-              iconBgColor: item.category?.icon?.bgColor,
-              rightSubText: item.transactionMethod,
-            } as ITransactionItem;
-          });
+          this.groupByCreatedDate();
         },
       });
     this.subscriptions.push(sub$);
+  }
+
+  groupByCreatedDate() {
+    const group = this.transactions.reduce((acc: any, item) => {
+      const date = new Date(item.createdAt);
+      date.setHours(0, 0, 0, 0);
+      const dateKey = date.toString();
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(item);
+      return acc;
+    }, {});
+    const transactionList = [];
+    for (var [key, value] of Object.entries(group)) {
+      const txns = value as ITransaction[];
+      const txnList = txns.map((item) => {
+        return {
+          id: item.id,
+          label: item.category?.name,
+          subText: item.comment || '-',
+          amount: item.amount,
+          iconName: item.category?.icon?.name,
+          iconBgColor: item.category?.icon?.bgColor,
+          rightSubText: item.transactionMethod,
+        } as ITransactionItem;
+      });
+      transactionList.push({
+        date: this._datePipe.transform(new Date(key), 'dd MMM yyyy'),
+        list: txnList,
+      });
+      this.transactionList = transactionList;
+    }
   }
 
   onEdit(id: string) {

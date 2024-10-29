@@ -1,9 +1,27 @@
 <app-header [heading]="'All Transactions'"></app-header>
 <div class="transaction-container">
-  <app-transactions
+  @for (item of transactionList; track $index) {
+  <mat-accordion class="example-headers-align" multi>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title> {{ item.date }} </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <app-transactions
+        [transactions]="item.list"
+        [showActions]="true"
+        (deleteClick)="onDelete($event)"
+        (editClick)="onEdit($event)"
+      >
+      </app-transactions>
+    </mat-expansion-panel>
+  </mat-accordion>
+  }
+
+  <!-- <app-transactions
     [transactions]="transactionItems"
     [showActions]="true"
     (deleteClick)="onDelete($event)"
     (editClick)="onEdit($event)"
-  ></app-transactions>
+  ></app-transactions> -->
 </div>

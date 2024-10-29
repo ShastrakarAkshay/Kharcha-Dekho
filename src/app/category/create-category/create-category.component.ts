@@ -51,6 +51,7 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
   showIconList: boolean = false;
   isEdit: boolean = false;
   isLoading: boolean = false;
+  formSubmitted: boolean = false;
   selectedIcon?: IIcon;
 
   form = this._fb.group({
@@ -92,7 +93,8 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
   }
 
   onCreate() {
-    if (this.form.invalid) return;
+    if (this.form.invalid || this.formSubmitted) return;
+    this.formSubmitted = true;
     const formData = this.form.value;
     const category: ICategory = {
       icon: this.selectedIcon ?? null,

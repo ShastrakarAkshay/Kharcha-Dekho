@@ -1,3 +1,26 @@
-.transaction-container {
-  margin-top: 20px;
+:host {
+  ::ng-deep {
+    mat-expansion-panel {
+      background-color: #121e29;
+      box-shadow: none !important;
+    }
+
+    .mat-expansion-panel:not(.mat-expanded)
+      .mat-expansion-panel-header:not([aria-disabled="true"]):hover {
+      background-color: #121e29 !important;
+    }
+
+    mat-expansion-panel-header {
+      padding: 0;
+      &:active {
+        background-color: #121e29;
+      }
+    }
+    .mat-expansion-panel-body {
+      padding: 0;
+    }
+    mat-panel-title {
+      color: white;
+    }
+  }
 }
