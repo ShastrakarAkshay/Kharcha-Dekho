@@ -36,6 +36,11 @@ export const ROUTES: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'all-transactions/:categoryId',
+    component: AllTransactionsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'login',
     component: LoginComponent,
   },

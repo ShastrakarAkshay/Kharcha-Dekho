@@ -45,14 +45,19 @@ export class TransactionComponent {
 
   @Output() editClick = new EventEmitter<string>();
   @Output() deleteClick = new EventEmitter<string>();
+  @Output() itemClick = new EventEmitter<string>();
 
   constructor() {}
 
-  onEdit(txn: string) {
-    this.editClick.emit(txn);
+  onEdit(txnId: string) {
+    this.editClick.emit(txnId);
   }
 
-  onDelete(txn: string) {
-    this.deleteClick.emit(txn);
+  onDelete(txnId: string) {
+    this.deleteClick.emit(txnId);
+  }
+
+  onLabelClick(txnId: string) {
+    this.itemClick.emit(txnId);
   }
 }

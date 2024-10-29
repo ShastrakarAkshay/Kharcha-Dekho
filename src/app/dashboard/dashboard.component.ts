@@ -20,11 +20,12 @@ import {
 } from '../common/components/transaction/transaction.component';
 import { DMA_REPORT_CONFIG } from './dashboard.constant';
 import { ConfigService } from '../common/service/config.service';
-import { ITransaction } from '../transactions/transactions.interface';
+import { IFilter, ITransaction } from '../transactions/transactions.interface';
 import { Subscription } from 'rxjs';
 import { SpinnerComponent } from '../common/components/spinner/spinner.component';
 import { AmountPipe } from '../common/pipes/amount.pipe';
 import { SpinnerService } from '../common/service/spinner.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -54,15 +55,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   transactionItems: ITransactionItem[] = [];
   subscriptions: Subscription[] = [];
 
-  filters = {
-    month: null,
-  };
+  filters: IFilter = {};
 
   constructor(
     private _bottomSheet: MatBottomSheet,
     private _transactionService: TransactionService,
     private _spinnerService: SpinnerService,
-    private _datePipe: DatePipe
+    private _datePipe: DatePipe,
+    private _router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -125,7 +125,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         0
       );
       txns.push({
-        id: '',
+        id: key,
         label: value.name,
         subText: '',
         iconName: value.icon,
@@ -188,6 +188,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         item.amount = amount;
       }
     });
+  }
+
+  onCategoryClick(categoryId: string) {
+    this._router.navigate(['all-transactions', categoryId]);
   }
 
   ngOnDestroy(): void {

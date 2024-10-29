@@ -1,5 +1,5 @@
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { importProvidersFrom } from '@angular/core';
 import {
@@ -43,7 +43,7 @@ const firebaseConfig = {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideRouter(ROUTES),
+    provideRouter(ROUTES, withComponentInputBinding()),
     importProvidersFrom(
       BrowserAnimationsModule,
       MatSnackBarModule,

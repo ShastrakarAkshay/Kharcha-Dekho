@@ -16,7 +16,7 @@
         }
       </ng-template>
       <div>
-        <h3 class="label">{{ txn.label }}</h3>
+        <h3 class="label" (click)="onLabelClick(txn.id)">{{ txn.label }}</h3>
         <p class="sub-label">{{ txn.subText }}</p>
       </div>
     </div>

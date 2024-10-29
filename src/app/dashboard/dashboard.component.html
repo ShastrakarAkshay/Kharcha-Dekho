@@ -23,7 +23,10 @@
 </section>
 
 <section id="transactions">
-  <app-transactions [transactions]="transactionItems"></app-transactions>
+  <app-transactions
+    [transactions]="transactionItems"
+    (itemClick)="onCategoryClick($event)"
+  ></app-transactions>
 </section>
 
 <section id="new-transaction">

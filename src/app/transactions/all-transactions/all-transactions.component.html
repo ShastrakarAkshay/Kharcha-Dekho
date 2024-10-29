@@ -1,4 +1,4 @@
-<app-header [heading]="'All Transactions'"></app-header>
+<app-header [heading]="'All Transactions'" [badge]="categoryName"></app-header>
 <div class="transaction-container">
   @for (item of transactionList; track $index) {
   <mat-accordion class="example-headers-align" multi>

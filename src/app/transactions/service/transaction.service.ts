@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, from, map, Observable, of } from 'rxjs';
-import { ITransaction } from '../transactions.interface';
+import { IFilter, ITransaction } from '../transactions.interface';
 import {
   collection,
   CollectionReference,
@@ -59,8 +59,7 @@ export class TransactionService {
     return { startDate: null, endDate: null };
   }
 
-  getAllTransactions(filters?: any): Observable<ITransaction[]> {
-    const monthFilter: any = this.getCurrentMonth(filters?.month);
+  getAllTransactions(filters?: IFilter): Observable<ITransaction[]> {
     const transactionRef = collection(
       this._firestore,
       COLLECTIONS.Transactions
@@ -71,11 +70,21 @@ export class TransactionService {
       orderBy('createdAt', 'desc')
     );
 
-    if (monthFilter?.startDate && monthFilter?.endDate) {
+    if (filters?.month) {
+      const monthFilter: any = this.getCurrentMonth(filters.month);
+      if (monthFilter?.startDate && monthFilter?.endDate) {
+        transactionQuery = query(
+          transactionRef,
+          where('createdAt', '>=', monthFilter?.startDate),
+          where('createdAt', '<=', monthFilter?.endDate)
+        );
+      }
+    }
+
+    if (filters?.categoryId) {
       transactionQuery = query(
         transactionRef,
-        where('createdAt', '>=', monthFilter?.startDate),
-        where('createdAt', '<=', monthFilter?.endDate)
+        where('categoryId', '==', filters.categoryId)
       );
     }
 

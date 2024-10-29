@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  Input,
   OnDestroy,
   OnInit,
   viewChild,
@@ -15,13 +16,14 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { DialogService } from 'src/app/common/service/dialog.service';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { TransactionService } from '../service/transaction.service';
-import { ITransaction } from '../transactions.interface';
+import { IFilter, ITransaction } from '../transactions.interface';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
 import { finalize, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-all-transactions',
@@ -34,15 +36,22 @@ import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
     SpinnerComponent,
     MatExpansionModule,
     MatAccordion,
+    MatChipsModule,
   ],
   providers: [DatePipe, provideNativeDateAdapter()],
   templateUrl: './all-transactions.component.html',
   styleUrls: ['./all-transactions.component.scss'],
 })
 export class AllTransactionsComponent implements OnInit, OnDestroy {
+  @Input('categoryId') categoryId?: string;
+
+  categoryName: string = '';
+
   transactions: ITransaction[] = [];
   transactionList: any[] = [];
   subscriptions: Subscription[] = [];
+
+  filters: IFilter = { categoryId: '' };
 
   constructor(
     private _transactionService: TransactionService,
@@ -54,17 +63,19 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.filters.categoryId = this.categoryId;
     this.getAllTransactions();
   }
 
   getAllTransactions() {
     this._spinnerService.show();
     const sub$ = this._transactionService
-      .getAllTransactions()
+      .getAllTransactions(this.filters)
       .pipe(finalize(() => this._spinnerService.hide()))
       .subscribe({
         next: (transactions) => {
           this.transactions = transactions;
+          this.categoryName = transactions?.at(0)?.category?.name || '';
           this.groupByCreatedDate();
         },
       });

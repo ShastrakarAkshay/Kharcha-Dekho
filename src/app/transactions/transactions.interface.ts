@@ -19,3 +19,8 @@ export enum TransactionMethod {
   CARD = 'Card',
   CHEQUE = 'Cheque',
 }
+
+export interface IFilter {
+  month?: number;
+  categoryId?: string;
+}
