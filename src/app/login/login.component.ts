@@ -61,7 +61,8 @@ export class LoginComponent {
       .loginWithEmail(email, password)
       .pipe(finalize(() => this.spinner.hide()))
       .subscribe({
-        next: () => {
+        next: (data) => {
+          localStorage.setItem('uid', data.user?.uid || '');
           this.router.navigate(['/dashboard']);
         },
         error: () => {

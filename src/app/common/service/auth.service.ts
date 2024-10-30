@@ -8,18 +8,7 @@ import { ConfigService } from './config.service';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(
-    private afAuth: AngularFireAuth,
-    private configService: ConfigService
-  ) {
-    this.setUserUid();
-  }
-
-  setUserUid() {
-    this.afAuth.authState.subscribe((user) => {
-      this.configService.userId = user?.uid || '';
-    });
-  }
+  constructor(private afAuth: AngularFireAuth) {}
 
   loginWithEmail(email: string, pass: string) {
     return from(this.afAuth.signInWithEmailAndPassword(email, pass));

@@ -6,4 +6,8 @@ import { Injectable } from '@angular/core';
 export class ConfigService {
   public currencySymbol = 'currency_rupee';
   public userId: string = '';
+
+  constructor() {
+    this.userId = localStorage.getItem('uid') || '';
+  }
 }

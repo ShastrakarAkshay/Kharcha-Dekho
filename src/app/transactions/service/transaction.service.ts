@@ -129,10 +129,10 @@ export class TransactionService {
   }
 
   createTransaction(data: ITransaction): Observable<any> {
-    data.userId = this.userId;
     return from(
       addDoc(this.collectionRef(), {
         ...data,
+        userId: this.userId,
         createdAt: Timestamp.fromDate(data.createdAt),
         updatedAt: Timestamp.now(),
       })
