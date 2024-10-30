@@ -32,7 +32,6 @@ import { MatChipsModule } from '@angular/material/chips';
     CommonModule,
     HeaderComponent,
     TransactionComponent,
-    TransactionComponent,
     SpinnerComponent,
     MatExpansionModule,
     MatAccordion,

@@ -22,7 +22,7 @@ import { ConfirmDialogComponent } from './app/common/components/confirm-dialog/c
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: 'AIzaSyBCewB9DeINEAHb4xI7V8Rezzmb1HQtv2w',
   authDomain: 'kharcha-dekho.firebaseapp.com',
   projectId: 'kharcha-dekho',

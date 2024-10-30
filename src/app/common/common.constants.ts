@@ -10,4 +10,5 @@ export const TRANSACTION_METHODS = [
 export const COLLECTIONS = {
   Categories: 'CATEGORIES',
   Transactions: 'TRANSACTIONS',
+  Users: 'USERS',
 };
