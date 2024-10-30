@@ -10,6 +10,15 @@ import {
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../common/service/auth.service';
+import {
+  AngularFireAuth,
+  AngularFireAuthModule,
+} from '@angular/fire/compat/auth';
+import { AngularFireModule, FIREBASE_APP_NAME } from '@angular/fire/compat';
+import { Router } from '@angular/router';
+import { ToasterService } from '../common/service/toaster.service';
+import { SpinnerService } from '../common/service/spinner.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +29,8 @@ import { AuthService } from '../common/service/auth.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    AngularFireModule,
+    AngularFireAuthModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
@@ -27,7 +38,13 @@ import { AuthService } from '../common/service/auth.service';
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private toasterService: ToasterService,
+    private spinner: SpinnerService
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -35,9 +52,21 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.authService.loginWithEmail(email, password);
+    if (this.loginForm.invalid) {
+      return;
     }
+    this.spinner.show();
+    const { email, password } = this.loginForm.value;
+    this.authService
+      .loginWithEmail(email, password)
+      .pipe(finalize(() => this.spinner.hide()))
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/dashboard']);
+        },
+        error: () => {
+          this.toasterService.showError('Invalid Credentials.');
+        },
+      });
   }
 }

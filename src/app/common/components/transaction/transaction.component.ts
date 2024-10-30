@@ -39,7 +39,8 @@ export interface ITransactionItem {
   styleUrls: ['./transaction.component.scss'],
 })
 export class TransactionComponent {
-  readonly currencySymbol = ConfigService.currencySymbol;
+  currencySymbol = '';
+
   @Input() transactions: ITransactionItem[] = [];
   @Input() showActions: boolean = false;
 
@@ -47,7 +48,9 @@ export class TransactionComponent {
   @Output() deleteClick = new EventEmitter<string>();
   @Output() itemClick = new EventEmitter<string>();
 
-  constructor() {}
+  constructor(private _configService: ConfigService) {
+    this.currencySymbol = this._configService.currencySymbol;
+  }
 
   onEdit(txnId: string) {
     this.editClick.emit(txnId);

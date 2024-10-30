@@ -26,9 +26,14 @@ import { ICategory } from 'src/app/category/category.interface';
   providedIn: 'root',
 })
 export class TransactionService {
-  userId = ConfigService.userId;
+  userId: string;
 
-  constructor(private _firestore: Firestore) {}
+  constructor(
+    private _firestore: Firestore,
+    private _configService: ConfigService
+  ) {
+    this.userId = this._configService.userId;
+  }
 
   private collectionRef(id?: any): CollectionReference {
     const collectionName = id
@@ -76,7 +81,8 @@ export class TransactionService {
         transactionQuery = query(
           transactionRef,
           where('createdAt', '>=', monthFilter?.startDate),
-          where('createdAt', '<=', monthFilter?.endDate)
+          where('createdAt', '<=', monthFilter?.endDate),
+          where('userId', '==', this.userId)
         );
       }
     }
@@ -85,7 +91,8 @@ export class TransactionService {
       transactionQuery = query(
         transactionRef,
         where('categoryId', '==', filters.categoryId),
-        orderBy('createdAt', 'desc')
+        orderBy('createdAt', 'desc'),
+        where('userId', '==', this.userId)
       );
     }
 

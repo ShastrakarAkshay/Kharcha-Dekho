@@ -22,9 +22,14 @@ import { ConfigService } from 'src/app/common/service/config.service';
   providedIn: 'root',
 })
 export class CategoryService {
-  userId = ConfigService.userId;
+  userId: string;
 
-  constructor(private _firestore: Firestore) {}
+  constructor(
+    private _firestore: Firestore,
+    private _configService: ConfigService
+  ) {
+    this.userId = this._configService.userId;
+  }
 
   private collectionRef(id?: any): CollectionReference {
     const collectionName = id

@@ -51,9 +51,9 @@ import { provideNativeDateAdapter } from '@angular/material/core';
   styleUrls: ['./add-transaction.component.scss'],
 })
 export class AddTransactionComponent implements OnInit, OnDestroy {
+  currencyIcon = '';
   isEdit: boolean = false;
   formSubmitted: boolean = false;
-  readonly currencyIcon = ConfigService.currencySymbol;
   transactionMethods = TRANSACTION_METHODS;
   categories: ICategory[] = [];
   subscriptions: Subscription[] = [];
@@ -73,8 +73,10 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: ITransaction,
     private _bottomSheetRef: MatBottomSheetRef<AddTransactionComponent>,
     private _toasterService: ToasterService,
-    private _spinner: SpinnerService
+    private _spinner: SpinnerService,
+    private _configService: ConfigService
   ) {
+    this.currencyIcon = this._configService.currencySymbol;
     this.onEdit(data);
   }
 
