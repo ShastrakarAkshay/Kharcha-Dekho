@@ -5,18 +5,17 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import {
+  MatBottomSheet,
+  MatBottomSheetModule,
+} from '@angular/material/bottom-sheet';
 import { EditProfileComponent } from '../edit-profile/edit-profile.component';
 import { ProfileService } from '../services/profile.service';
 import { AuthService } from 'src/app/common/service/auth.service';
-import { FirestoreModule } from '@angular/fire/firestore';
-import { ConfigService } from 'src/app/common/service/config.service';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
-
-export interface ILinks {
-  label: string;
-  path: string;
-}
+import { IUser } from '../profile.interface';
+import { ToasterService } from 'src/app/common/service/toaster.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -29,23 +28,30 @@ export interface ILinks {
     MatIconModule,
     MatDividerModule,
     MatButtonModule,
+    MatBottomSheetModule,
   ],
 })
 export class ProfileComponent implements OnInit {
-  userName!: string;
+  userData!: IUser;
 
   constructor(
     private _router: Router,
     private _bottomSheet: MatBottomSheet,
-    // private _profileService: ProfileService,
     private _authService: AuthService,
-    private _configService: ConfigService,
-    private _spinner: SpinnerService
+    private _spinner: SpinnerService,
+    private _profileService: ProfileService,
+    private _toaster: ToasterService
   ) {}
 
   ngOnInit(): void {
     this.getAccountInfo();
-    this.userName = this._configService.userId;
+  }
+
+  getUserName() {
+    if (this.userData) {
+      return `${this.userData.firstName} ${this.userData.lastName}`;
+    }
+    return '';
   }
 
   navigateToAllTransactions() {
@@ -53,23 +59,29 @@ export class ProfileComponent implements OnInit {
   }
 
   getAccountInfo() {
-    // this._profileService.getAccountInfo().subscribe({
-    //   next: (data) => {
-    //     if (data) {
-    //       this.userName = data.firstName + ' ' + data.lastName;
-    //     }
-    //   },
-    // });
+    this._spinner.show();
+    this._profileService
+      .getAccountInfo()
+      .pipe(finalize(() => this._spinner.hide()))
+      .subscribe({
+        next: (data) => {
+          if (data) {
+            this.userData = data;
+          } else {
+            this._toaster.showWarning('Please update your profile');
+          }
+        },
+      });
   }
 
   editProfile() {
     this._bottomSheet
-      .open(EditProfileComponent)
+      .open(EditProfileComponent, { data: this.userData })
       .afterDismissed()
       .subscribe({
         next: (refresh) => {
           if (refresh) {
-            console.log('test');
+            this.getAccountInfo();
           }
         },
       });

@@ -40,10 +40,6 @@ export const ROUTES: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
     path: 'profile',
     component: ProfileComponent,
     canActivate: [AuthGuard],
@@ -52,5 +48,9 @@ export const ROUTES: Routes = [
     path: 'edit-profile',
     component: EditProfileComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
   },
 ];

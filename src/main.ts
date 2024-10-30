@@ -34,6 +34,7 @@ export const firebaseConfig = {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    { provide: FIREBASE_OPTIONS, useValue: firebaseConfig },
     provideRouter(ROUTES, withComponentInputBinding()),
     importProvidersFrom(
       BrowserAnimationsModule,
@@ -50,7 +51,6 @@ bootstrapApplication(AppComponent, {
       provideFirestore(() => getFirestore()),
       provideAuth(() => getAuth())
     ),
-    { provide: FIREBASE_OPTIONS, useValue: firebaseConfig },
     ConfirmDialogComponent,
   ],
 }).catch((err) => console.log(err));

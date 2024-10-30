@@ -12,6 +12,7 @@ import {
   getDocs,
   orderBy,
   query,
+  Timestamp,
   updateDoc,
   where,
 } from 'firebase/firestore';
@@ -67,20 +68,23 @@ export class CategoryService {
   }
 
   createCategory(data: ICategory): Observable<any> {
-    data.userId = this.userId;
-    data.active = true;
     return from(
       addDoc(this.collectionRef(), {
         ...data,
-        creationDate: new Date(),
-        updatedDate: new Date(),
+        active: true,
+        userId: this.userId,
+        creationDate: Timestamp.fromDate(new Date()),
+        updatedDate: Timestamp.fromDate(new Date()),
       })
     );
   }
 
   updateCategory(data: ICategory, id: string): Observable<any> {
     return from(
-      updateDoc(this.docRef(id), { ...data, updatedDate: new Date() })
+      updateDoc(this.docRef(id), {
+        ...data,
+        updatedDate: Timestamp.fromDate(new Date()),
+      })
     );
   }
 

@@ -19,4 +19,8 @@ export class ToasterService {
   showError(message: string) {
     this.snackBar.open(message, 'Error', this.config);
   }
+
+  showWarning(message: string) {
+    this.snackBar.open(message, 'Warning', this.config);
+  }
 }

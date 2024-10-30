@@ -12,7 +12,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import {
+  MAT_BOTTOM_SHEET_DATA,
+  MatBottomSheetRef,
+} from '@angular/material/bottom-sheet';
 import { ConfigService } from 'src/app/common/service/config.service';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -20,6 +23,8 @@ import { Subscription } from 'rxjs';
 import { ProfileService } from '../services/profile.service';
 import { FirestoreModule } from '@angular/fire/firestore';
 import { FirebaseAppModule } from '@angular/fire/app';
+import { SpinnerService } from 'src/app/common/service/spinner.service';
+import { IUser } from '../profile.interface';
 
 @Component({
   selector: 'app-edit-profile',
@@ -35,16 +40,12 @@ import { FirebaseAppModule } from '@angular/fire/app';
     ReactiveFormsModule,
     SpinnerComponent,
     MatDatepickerModule,
-    FirebaseAppModule,
-    FirestoreModule,
   ],
-  providers: [ProfileService],
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss'],
 })
 export class EditProfileComponent implements OnInit, OnDestroy {
   currencyIcon = '';
-  isEdit: boolean = false;
   formSubmitted: boolean = false;
   subscriptions: Subscription[] = [];
 
@@ -57,23 +58,41 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     private _fb: FormBuilder,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
-    private _configService: ConfigService
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: IUser,
+    private _configService: ConfigService,
+    private _profileService: ProfileService,
+    private _bottomSheetRef: MatBottomSheetRef<EditProfileComponent>,
+    private _spinner: SpinnerService
   ) {
     this.currencyIcon = this._configService.currencySymbol;
+    console.log(this.data);
+    this.patchData();
   }
 
   ngOnInit(): void {}
 
+  patchData() {
+    if (this.data) {
+      this.form.setValue({
+        firstName: this.data.firstName,
+        lastName: this.data.lastName,
+        age: this.data.age,
+        mobile: this.data.mobile,
+      });
+    }
+  }
+
   updateProfile() {
     if (this.form.invalid || this.formSubmitted) return;
     this.formSubmitted = true;
+    this._spinner.show();
     const formData = this.form.value;
-    // this._profileService.updateProfileInfo(formData).subscribe({
-    //   next: () => {
-    //     this._bottomSheetRef.dismiss(true);
-    //   },
-    // });
+    this._profileService.updateProfileInfo(formData).subscribe({
+      next: () => {
+        this._bottomSheetRef.dismiss(true);
+        this._spinner.hide();
+      },
+    });
   }
 
   ngOnDestroy(): void {

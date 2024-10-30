@@ -4,3 +4,8 @@ export interface IUser {
   age: number;
   mobile: number;
 }
+
+export interface ILinks {
+  label: string;
+  path: string;
+}
