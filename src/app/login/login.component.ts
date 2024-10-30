@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { ToasterService } from '../common/service/toaster.service';
 import { SpinnerService } from '../common/service/spinner.service';
 import { finalize } from 'rxjs';
+import { ConfigService } from '../common/service/config.service';
 
 @Component({
   selector: 'app-login',
@@ -43,7 +44,8 @@ export class LoginComponent {
     private authService: AuthService,
     private router: Router,
     private toasterService: ToasterService,
-    private spinner: SpinnerService
+    private spinner: SpinnerService,
+    private config: ConfigService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -63,6 +65,7 @@ export class LoginComponent {
       .subscribe({
         next: (data) => {
           localStorage.setItem('uid', data.user?.uid || '');
+          this.config.userId = data.user?.uid || '';
           this.router.navigate(['/dashboard']);
         },
         error: () => {
