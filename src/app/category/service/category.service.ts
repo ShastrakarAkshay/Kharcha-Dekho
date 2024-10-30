@@ -23,14 +23,10 @@ import { ConfigService } from 'src/app/common/service/config.service';
   providedIn: 'root',
 })
 export class CategoryService {
-  userId: string;
-
   constructor(
     private _firestore: Firestore,
     private _configService: ConfigService
-  ) {
-    this.userId = this._configService.userId;
-  }
+  ) {}
 
   private collectionRef(id?: any): CollectionReference {
     const collectionName = id
@@ -56,7 +52,7 @@ export class CategoryService {
   getAllCategories(): Observable<any> {
     const categoryQuery = query(
       this.collectionRef(),
-      where('userId', '==', this.userId),
+      where('userId', '==', this._configService.userId),
       where('active', '==', true),
       orderBy('name', 'asc')
     );
@@ -72,7 +68,7 @@ export class CategoryService {
       addDoc(this.collectionRef(), {
         ...data,
         active: true,
-        userId: this.userId,
+        userId: this._configService.userId,
         creationDate: Timestamp.fromDate(new Date()),
         updatedDate: Timestamp.fromDate(new Date()),
       })

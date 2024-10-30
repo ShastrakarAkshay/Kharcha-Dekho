@@ -65,7 +65,6 @@ export class LoginComponent {
       .subscribe({
         next: (data) => {
           localStorage.setItem('uid', data.user?.uid || '');
-          this.config.userId = data.user?.uid || '';
           this.router.navigate(['/dashboard']);
         },
         error: () => {

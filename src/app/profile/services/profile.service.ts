@@ -17,14 +17,10 @@ import { Firestore } from '@angular/fire/firestore';
   providedIn: 'root',
 })
 export class ProfileService {
-  userId: string;
-
   constructor(
     private _firestore: Firestore,
     private _configService: ConfigService
-  ) {
-    this.userId = this._configService.userId;
-  }
+  ) {}
 
   private collectionRef(id?: any): CollectionReference {
     const collectionName = id
@@ -41,12 +37,12 @@ export class ProfileService {
   }
 
   getAccountInfo(): Observable<any> {
-    return from(getDoc(this.docRef(this.userId))).pipe(
+    return from(getDoc(this.docRef(this._configService.userId))).pipe(
       map((snapshot) => snapshot.data())
     );
   }
 
   updateProfileInfo(data: IUser): Observable<any> {
-    return from(setDoc(this.docRef(this.userId), data));
+    return from(setDoc(this.docRef(this._configService.userId), data));
   }
 }

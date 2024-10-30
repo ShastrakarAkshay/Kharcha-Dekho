@@ -26,14 +26,10 @@ import { ICategory } from 'src/app/category/category.interface';
   providedIn: 'root',
 })
 export class TransactionService {
-  userId: string;
-
   constructor(
     private _firestore: Firestore,
     private _configService: ConfigService
-  ) {
-    this.userId = this._configService.userId;
-  }
+  ) {}
 
   private collectionRef(id?: any): CollectionReference {
     const collectionName = id
@@ -71,7 +67,7 @@ export class TransactionService {
     );
     let transactionQuery = query(
       transactionRef,
-      where('userId', '==', this.userId),
+      where('userId', '==', this._configService.userId),
       orderBy('createdAt', 'desc')
     );
 
@@ -82,7 +78,7 @@ export class TransactionService {
           transactionRef,
           where('createdAt', '>=', monthFilter?.startDate),
           where('createdAt', '<=', monthFilter?.endDate),
-          where('userId', '==', this.userId)
+          where('userId', '==', this._configService.userId)
         );
       }
     }
@@ -92,7 +88,7 @@ export class TransactionService {
         transactionRef,
         where('categoryId', '==', filters.categoryId),
         orderBy('createdAt', 'desc'),
-        where('userId', '==', this.userId)
+        where('userId', '==', this._configService.userId)
       );
     }
 
@@ -108,7 +104,7 @@ export class TransactionService {
     const categoryRef = collection(this._firestore, COLLECTIONS.Categories);
     const categoryQuery = query(
       categoryRef,
-      where('userId', '==', this.userId)
+      where('userId', '==', this._configService.userId)
     );
     const categories$ = from(getDocs(categoryQuery)).pipe(
       map((snapshot) =>
@@ -132,7 +128,7 @@ export class TransactionService {
     return from(
       addDoc(this.collectionRef(), {
         ...data,
-        userId: this.userId,
+        userId: this._configService.userId,
         createdAt: Timestamp.fromDate(data.createdAt),
         updatedAt: Timestamp.now(),
       })
