@@ -194,7 +194,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onCategoryClick(categoryId: string) {
-    this._router.navigate(['all-transactions', categoryId]);
+    this._router.navigate(['core/all-transactions', categoryId]);
   }
 
   ngOnDestroy(): void {

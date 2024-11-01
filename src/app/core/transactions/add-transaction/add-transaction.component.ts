@@ -53,6 +53,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 export class AddTransactionComponent implements OnInit, OnDestroy {
   currencyIcon = '';
   isEdit: boolean = false;
+  isLoading: boolean = false;
   formSubmitted: boolean = false;
   transactionMethods = TRANSACTION_METHODS;
   categories: ICategory[] = [];
@@ -73,7 +74,6 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: ITransaction,
     private _bottomSheetRef: MatBottomSheetRef<AddTransactionComponent>,
     private _toasterService: ToasterService,
-    private _spinner: SpinnerService,
     private _configService: ConfigService
   ) {
     this.currencyIcon = this._configService.currencySymbol;
@@ -97,10 +97,10 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
   }
 
   getAllCategories() {
-    this._spinner.show();
+    this.isLoading = true;
     const sub$ = this._categoryService
       .getAllCategories()
-      .pipe(finalize(() => this._spinner.hide()))
+      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (data) => {
           this.categories = data;
@@ -121,7 +121,7 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
       transactionMethod: formData.transactionMethod,
       createdAt: formData.createdAt,
     };
-    this._spinner.show();
+    this.isLoading = true;
     const $api = this.isEdit
       ? this._transactionService.updateTransaction(transaction, this.data.id)
       : this._transactionService.createTransaction(transaction);
@@ -132,7 +132,7 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
           ? 'Transaction Updated'
           : 'Transaction Created';
         this._toasterService.showSuccess(message);
-        this._spinner.hide();
+        this.isLoading = false;
       },
     });
     this.subscriptions.push(sub$);

@@ -96,6 +96,7 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
   onCreate() {
     if (this.form.invalid || this.formSubmitted) return;
     this.formSubmitted = true;
+    this.isLoading = true;
     const formData = this.form.value;
     const category: ICategory = {
       icon: this.selectedIcon ?? null,
@@ -106,19 +107,14 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
       ? this._categoryService.updateCategory(category, this.data.id)
       : this._categoryService.createCategory(category);
     this.isLoading = true;
-    const sub$ = $api
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-          this._bottomSheetRef.dismiss(true);
-        })
-      )
-      .subscribe({
-        next: (res) => {
-          const message = this.isEdit ? 'Category Updated' : 'Category Created';
-          this._toasterService.showSuccess(message);
-        },
-      });
+    const sub$ = $api.subscribe({
+      next: (res) => {
+        const message = this.isEdit ? 'Category Updated' : 'Category Created';
+        this._toasterService.showSuccess(message);
+        this._bottomSheetRef.dismiss(true);
+        this.isLoading = false;
+      },
+    });
     this.subscription.push(sub$);
   }
 

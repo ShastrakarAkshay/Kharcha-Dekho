@@ -46,6 +46,7 @@ import { emptySpaceValidator } from 'src/app/common/validators/empty-space.valid
 export class EditProfileComponent implements OnInit, OnDestroy {
   currencyIcon = '';
   formSubmitted: boolean = false;
+  isLoading: boolean = false;
   subscriptions: Subscription[] = [];
 
   form: FormGroup = this._fb.group({
@@ -63,11 +64,9 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: IUser,
     private _configService: ConfigService,
     private _profileService: ProfileService,
-    private _bottomSheetRef: MatBottomSheetRef<EditProfileComponent>,
-    private _spinner: SpinnerService
+    private _bottomSheetRef: MatBottomSheetRef<EditProfileComponent>
   ) {
     this.currencyIcon = this._configService.currencySymbol;
-    console.log(this.data);
     this.patchData();
   }
 
@@ -87,12 +86,12 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   updateProfile() {
     if (this.form.invalid || this.formSubmitted) return;
     this.formSubmitted = true;
-    this._spinner.show();
+    this.isLoading = true;
     const formData = this.form.value;
     this._profileService.updateProfileInfo(formData).subscribe({
       next: () => {
         this._bottomSheetRef.dismiss(true);
-        this._spinner.hide();
+        this.isLoading = false;
       },
     });
   }
