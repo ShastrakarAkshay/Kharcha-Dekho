@@ -14,7 +14,10 @@ import { SearchPipe } from 'src/app/common/pipes/search.pipe';
 import { CategoryService } from '../service/category.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HeaderComponent } from 'src/app/common/components/header/header.component';
-import { DialogService } from 'src/app/common/service/dialog.service';
+import {
+  DialogService,
+  IConfirmData,
+} from 'src/app/common/service/dialog.service';
 import { finalize, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { ToasterService } from 'src/app/common/service/toaster.service';
@@ -98,8 +101,12 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(category: ICategory) {
+    const data: IConfirmData = {
+      heading: 'Delete',
+      message: 'Do you want to delete?',
+    };
     const sub$ = this._dialogService
-      .confirm()
+      .confirm(data)
       .afterClosed()
       .subscribe({
         next: (isConfirm) => {

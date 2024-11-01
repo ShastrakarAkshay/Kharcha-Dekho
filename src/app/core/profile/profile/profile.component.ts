@@ -18,6 +18,10 @@ import { ToasterService } from 'src/app/common/service/toaster.service';
 import { finalize } from 'rxjs';
 import { IconComponent } from 'src/app/common/components/icon/icon.component';
 import { Links } from '../profile.constant';
+import {
+  DialogService,
+  IConfirmData,
+} from 'src/app/common/service/dialog.service';
 
 @Component({
   selector: 'app-profile',
@@ -45,7 +49,8 @@ export class ProfileComponent implements OnInit {
     private _authService: AuthService,
     private _spinner: SpinnerService,
     private _profileService: ProfileService,
-    private _toaster: ToasterService
+    private _toaster: ToasterService,
+    private _dialog: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -103,12 +108,25 @@ export class ProfileComponent implements OnInit {
   }
 
   logout() {
-    this._spinner.show();
-    this._authService.logout().subscribe({
-      next: () => {
-        this._router.navigate(['login']);
-        this._spinner.hide();
-      },
-    });
+    const data: IConfirmData = {
+      heading: 'Confirm',
+      message: 'Do you want to logout?',
+    };
+    this._dialog
+      .confirm(data)
+      .afterClosed()
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this._spinner.show();
+            this._authService.logout().subscribe({
+              next: () => {
+                this._router.navigate(['login']);
+                this._spinner.hide();
+              },
+            });
+          }
+        },
+      });
   }
 }

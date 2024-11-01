@@ -13,7 +13,10 @@ import {
   TransactionComponent,
 } from 'src/app/common/components/transaction/transaction.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { DialogService } from 'src/app/common/service/dialog.service';
+import {
+  DialogService,
+  IConfirmData,
+} from 'src/app/common/service/dialog.service';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { TransactionService } from '../service/transaction.service';
 import { IFilter, ITransaction } from '../transactions.interface';
@@ -130,8 +133,12 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
 
   onDelete(id: string) {
     const txn = this.transactions.find((x) => x.id === id);
+    const data: IConfirmData = {
+      heading: 'Delete',
+      message: 'Do you want to delete?',
+    };
     const sub$ = this._dialogService
-      .confirm()
+      .confirm(data)
       .afterClosed()
       .subscribe({
         next: (isConfirm) => {
