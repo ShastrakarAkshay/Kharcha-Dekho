@@ -14,7 +14,8 @@ import { AuthService } from '../common/service/auth.service';
 import { Router } from '@angular/router';
 import { ToasterService } from '../common/service/toaster.service';
 import { SpinnerService } from '../common/service/spinner.service';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin, switchMap } from 'rxjs';
+import { ProfileService } from '../core/profile/services/profile.service';
 
 @Component({
   selector: 'app-login',
@@ -39,7 +40,8 @@ export class LoginComponent {
     private authService: AuthService,
     private router: Router,
     private toasterService: ToasterService,
-    private spinner: SpinnerService
+    private spinner: SpinnerService,
+    private profileService: ProfileService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -66,13 +68,19 @@ export class LoginComponent {
     }
     this.spinner.show();
     const { email, password } = this.loginForm.value;
-    this.authService
-      .loginWithEmail(email, password)
+    forkJoin([
+      this.authService.loginWithEmail(email, password),
+      this.profileService.isProfileUpdated(),
+    ])
       .pipe(finalize(() => this.spinner.hide()))
       .subscribe({
-        next: (data) => {
+        next: ([data, isProfileUpdated]) => {
           localStorage.setItem('uid', data.user?.uid || '');
-          this.router.navigate(['core']);
+          if (isProfileUpdated) {
+            this.router.navigate(['core']);
+          } else {
+            this.router.navigate(['core/profile']);
+          }
         },
         error: () => {
           this.toasterService.showError('Invalid Credentials.');

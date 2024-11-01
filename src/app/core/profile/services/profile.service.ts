@@ -42,6 +42,10 @@ export class ProfileService {
     );
   }
 
+  isProfileUpdated(): Observable<boolean> {
+    return this.getAccountInfo().pipe(map((data) => !data));
+  }
+
   updateProfileInfo(data: IUser): Observable<any> {
     return from(setDoc(this.docRef(this._configService.userId), data));
   }
