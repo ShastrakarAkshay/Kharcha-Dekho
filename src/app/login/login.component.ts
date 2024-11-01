@@ -14,7 +14,7 @@ import { AuthService } from '../common/service/auth.service';
 import { Router } from '@angular/router';
 import { ToasterService } from '../common/service/toaster.service';
 import { SpinnerService } from '../common/service/spinner.service';
-import { finalize, forkJoin, switchMap } from 'rxjs';
+import { finalize, forkJoin, switchMap, tap } from 'rxjs';
 import { ProfileService } from '../core/profile/services/profile.service';
 
 @Component({
@@ -68,14 +68,15 @@ export class LoginComponent {
     }
     this.spinner.show();
     const { email, password } = this.loginForm.value;
-    forkJoin([
-      this.authService.loginWithEmail(email, password),
-      this.profileService.isProfileUpdated(),
-    ])
-      .pipe(finalize(() => this.spinner.hide()))
+    this.authService
+      .loginWithEmail(email, password)
+      .pipe(
+        tap((data) => localStorage.setItem('uid', data.user?.uid || '')),
+        switchMap(() => this.profileService.isProfileUpdated()),
+        finalize(() => this.spinner.hide())
+      )
       .subscribe({
-        next: ([data, isProfileUpdated]) => {
-          localStorage.setItem('uid', data.user?.uid || '');
+        next: (isProfileUpdated) => {
           if (isProfileUpdated) {
             this.router.navigate(['core']);
           } else {
