@@ -25,6 +25,7 @@ import { ICategory } from '../category.interface';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { finalize, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
+import { emptySpaceValidator } from 'src/app/common/validators/empty-space.validator';
 
 @Component({
   selector: 'app-create-category',
@@ -55,8 +56,8 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
   selectedIcon?: IIcon;
 
   form = this._fb.group({
-    name: ['', Validators.required],
-    description: [''],
+    name: ['', [Validators.required, emptySpaceValidator()]],
+    description: ['', emptySpaceValidator()],
   });
 
   subscription: Subscription[] = [];

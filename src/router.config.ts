@@ -35,7 +35,7 @@ export const ROUTES: Routes = [
         component: DashboardComponent,
       },
       {
-        path: 'icon-list',
+        path: 'icons',
         component: IconListComponent,
       },
       {

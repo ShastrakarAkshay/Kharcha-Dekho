@@ -59,7 +59,7 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
   form: FormGroup = this._fb.group({
-    amount: ['', Validators.required],
+    amount: ['', [Validators.required, Validators.min(1)]],
     createdAt: [new Date(), Validators.required],
     comment: [''],
     categoryId: ['', Validators.required],

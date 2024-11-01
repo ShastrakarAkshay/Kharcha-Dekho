@@ -62,9 +62,8 @@ export class ProfileComponent implements OnInit {
   onItemClick(link: ILinks) {
     if (link.id === 1) {
       this.editProfile();
-    }
-    if (link.id === 2) {
-      this._router.navigate(['core/all-transactions']);
+    } else {
+      this._router.navigate([link.path]);
     }
   }
 

@@ -21,10 +21,9 @@ import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.comp
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { Subscription } from 'rxjs';
 import { ProfileService } from '../services/profile.service';
-import { FirestoreModule } from '@angular/fire/firestore';
-import { FirebaseAppModule } from '@angular/fire/app';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { IUser } from '../profile.interface';
+import { emptySpaceValidator } from 'src/app/common/validators/empty-space.validator';
 
 @Component({
   selector: 'app-edit-profile',
@@ -50,10 +49,13 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
   form: FormGroup = this._fb.group({
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
+    firstName: ['', [Validators.required, emptySpaceValidator()]],
+    lastName: ['', [Validators.required, emptySpaceValidator()]],
     age: [null, Validators.required],
-    mobile: ['', Validators.required],
+    mobile: [
+      '',
+      [Validators.required, Validators.minLength(10), Validators.maxLength(10)],
+    ],
   });
 
   constructor(

@@ -8,5 +8,5 @@ export const Links: ILinks[] = [
     path: 'core/all-transactions',
     icon: 'person',
   },
-  { id: 3, label: 'Icons', path: 'core/icons-list', icon: 'person' },
+  { id: 3, label: 'Icons', path: 'core/icons', icon: 'person' },
 ];
