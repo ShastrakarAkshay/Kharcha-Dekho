@@ -1,17 +1,15 @@
 <div class="profile">
-  <div class="user-info text-white">
-    <h3>{{ getUserName() }}</h3>
+  <div class="profile-container">
+    <app-icon [name]="'person'"></app-icon>
+    <div class="profile-name">{{ getUserName() || "Unavailable" }}</div>
   </div>
   <div class="links">
     <mat-list>
-      <div mat-subheader class="text-white">Profile</div>
-
       <mat-list-item>
         <mat-icon matListItemIcon class="text-white">folder</mat-icon>
         <div matListItemTitle class="text-white" (click)="editProfile()">
           Edit Profile
         </div>
-        <div matListItemLine class="text-gray">...</div>
       </mat-list-item>
       <mat-divider></mat-divider>
 
@@ -24,17 +22,16 @@
         >
           All Transactions
         </div>
-        <div matListItemLine class="text-gray">...</div>
       </mat-list-item>
       <mat-divider></mat-divider>
     </mat-list>
   </div>
   <div class="logout">
     <button
-      class="full-width"
       mat-raised-button
       color="primary"
       type="button"
+      class="logout-button full-width"
       (click)="logout()"
     >
       Logout

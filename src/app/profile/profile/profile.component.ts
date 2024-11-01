@@ -16,6 +16,7 @@ import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { IUser } from '../profile.interface';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { finalize } from 'rxjs';
+import { IconComponent } from 'src/app/common/components/icon/icon.component';
 
 @Component({
   selector: 'app-profile',
@@ -29,6 +30,7 @@ import { finalize } from 'rxjs';
     MatDividerModule,
     MatButtonModule,
     MatBottomSheetModule,
+    IconComponent,
   ],
 })
 export class ProfileComponent implements OnInit {
