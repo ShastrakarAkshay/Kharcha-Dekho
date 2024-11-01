@@ -1,8 +1,12 @@
 <div class="login-container">
   <div class="login-page">
-    <label class="label"> Expense Tracker </label>
-    <h2>Login</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <label class="app-label"> Expense Tracker </label>
+
+    @if (showLogin) {
+    <div class="header">
+      <label class="header-label">Login</label>
+    </div>
+    <form [formGroup]="loginForm">
       <!-- Email Field -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
@@ -44,6 +48,7 @@
         color="primary"
         type="submit"
         [disabled]="loginForm.invalid"
+        (click)="onSubmit()"
       >
         Login
       </button>
@@ -51,10 +56,56 @@
         class="full-width btn-forgot-pass"
         mat-raised-button
         color="primary"
-        type="submit"
+        type="button"
+        (click)="showForgotPassFields()"
       >
         Forgot Password
       </button>
     </form>
+    } @else {
+    <div class="header">
+      <label class="header-label">Forgot Password?</label>
+      <p class="sub-text">No worries, we'll send you reset instructions.</p>
+    </div>
+    <form [formGroup]="resetForm">
+      <!-- Email Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          formControlName="email"
+          type="email"
+          placeholder="Enter your email"
+        />
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+          Email is required
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+          Enter a valid email
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Submit Button -->
+      <button
+        class="full-width"
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="resetForm.invalid"
+        (click)="resetPassword()"
+      >
+        Reset Password
+      </button>
+      <button
+        class="full-width btn-forgot-pass"
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="showLogin = true"
+      >
+        Cancel
+      </button>
+    </form>
+    }
   </div>
 </div>

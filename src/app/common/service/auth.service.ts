@@ -31,4 +31,8 @@ export class AuthService {
   logout() {
     return from(this.afAuth.signOut());
   }
+
+  resetPassword(email: string) {
+    return from(this.afAuth.sendPasswordResetEmail(email));
+  }
 }
