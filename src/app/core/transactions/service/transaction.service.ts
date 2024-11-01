@@ -20,7 +20,7 @@ import {
   Timestamp,
   updateDoc,
 } from 'firebase/firestore';
-import { ICategory } from 'src/app/category/category.interface';
+import { ICategory } from 'src/app/core/category/category.interface';
 
 @Injectable({
   providedIn: 'root',

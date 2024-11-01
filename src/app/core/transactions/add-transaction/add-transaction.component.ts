@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { TRANSACTION_METHODS } from '../../common/common.constants';
+import { TRANSACTION_METHODS } from '../../../common/common.constants';
 import {
   FormBuilder,
   FormGroup,
@@ -13,9 +13,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ScrollToTopOnFocusDirective } from '../../common/directives/scroll-to-top.directive';
-import { ICategory } from 'src/app/category/category.interface';
-import { CategoryService } from 'src/app/category/service/category.service';
+import { ScrollToTopOnFocusDirective } from '../../../common/directives/scroll-to-top.directive';
+import { ICategory } from 'src/app/core/category/category.interface';
+import { CategoryService } from 'src/app/core/category/service/category.service';
 import { ITransaction, TransactionMethod } from '../transactions.interface';
 import { TransactionService } from '../service/transaction.service';
 import {

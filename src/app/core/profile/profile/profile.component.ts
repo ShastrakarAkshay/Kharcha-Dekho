@@ -13,10 +13,11 @@ import { EditProfileComponent } from '../edit-profile/edit-profile.component';
 import { ProfileService } from '../services/profile.service';
 import { AuthService } from 'src/app/common/service/auth.service';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
-import { IUser } from '../profile.interface';
+import { ILinks, IUser } from '../profile.interface';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { finalize } from 'rxjs';
 import { IconComponent } from 'src/app/common/components/icon/icon.component';
+import { Links } from '../profile.constant';
 
 @Component({
   selector: 'app-profile',
@@ -34,7 +35,9 @@ import { IconComponent } from 'src/app/common/components/icon/icon.component';
   ],
 })
 export class ProfileComponent implements OnInit {
+  isLoading: boolean = false;
   userData!: IUser;
+  links: ILinks[] = Links;
 
   constructor(
     private _router: Router,
@@ -56,15 +59,26 @@ export class ProfileComponent implements OnInit {
     return '';
   }
 
-  navigateToAllTransactions() {
-    this._router.navigate(['all-transactions']);
+  onItemClick(link: ILinks) {
+    if (link.id === 1) {
+      this.editProfile();
+    }
+    if (link.id === 2) {
+      this._router.navigate(['core/all-transactions']);
+    }
   }
 
   getAccountInfo() {
+    this.isLoading = true;
     this._spinner.show();
     this._profileService
       .getAccountInfo()
-      .pipe(finalize(() => this._spinner.hide()))
+      .pipe(
+        finalize(() => {
+          this._spinner.hide();
+          this.isLoading = false;
+        })
+      )
       .subscribe({
         next: (data) => {
           if (data) {

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../../common/components/icon/icon.component';
+import { IconComponent } from '../../../common/components/icon/icon.component';
 import { getIcons } from './icon-list.constant';
 import { IIcon } from './icon-list.interface';
 import { SearchComponent } from 'src/app/common/components/search/search.component';

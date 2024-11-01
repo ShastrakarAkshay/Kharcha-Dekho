@@ -1,0 +1,34 @@
+<div class="profile app-layout">
+  <div class="profile-container">
+    <app-icon [name]="'person'"></app-icon>
+    <div class="profile-name" *ngIf="!isLoading">
+      {{ getUserName() || "Unavailable" }}
+    </div>
+  </div>
+  <div class="links">
+    <mat-list>
+      @for (link of links; track $index) {
+      <mat-list-item>
+        <mat-icon matListItemIcon class="link-icon material-icons-outlined">
+          {{ link.icon }}
+        </mat-icon>
+        <div matListItemTitle class="link-label" (click)="onItemClick(link)">
+          {{ link.label }}
+        </div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      }
+    </mat-list>
+  </div>
+  <div class="logout">
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      class="logout-button full-width"
+      (click)="logout()"
+    >
+      Logout
+    </button>
+  </div>
+</div>

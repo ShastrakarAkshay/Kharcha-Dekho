@@ -8,23 +8,23 @@ import {
   MatBottomSheetModule,
 } from '@angular/material/bottom-sheet';
 import { AddTransactionComponent } from '../transactions/add-transaction/add-transaction.component';
-import { HeaderComponent } from '../common/components/header/header.component';
+import { HeaderComponent } from '../../common/components/header/header.component';
 import {
   DropdownComponent,
   IMonth,
-} from '../common/components/dropdown/dropdown.component';
+} from '../../common/components/dropdown/dropdown.component';
 import { TransactionService } from '../transactions/service/transaction.service';
 import {
   ITransactionItem,
   TransactionComponent,
-} from '../common/components/transaction/transaction.component';
+} from '../../common/components/transaction/transaction.component';
 import { DMA_REPORT_CONFIG } from './dashboard.constant';
-import { ConfigService } from '../common/service/config.service';
+import { ConfigService } from '../../common/service/config.service';
 import { IFilter, ITransaction } from '../transactions/transactions.interface';
 import { Subscription } from 'rxjs';
-import { SpinnerComponent } from '../common/components/spinner/spinner.component';
-import { AmountPipe } from '../common/pipes/amount.pipe';
-import { SpinnerService } from '../common/service/spinner.service';
+import { SpinnerComponent } from '../../common/components/spinner/spinner.component';
+import { AmountPipe } from '../../common/pipes/amount.pipe';
+import { SpinnerService } from '../../common/service/spinner.service';
 import { Router } from '@angular/router';
 
 @Component({

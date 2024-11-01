@@ -6,6 +6,8 @@ export interface IUser {
 }
 
 export interface ILinks {
+  id: number;
   label: string;
   path: string;
+  icon: string;
 }

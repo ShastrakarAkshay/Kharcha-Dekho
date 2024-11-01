@@ -1,0 +1,35 @@
+<div class="app-layout">
+  <app-header [heading]="'Expense Tracker'">
+    <app-dropdown (monthChange)="onMonthChange($event)"></app-dropdown>
+  </app-header>
+
+  <div class="dashboard">Dashboard</div>
+
+  <div class="report-container">
+    @for (report of dwmReport; track $index) {
+    <div class="report">
+      <label class="label">{{ report.type }}</label>
+      <h5 class="m-0 d-flex justify-content-center">
+        <span class="currency-symbol">
+          <mat-icon>{{ currencySymbol }}</mat-icon>
+        </span>
+        <span class="amount">{{ report.amount | amount }} </span>
+      </h5>
+    </div>
+    }
+  </div>
+
+  <div class="transactions-container">
+    <app-transactions
+      [transactions]="transactionItems"
+      (itemClick)="onCategoryClick($event)"
+    >
+    </app-transactions>
+  </div>
+
+  <section id="new-transaction">
+    <button mat-fab matRipple (click)="addTransaction()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </section>
+</div>

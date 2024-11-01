@@ -1,4 +1,4 @@
-import { TransactionMethod } from '../transactions/transactions.interface';
+import { TransactionMethod } from '../core/transactions/transactions.interface';
 
 export const TRANSACTION_METHODS = [
   { id: TransactionMethod.CASH, name: TransactionMethod.CASH },

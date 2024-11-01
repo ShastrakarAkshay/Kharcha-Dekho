@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-bottom-menu',
@@ -17,17 +17,17 @@ export class BottomMenuComponent {
     {
       icon: 'home',
       label: 'Home',
-      path: 'dashboard',
+      path: 'core/dashboard',
     },
     {
       icon: 'category',
       label: 'Category',
-      path: 'category',
+      path: 'core/category',
     },
     {
       icon: 'person',
       label: 'Account',
-      path: 'profile',
+      path: 'core/profile',
     },
   ];
 

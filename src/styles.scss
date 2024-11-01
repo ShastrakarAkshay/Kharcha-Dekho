@@ -1,4 +1,4 @@
-.app-container {
+.app-layout {
   padding: 15px;
   padding-bottom: 100px;
 }
@@ -11,6 +11,17 @@
 
 .full-width {
   width: 100%;
+}
+
+.btn-fixed {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+
+  button {
+    border-radius: 20px;
+    background: #e8d0ff;
+  }
 }
 
 * {

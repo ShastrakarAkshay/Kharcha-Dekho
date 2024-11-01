@@ -65,7 +65,7 @@ export class LoginComponent {
       .subscribe({
         next: (data) => {
           localStorage.setItem('uid', data.user?.uid || '');
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['core']);
         },
         error: () => {
           this.toasterService.showError('Invalid Credentials.');

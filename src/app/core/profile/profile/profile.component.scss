@@ -1,20 +1,22 @@
-.text-white {
-  color: #ffffff !important;
-}
+.links {
+  margin-top: 20px;
 
-.text-gray {
-  color: gray !important;
+  .link-icon,
+  .link-label {
+    color: #ffffff;
+  }
+
+  .link-label {
+    font-family: "Poppins", sans-serif !important;
+    font-weight: 200 !important;
+  }
 }
 
 .logout {
   margin-top: 100px;
-}
 
-.links {
-  margin-top: 20px;
-
-  .logout-button {
-    height: 50px !important;
+  button {
+    height: 50px;
   }
 }
 
