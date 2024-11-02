@@ -34,7 +34,7 @@ export class IconListComponent {
   }
 
   onIconSelect(icon: IIcon) {
-    this._dialogRef.close(icon);
+    this._dialogRef?.close(icon);
   }
 
   onSearch(text: string) {
@@ -42,6 +42,6 @@ export class IconListComponent {
   }
 
   onCancel() {
-    this._dialogRef.close();
+    this._dialogRef?.close();
   }
 }
