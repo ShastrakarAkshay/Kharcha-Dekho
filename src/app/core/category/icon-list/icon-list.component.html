@@ -1,5 +1,6 @@
 <div class="app-layout">
   <div class="search-container">
+    <app-header *ngIf="heading" [heading]="heading"></app-header>
     <app-search (searchTextChange)="onSearch($event)"></app-search>
   </div>
   <div class="icon-list">
@@ -21,7 +22,7 @@
   </div>
 </div>
 <div class="footer">
-  <button mat-flat-button color="tertiary" type="button" (click)="onCancel()">
+  <button mat-button color="tertiary" type="button" (click)="onCancel()">
     Cancel
   </button>
 </div>

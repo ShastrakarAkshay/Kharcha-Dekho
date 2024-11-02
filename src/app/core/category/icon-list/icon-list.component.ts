@@ -7,6 +7,7 @@ import { SearchComponent } from 'src/app/common/components/search/search.compone
 import { SearchPipe } from 'src/app/common/pipes/search.pipe';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { HeaderComponent } from 'src/app/common/components/header/header.component';
 
 @Component({
   selector: 'app-icon-list',
@@ -17,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
     SearchComponent,
     SearchPipe,
     MatButtonModule,
+    HeaderComponent,
   ],
   templateUrl: './icon-list.component.html',
   styleUrls: ['./icon-list.component.scss'],
@@ -24,10 +26,13 @@ import { MatButtonModule } from '@angular/material/button';
 export class IconListComponent {
   icons: IIcon[] = [];
   searchText: string = '';
+  heading: string = '';
 
-  constructor(
-    @Optional() private _dialogRef: MatDialogRef<IconListComponent>
-  ) {}
+  constructor(@Optional() private _dialogRef: MatDialogRef<IconListComponent>) {
+    if (this._dialogRef) {
+      this.heading = 'Select Icon';
+    }
+  }
 
   ngOnInit(): void {
     this.icons = getIcons();
