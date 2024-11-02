@@ -1,42 +1,33 @@
 <app-spinner [isLoading]="isLoading"></app-spinner>
 
-<ng-container *ngIf="!showIconList; else iconList">
-  <div class="create-category">
-    <div class="title">Create Category</div>
-
-    <form [formGroup]="form">
-      <div class="input-container">
-        <div class="icon-field">
-          <app-icon
-            [name]="selectedIcon?.name || 'upload'"
-            [bgColor]="selectedIcon?.bgColor || '#ececec'"
-            [label]="selectedIcon?.label || 'Select Icon'"
-            (click)="openIconList()"
-          >
-          </app-icon>
-        </div>
-        <mat-form-field appearance="outline">
-          <mat-label>Category Name</mat-label>
-          <input matInput placeholder="Category Name" formControlName="name" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Description</mat-label>
-          <input
-            matInput
-            placeholder="Description"
-            formControlName="description"
-          />
-        </mat-form-field>
+<div class="create-category">
+  <div class="title">Create Category</div>
+  <form [formGroup]="form">
+    <div class="input-container">
+      <div class="icon-field">
+        <app-icon
+          [name]="selectedIcon?.name || 'upload'"
+          [bgColor]="selectedIcon?.bgColor || '#ececec'"
+          [label]="selectedIcon?.label || 'Select Icon'"
+          (click)="openIconList()"
+        >
+        </app-icon>
       </div>
-      <button class="btn-add" mat-flat-button (click)="onCreate()">
-        {{ isEdit ? "Update" : "Create" }}
-      </button>
-    </form>
-  </div>
-</ng-container>
-
-<ng-template #iconList>
-  <div class="icon-container">
-    <app-icon-list (iconSelect)="onIconSelect($event)"></app-icon-list>
-  </div>
-</ng-template>
+      <mat-form-field appearance="outline">
+        <mat-label>Category Name</mat-label>
+        <input matInput placeholder="Category Name" formControlName="name" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <input
+          matInput
+          placeholder="Description"
+          formControlName="description"
+        />
+      </mat-form-field>
+    </div>
+    <button class="btn-add" mat-flat-button (click)="onCreate()">
+      {{ isEdit ? "Update" : "Create" }}
+    </button>
+  </form>
+</div>

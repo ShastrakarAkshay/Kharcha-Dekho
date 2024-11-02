@@ -26,6 +26,7 @@ import { ToasterService } from 'src/app/common/service/toaster.service';
 import { finalize, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { emptySpaceValidator } from 'src/app/common/validators/empty-space.validator';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-create-category',
@@ -49,7 +50,6 @@ import { emptySpaceValidator } from 'src/app/common/validators/empty-space.valid
   styleUrls: ['./create-category.component.scss'],
 })
 export class CreateCategoryComponent implements OnInit, OnDestroy {
-  showIconList: boolean = false;
   isEdit: boolean = false;
   isLoading: boolean = false;
   formSubmitted: boolean = false;
@@ -69,7 +69,8 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
     private _fb: FormBuilder,
     private _bottomSheetRef: MatBottomSheetRef<CreateCategoryComponent>,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: ICategory,
-    private _toasterService: ToasterService
+    private _toasterService: ToasterService,
+    private _dialog: MatDialog
   ) {
     this.onEdit(data);
   }
@@ -85,12 +86,20 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
   }
 
   openIconList() {
-    this.showIconList = true;
-  }
-
-  onIconSelect(icon: IIcon) {
-    this.showIconList = false;
-    this.selectedIcon = icon;
+    const dialogRef = this._dialog
+      .open(IconListComponent, {
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        height: '100%',
+        width: '100%',
+        panelClass: 'full-screen-modal',
+      })
+      .afterClosed()
+      .subscribe({
+        next: (icon) => {
+          this.selectedIcon = icon;
+        },
+      });
   }
 
   onCreate() {
