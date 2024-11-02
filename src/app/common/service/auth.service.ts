@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   logout() {
-    return from(this.afAuth.signOut());
+    return from(this.afAuth.signOut()).pipe(tap(() => localStorage.clear()));
   }
 
   resetPassword(email: string) {

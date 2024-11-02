@@ -40,6 +40,12 @@
           placeholder="Enter Amount"
           formControlName="amount"
         />
+        <mat-error *ngIf="form.get('amount')?.hasError('min')">
+          Invalid Amount
+        </mat-error>
+        <mat-error *ngIf="form.get('amount')?.hasError('required')">
+          Field is required
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Add Comment</mat-label>

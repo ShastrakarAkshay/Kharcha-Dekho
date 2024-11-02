@@ -3,4 +3,17 @@
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
   }
+
+  .mat-mdc-form-field-hint-wrapper,
+  .mat-mdc-form-field-error-wrapper {
+    padding: 0 !important;
+    position: relative !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper,
+  .mat-mdc-form-field-bottom-align::before {
+    display: inline !important;
+    margin-bottom: 10px !important;
+    min-height: 10px !important;
+  }
 }

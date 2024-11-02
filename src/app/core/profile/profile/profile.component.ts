@@ -10,18 +10,17 @@ import {
   MatBottomSheetModule,
 } from '@angular/material/bottom-sheet';
 import { EditProfileComponent } from '../edit-profile/edit-profile.component';
-import { ProfileService } from '../services/profile.service';
 import { AuthService } from 'src/app/common/service/auth.service';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { ILinks, IUser } from '../profile.interface';
 import { ToasterService } from 'src/app/common/service/toaster.service';
-import { finalize } from 'rxjs';
 import { IconComponent } from 'src/app/common/components/icon/icon.component';
 import { Links } from '../profile.constant';
 import {
   DialogService,
   IConfirmData,
 } from 'src/app/common/service/dialog.service';
+import { ConfigService } from 'src/app/common/service/config.service';
 
 @Component({
   selector: 'app-profile',
@@ -41,6 +40,7 @@ import {
 export class ProfileComponent implements OnInit {
   isLoading: boolean = false;
   userData!: IUser;
+  displayName: string = '';
   links: ILinks[] = Links;
 
   constructor(
@@ -48,20 +48,13 @@ export class ProfileComponent implements OnInit {
     private _bottomSheet: MatBottomSheet,
     private _authService: AuthService,
     private _spinner: SpinnerService,
-    private _profileService: ProfileService,
     private _toaster: ToasterService,
-    private _dialog: DialogService
+    private _dialog: DialogService,
+    private _configService: ConfigService
   ) {}
 
   ngOnInit(): void {
     this.getAccountInfo();
-  }
-
-  getUserName() {
-    if (this.userData) {
-      return `${this.userData.firstName} ${this.userData.lastName}`;
-    }
-    return '';
   }
 
   onItemClick(link: ILinks) {
@@ -73,25 +66,13 @@ export class ProfileComponent implements OnInit {
   }
 
   getAccountInfo() {
-    this.isLoading = true;
-    this._spinner.show();
-    this._profileService
-      .getAccountInfo()
-      .pipe(
-        finalize(() => {
-          this._spinner.hide();
-          this.isLoading = false;
-        })
-      )
-      .subscribe({
-        next: (data) => {
-          if (data) {
-            this.userData = data;
-          } else {
-            this._toaster.showWarning('Please update your profile');
-          }
-        },
-      });
+    this.userData = this._configService.userInfo;
+    if (!this.userData) {
+      this._toaster.showWarning('Please update your profile');
+      this.editProfile();
+    } else {
+      this.displayName = `${this.userData.firstName} ${this.userData.lastName}`;
+    }
   }
 
   editProfile() {

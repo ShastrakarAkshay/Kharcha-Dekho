@@ -10,3 +10,11 @@ export const Links: ILinks[] = [
   },
   { id: 3, label: 'Icons', path: 'core/icons', icon: 'interests' },
 ];
+
+export const Currencies = [
+  { icon: 'currency_rupee', name: 'Rupee' },
+  { icon: 'attach_money', name: 'Dollar' },
+  { icon: 'currency_pound', name: 'Pound' },
+  { icon: 'currency_yen', name: 'Yen' },
+  { icon: 'euro', name: 'Euro' },
+];

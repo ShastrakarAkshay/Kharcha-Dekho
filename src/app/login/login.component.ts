@@ -16,6 +16,8 @@ import { ToasterService } from '../common/service/toaster.service';
 import { SpinnerService } from '../common/service/spinner.service';
 import { finalize, forkJoin, switchMap, tap } from 'rxjs';
 import { ProfileService } from '../core/profile/services/profile.service';
+import { IUser } from '../core/profile/profile.interface';
+import { ConfigService } from '../common/service/config.service';
 
 @Component({
   selector: 'app-login',
@@ -41,7 +43,8 @@ export class LoginComponent {
     private router: Router,
     private toasterService: ToasterService,
     private spinner: SpinnerService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private configService: ConfigService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -72,12 +75,13 @@ export class LoginComponent {
       .loginWithEmail(email, password)
       .pipe(
         tap((data) => localStorage.setItem('uid', data.user?.uid || '')),
-        switchMap(() => this.profileService.isProfileUpdated()),
+        switchMap(() => this.profileService.getAccountInfo()),
         finalize(() => this.spinner.hide())
       )
       .subscribe({
-        next: (isProfileUpdated) => {
-          if (isProfileUpdated) {
+        next: (data: IUser) => {
+          if (data) {
+            this.configService.userInfo = data;
             this.router.navigate(['core']);
           } else {
             this.router.navigate(['core/profile']);

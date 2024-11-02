@@ -51,7 +51,6 @@ import { provideNativeDateAdapter } from '@angular/material/core';
   styleUrls: ['./add-transaction.component.scss'],
 })
 export class AddTransactionComponent implements OnInit, OnDestroy {
-  currencyIcon = '';
   isEdit: boolean = false;
   isLoading: boolean = false;
   formSubmitted: boolean = false;
@@ -67,6 +66,10 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
     transactionMethod: [TransactionMethod.CASH, Validators.required],
   });
 
+  get currencyIcon() {
+    return this._configService.currencySymbol;
+  }
+
   constructor(
     private _fb: FormBuilder,
     private _categoryService: CategoryService,
@@ -76,7 +79,6 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
     private _toasterService: ToasterService,
     private _configService: ConfigService
   ) {
-    this.currencyIcon = this._configService.currencySymbol;
     this.onEdit(data);
   }
 
@@ -104,7 +106,9 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.categories = data;
-          this.form.patchValue({ categoryId: data.at(0)?.id });
+          if (!this.isEdit) {
+            this.form.patchValue({ categoryId: data.at(0)?.id });
+          }
         },
       });
     this.subscriptions.push(sub$);
@@ -116,7 +120,7 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
     const formData = this.form.value;
     const transaction: ITransaction = {
       amount: formData.amount,
-      comment: formData.comment,
+      comment: formData.comment?.trim(),
       categoryId: formData.categoryId,
       transactionMethod: formData.transactionMethod,
       createdAt: formData.createdAt,

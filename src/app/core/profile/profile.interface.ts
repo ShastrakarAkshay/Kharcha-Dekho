@@ -3,6 +3,7 @@ export interface IUser {
   lastName: string;
   age: number;
   mobile: number;
+  currency: string;
 }
 
 export interface ILinks {

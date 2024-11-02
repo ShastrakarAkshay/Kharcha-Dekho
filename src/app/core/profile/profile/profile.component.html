@@ -2,7 +2,7 @@
   <div class="profile-container">
     <app-icon [name]="'person'"></app-icon>
     <div class="profile-name" *ngIf="!isLoading">
-      {{ getUserName() || "Unavailable" }}
+      {{ displayName || "Unavailable" }}
     </div>
   </div>
   <div class="links">

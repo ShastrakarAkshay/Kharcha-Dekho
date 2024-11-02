@@ -48,7 +48,6 @@ import { Router } from '@angular/router';
   providers: [DatePipe],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  currencySymbol = '';
   isLoading: boolean = false;
   dwmReport: IDWMReport[] = DMA_REPORT_CONFIG;
   transactions: ITransaction[] = [];
@@ -57,6 +56,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   filters: IFilter = {};
 
+  get currencySymbol() {
+    return this._configService.currencySymbol;
+  }
+
   constructor(
     private _bottomSheet: MatBottomSheet,
     private _transactionService: TransactionService,
@@ -64,9 +67,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private _datePipe: DatePipe,
     private _router: Router,
     private _configService: ConfigService
-  ) {
-    this.currencySymbol = this._configService.currencySymbol;
-  }
+  ) {}
 
   ngOnInit(): void {}
 

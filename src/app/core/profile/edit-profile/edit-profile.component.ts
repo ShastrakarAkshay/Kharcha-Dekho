@@ -24,6 +24,7 @@ import { ProfileService } from '../services/profile.service';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { IUser } from '../profile.interface';
 import { emptySpaceValidator } from 'src/app/common/validators/empty-space.validator';
+import { Currencies } from '../profile.constant';
 
 @Component({
   selector: 'app-edit-profile',
@@ -48,11 +49,13 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   formSubmitted: boolean = false;
   isLoading: boolean = false;
   subscriptions: Subscription[] = [];
+  currencies: any[] = Currencies;
 
   form: FormGroup = this._fb.group({
     firstName: ['', [Validators.required, emptySpaceValidator()]],
     lastName: ['', [Validators.required, emptySpaceValidator()]],
-    age: [null, Validators.required],
+    age: [null, [Validators.required, Validators.min(1)]],
+    currency: ['currency_rupee', Validators.required],
     mobile: [
       '',
       [Validators.required, Validators.minLength(10), Validators.maxLength(10)],
@@ -79,6 +82,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
         lastName: this.data.lastName,
         age: this.data.age,
         mobile: this.data.mobile,
+        currency: this.data.currency || 'currency_rupee',
       });
     }
   }
@@ -90,6 +94,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     const formData = this.form.value;
     this._profileService.updateProfileInfo(formData).subscribe({
       next: () => {
+        this._configService.userInfo = formData;
         this._bottomSheetRef.dismiss(true);
         this.isLoading = false;
       },
