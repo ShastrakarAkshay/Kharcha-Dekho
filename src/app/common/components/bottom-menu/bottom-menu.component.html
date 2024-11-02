@@ -1,6 +1,12 @@
 <div class="menu">
   @for (menu of menus; track $index) {
-  <div matRipple class="menu-item" (click)="navigate(menu)">
+  <div
+    matRipple
+    matRippleColor="#131e29c4"
+    class="menu-item"
+    [class.active]="menu.active"
+    (click)="navigate(menu)"
+  >
     <mat-icon>{{ menu.icon }}</mat-icon>
     <label>{{ menu.label }}</label>
   </div>
