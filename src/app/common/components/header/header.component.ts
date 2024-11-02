@@ -25,4 +25,5 @@ import { MatChipsModule } from '@angular/material/chips';
 export class HeaderComponent {
   @Input() heading: string = '';
   @Input() badge: string = '';
+  @Input() showLogo: boolean = false;
 }

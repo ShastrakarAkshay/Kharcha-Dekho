@@ -15,4 +15,15 @@
   .header-badge {
     text-transform: capitalize;
   }
+
+  .logo-container {
+    display: flex;
+    align-items: end;
+
+    .logo-name {
+      font-size: 10px;
+      font-weight: 200;
+      color: #bebebe;
+    }
+  }
 }
