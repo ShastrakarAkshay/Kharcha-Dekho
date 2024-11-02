@@ -71,8 +71,8 @@ export class TransactionService {
       orderBy('createdAt', 'desc')
     );
 
-    if (filters?.month) {
-      const monthFilter: any = this.getCurrentMonth(filters.month);
+    if (Number(filters?.month) >= 0) {
+      const monthFilter: any = this.getCurrentMonth(Number(filters?.month));
       if (monthFilter?.startDate && monthFilter?.endDate) {
         transactionQuery = query(
           transactionRef,
