@@ -162,7 +162,10 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
 
   @HostListener('document:scrollend', ['$event'])
   public onViewportScroll(event: Event) {
-    if (!this.collectionDataEnd) {
+    const scrollPosition = window.scrollY + window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+
+    if (scrollPosition >= documentHeight - 100 && !this.collectionDataEnd) {
       this.getAllTransactions();
     }
   }
