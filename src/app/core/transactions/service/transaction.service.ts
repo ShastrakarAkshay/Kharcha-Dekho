@@ -85,15 +85,6 @@ export class TransactionService {
       }
     }
 
-    if (filters?.categoryId) {
-      transactionQuery = query(
-        collectionRef,
-        where('categoryId', '==', filters.categoryId),
-        orderBy('createdAt', 'desc'),
-        where('userId', '==', this._configService.userId)
-      );
-    }
-
     if (filters?.pageSize) {
       transactionQuery = query(
         collectionRef,
@@ -111,6 +102,26 @@ export class TransactionService {
           startAfter(this.lastDoc)
         );
       }
+    }
+
+    if (filters?.categoryId) {
+      transactionQuery = query(
+        collectionRef,
+        where('categoryId', '==', filters.categoryId),
+        orderBy('createdAt', 'desc'),
+        where('userId', '==', this._configService.userId)
+      );
+    }
+
+    if (filters?.categoryId && filters?.pageSize && this.lastDoc) {
+      transactionQuery = query(
+        collectionRef,
+        where('categoryId', '==', filters.categoryId),
+        where('userId', '==', this._configService.userId),
+        orderBy('createdAt', 'desc'),
+        limit(filters.pageSize),
+        startAfter(this.lastDoc)
+      );
     }
 
     return transactionQuery;
