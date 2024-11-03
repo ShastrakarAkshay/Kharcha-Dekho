@@ -23,4 +23,5 @@ export enum TransactionMethod {
 export interface IFilter {
   month?: number;
   categoryId?: string;
+  pageSize?: number;
 }

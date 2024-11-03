@@ -1,6 +1,6 @@
 import {
-  AfterViewInit,
   Component,
+  HostListener,
   Input,
   OnDestroy,
   OnInit,
@@ -48,12 +48,12 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   @Input('categoryId') categoryId?: string;
 
   categoryName: string = '';
-
+  collectionDataEnd: boolean = false;
   transactions: ITransaction[] = [];
   transactionList: any[] = [];
   subscriptions: Subscription[] = [];
 
-  filters: IFilter = { categoryId: '' };
+  filters: IFilter = { categoryId: '', pageSize: 10 };
 
   constructor(
     private _transactionService: TransactionService,
@@ -76,7 +76,8 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => this._spinnerService.hide()))
       .subscribe({
         next: (transactions) => {
-          this.transactions = transactions;
+          this.collectionDataEnd = !transactions.length;
+          this.transactions.push(...transactions);
           this.groupByCreatedDate();
         },
       });
@@ -157,6 +158,13 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
         },
       });
     this.subscriptions.push(sub$);
+  }
+
+  @HostListener('document:scrollend', ['$event'])
+  public onViewportScroll(event: Event) {
+    if (!this.collectionDataEnd) {
+      this.getAllTransactions();
+    }
   }
 
   ngOnDestroy(): void {

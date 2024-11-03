@@ -16,7 +16,10 @@ import {
   addDoc,
   deleteDoc,
   getDocs,
+  limit,
   orderBy,
+  QueryDocumentSnapshot,
+  startAfter,
   Timestamp,
   updateDoc,
 } from 'firebase/firestore';
@@ -26,6 +29,9 @@ import { ICategory } from 'src/app/core/category/category.interface';
   providedIn: 'root',
 })
 export class TransactionService {
+  private lastDoc: QueryDocumentSnapshot<any> | null = null;
+  private firstDoc: QueryDocumentSnapshot<any> | null = null;
+
   constructor(
     private _firestore: Firestore,
     private _configService: ConfigService
@@ -60,13 +66,9 @@ export class TransactionService {
     return { startDate: null, endDate: null };
   }
 
-  getAllTransactions(filters?: IFilter): Observable<ITransaction[]> {
-    const transactionRef = collection(
-      this._firestore,
-      COLLECTIONS.Transactions
-    );
+  getFilteredQuery(collectionRef: CollectionReference, filters?: IFilter) {
     let transactionQuery = query(
-      transactionRef,
+      collectionRef,
       where('userId', '==', this._configService.userId),
       orderBy('createdAt', 'desc')
     );
@@ -75,7 +77,7 @@ export class TransactionService {
       const monthFilter: any = this.getCurrentMonth(Number(filters?.month));
       if (monthFilter?.startDate && monthFilter?.endDate) {
         transactionQuery = query(
-          transactionRef,
+          collectionRef,
           where('createdAt', '>=', monthFilter?.startDate),
           where('createdAt', '<=', monthFilter?.endDate),
           where('userId', '==', this._configService.userId)
@@ -85,16 +87,50 @@ export class TransactionService {
 
     if (filters?.categoryId) {
       transactionQuery = query(
-        transactionRef,
+        collectionRef,
         where('categoryId', '==', filters.categoryId),
         orderBy('createdAt', 'desc'),
         where('userId', '==', this._configService.userId)
       );
     }
 
+    if (filters?.pageSize) {
+      transactionQuery = query(
+        collectionRef,
+        orderBy('createdAt', 'desc'),
+        where('userId', '==', this._configService.userId),
+        limit(filters.pageSize)
+      );
+
+      if (this.lastDoc) {
+        transactionQuery = query(
+          collectionRef,
+          orderBy('createdAt', 'desc'),
+          where('userId', '==', this._configService.userId),
+          limit(filters.pageSize),
+          startAfter(this.lastDoc)
+        );
+      }
+    }
+
+    return transactionQuery;
+  }
+
+  getAllTransactions(filters?: IFilter): Observable<ITransaction[]> {
+    const transactionRef = collection(
+      this._firestore,
+      COLLECTIONS.Transactions
+    );
+
+    const transactionQuery = this.getFilteredQuery(transactionRef, filters);
+
     const transactions$ = from(getDocs(transactionQuery)).pipe(
       map((snapshot) =>
         snapshot.docs.map((doc) => {
+          if (!snapshot.empty) {
+            this.firstDoc = snapshot.docs[0];
+            this.lastDoc = snapshot.docs[snapshot.docs.length - 1];
+          }
           const data: any = doc.data();
           return { ...data, id: doc.id, createdAt: data.createdAt?.toDate() };
         })
