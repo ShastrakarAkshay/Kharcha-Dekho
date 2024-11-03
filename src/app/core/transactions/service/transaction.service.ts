@@ -29,7 +29,7 @@ import { ICategory } from 'src/app/core/category/category.interface';
   providedIn: 'root',
 })
 export class TransactionService {
-  private lastDoc: QueryDocumentSnapshot<any> | null = null;
+  lastDoc: QueryDocumentSnapshot<any> | null = null;
   private firstDoc: QueryDocumentSnapshot<any> | null = null;
 
   constructor(
