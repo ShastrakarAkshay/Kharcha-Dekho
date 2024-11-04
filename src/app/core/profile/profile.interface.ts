@@ -4,6 +4,7 @@ export interface IUser {
   age: number;
   mobile: number;
   currency: string;
+  imageUrl?: string;
 }
 
 export interface ILinks {

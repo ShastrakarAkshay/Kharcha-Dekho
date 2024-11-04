@@ -1,6 +1,13 @@
 <div class="profile app-layout">
   <div class="profile-container">
-    <app-icon [name]="'person'"></app-icon>
+    <div class="image-container">
+      @if (userData && userData.imageUrl) {
+      <img class="profile-image" [src]="userData.imageUrl" alt="" />
+      } @else {
+      <app-icon [name]="'person'"></app-icon>
+      }
+    </div>
+
     <div class="profile-name" *ngIf="!isLoading">
       {{ displayName || "Unavailable" }}
     </div>

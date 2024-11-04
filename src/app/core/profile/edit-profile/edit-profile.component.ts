@@ -60,6 +60,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       '',
       [Validators.required, Validators.minLength(10), Validators.maxLength(10)],
     ],
+    imageUrl: [''],
   });
 
   constructor(
@@ -83,6 +84,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
         age: this.data.age,
         mobile: this.data.mobile,
         currency: this.data.currency || 'currency_rupee',
+        imageUrl: this.data.imageUrl || '',
       });
     }
   }

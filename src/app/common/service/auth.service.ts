@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { from, map, Observable, tap } from 'rxjs';
+import { from, map, Observable, of, tap } from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { ConfigService } from './config.service';
 
@@ -9,6 +9,14 @@ import { ConfigService } from './config.service';
 })
 export class AuthService {
   constructor(private afAuth: AngularFireAuth) {}
+
+  async getUid() {
+    const user = await this.afAuth.currentUser;
+    if (user) {
+      return user.uid;
+    }
+    return null;
+  }
 
   loginWithEmail(email: string, pass: string) {
     return from(this.afAuth.signInWithEmailAndPassword(email, pass)).pipe(
