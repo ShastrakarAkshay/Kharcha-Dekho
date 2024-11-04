@@ -3,6 +3,7 @@
     [heading]="'All Transactions'"
     [badge]="categoryName"
   ></app-header>
+  @if (transactionList.length) {
   <div class="transaction-container">
     @for (item of transactionList; track $index) {
     <mat-accordion class="example-headers-align" multi>
@@ -22,4 +23,10 @@
     </mat-accordion>
     }
   </div>
+  } @else {
+  <app-empty-state
+    [message]="'No Transactions available'"
+    [subText]="'Please add some transactions against category.'"
+  ></app-empty-state
+  >}
 </div>

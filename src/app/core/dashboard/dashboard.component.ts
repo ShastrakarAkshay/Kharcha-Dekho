@@ -26,6 +26,7 @@ import { SpinnerComponent } from '../../common/components/spinner/spinner.compon
 import { AmountPipe } from '../../common/pipes/amount.pipe';
 import { SpinnerService } from '../../common/service/spinner.service';
 import { Router } from '@angular/router';
+import { EmptyStateComponent } from '../../common/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -44,6 +45,7 @@ import { Router } from '@angular/router';
     TransactionComponent,
     SpinnerComponent,
     AmountPipe,
+    EmptyStateComponent,
   ],
   providers: [DatePipe],
 })

@@ -20,11 +20,18 @@
   </div>
 
   <div class="transactions-container">
+    @if (transactionItems.length) {
     <app-transactions
       [transactions]="transactionItems"
       (itemClick)="onCategoryClick($event)"
     >
     </app-transactions>
+    } @else {
+    <app-empty-state
+      [message]="'No Transactions available'"
+      [subText]="'Please add some transactions against category.'"
+    ></app-empty-state>
+    }
   </div>
 
   <section id="new-transaction">

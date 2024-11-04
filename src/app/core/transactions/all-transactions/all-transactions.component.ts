@@ -27,6 +27,7 @@ import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
+import { EmptyStateComponent } from 'src/app/common/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-all-transactions',
@@ -39,6 +40,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatExpansionModule,
     MatAccordion,
     MatChipsModule,
+    EmptyStateComponent,
   ],
   providers: [DatePipe, provideNativeDateAdapter()],
   templateUrl: './all-transactions.component.html',

@@ -22,6 +22,7 @@ import { finalize, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
+import { EmptyStateComponent } from 'src/app/common/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-category-list',
@@ -38,6 +39,7 @@ import { SpinnerService } from 'src/app/common/service/spinner.service';
     MatSnackBarModule,
     HeaderComponent,
     SpinnerComponent,
+    EmptyStateComponent,
   ],
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
