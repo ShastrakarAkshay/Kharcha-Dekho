@@ -1,6 +1,10 @@
+@if (type === 'bg') {
 <div class="icon" [style.backgroundColor]="bgColor">
   <mat-icon>{{ name }}</mat-icon>
   @if (label) {
   <span class="label"> {{ label | titlecase }} </span>
   }
 </div>
+} @else {
+<mat-icon [style.backgroundColor]="bgColor">{{ name }}</mat-icon>
+}

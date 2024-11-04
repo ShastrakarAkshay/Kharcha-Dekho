@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Optional, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../../../common/components/icon/icon.component';
+import {
+  IconComponent,
+  IconType,
+} from '../../../common/components/icon/icon.component';
 import { getIcons } from './icon-list.constant';
 import { IIcon } from './icon-list.interface';
 import { SearchComponent } from 'src/app/common/components/search/search.component';
@@ -27,6 +30,7 @@ export class IconListComponent {
   icons: IIcon[] = [];
   searchText: string = '';
   heading: string = '';
+  listType: IconType = IconType.NORMAL;
 
   constructor(@Optional() private _dialogRef: MatDialogRef<IconListComponent>) {
     if (this._dialogRef) {

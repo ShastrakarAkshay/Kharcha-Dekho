@@ -3,7 +3,12 @@
     <app-header *ngIf="heading" [heading]="heading"></app-header>
     <app-search (searchTextChange)="onSearch($event)"></app-search>
   </div>
-  <div class="icon-list">
+  <div
+    [ngClass]="{
+      'icon-bg-list': listType === 'bg',
+      'icon-normal-list': listType === 'normal',
+    }"
+  >
     @for (icon of icons | search : searchText; track $index) {
     <ng-container>
       @defer (on viewport) {
@@ -11,11 +16,18 @@
         [name]="icon.name"
         [label]="icon.label"
         [bgColor]="icon.bgColor"
+        [type]="listType"
         (click)="onIconSelect(icon)"
       >
       </app-icon>
       } @placeholder {
-      <app-icon [name]="''" [label]="''" [bgColor]="'#ececec'"> </app-icon>
+      <app-icon
+        [name]="''"
+        [label]="''"
+        [bgColor]="'#ececec'"
+        [type]="listType"
+      >
+      </app-icon>
       }
     </ng-container>
     }

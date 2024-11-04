@@ -2,12 +2,24 @@
   margin: 20px 5px 0px;
 }
 
-.icon-list {
+.icon-bg-list {
   display: grid;
   grid-template-columns: 33.33% 33.33% 33.33%;
   place-content: center;
   gap: 15px;
   padding: 0 20px;
+}
+
+.icon-normal-list {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  place-content: center;
+  gap: 25px;
+  padding: 0 10px;
+}
+
+.flex-start {
+  justify-content: flex-start;
 }
 
 .footer {
