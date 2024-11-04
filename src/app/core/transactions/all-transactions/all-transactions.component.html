@@ -23,7 +23,7 @@
     </mat-accordion>
     }
   </div>
-  } @else {
+  } @else if(!isLoading) {
   <app-empty-state
     [message]="'No Transactions available'"
     [subText]="'Please add some transactions against category.'"

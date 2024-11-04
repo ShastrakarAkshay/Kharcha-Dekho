@@ -80,6 +80,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getAllTransactions() {
     this._spinnerService.show();
+    this.isLoading = true;
     const sub$ = this._transactionService
       .getAllTransactions(this.filters)
       .subscribe({
@@ -90,6 +91,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.updateWeekAmount();
           this.updateMonthAmount();
           this._spinnerService.hide();
+          this.isLoading = false;
         },
       });
     this.subscriptions.push(sub$);

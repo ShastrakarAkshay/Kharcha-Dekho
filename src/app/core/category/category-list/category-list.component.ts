@@ -48,6 +48,7 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   searchText: string = '';
   categories: ICategory[] = [];
   subscription: Subscription[] = [];
+  isLoading: boolean = false;
 
   constructor(
     private _bottomSheet: MatBottomSheet,
@@ -63,12 +64,14 @@ export class CategoryListComponent implements OnInit, OnDestroy {
 
   getAllCategories() {
     this._spinner.show();
+    this.isLoading = true;
     const sub$ = this._categoryService
       .getAllCategories()
       .pipe(finalize(() => this._spinner.hide()))
       .subscribe({
         next: (list) => {
           this.categories = list;
+          this.isLoading = false;
         },
       });
     this.subscription.push(sub$);

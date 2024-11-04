@@ -51,6 +51,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
 
   categoryName: string = '';
   collectionDataEnd: boolean = false;
+  isLoading: boolean = false;
   transactions: ITransaction[] = [];
   transactionList: any[] = [];
   subscriptions: Subscription[] = [];
@@ -73,6 +74,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
 
   getAllTransactions() {
     this._spinnerService.show();
+    this.isLoading = true;
     const sub$ = this._transactionService
       .getAllTransactions(this.filters)
       .pipe(finalize(() => this._spinnerService.hide()))
@@ -81,6 +83,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
           this.collectionDataEnd = !transactions.length;
           this.transactions.push(...transactions);
           this.groupByCreatedDate();
+          this.isLoading = false;
         },
       });
     this.subscriptions.push(sub$);
