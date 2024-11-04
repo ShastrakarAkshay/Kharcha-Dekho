@@ -161,11 +161,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const currentDate = new Date();
 
     const startOfWeek = new Date(currentDate);
-    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 1);
     startOfWeek.setHours(0, 0, 0, 0);
 
     const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setDate(startOfWeek.getDate() + 7);
     endOfWeek.setHours(23, 59, 59, 999);
 
     const amount = this.transactions
