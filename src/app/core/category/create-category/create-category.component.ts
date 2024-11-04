@@ -92,7 +92,7 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
         maxHeight: '100vh',
         height: '100%',
         width: '100%',
-        panelClass: 'full-screen-modal',
+        panelClass: 'dialog-bg',
       })
       .afterClosed()
       .subscribe({

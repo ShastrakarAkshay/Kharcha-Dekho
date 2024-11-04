@@ -1,3 +1,17 @@
+* {
+  font-family: "Poppins", sans-serif;
+}
+html,
+body {
+  height: 100%;
+  background: #131e29;
+  user-select: none;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
 .app-layout {
   padding: 15px;
   padding-bottom: 100px;
@@ -14,16 +28,8 @@
   width: 100%;
 }
 
-* {
-  font-family: "Poppins", sans-serif;
-}
-html,
-body {
-  height: 100%;
-  background: #131e29;
-  user-select: none;
-}
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+.dialog-bg {
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    background-color: #131e29 !important;
+  }
 }
