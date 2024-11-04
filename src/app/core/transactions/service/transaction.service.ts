@@ -113,6 +113,16 @@ export class TransactionService {
       );
     }
 
+    if (filters?.categoryId && filters?.pageSize) {
+      transactionQuery = query(
+        collectionRef,
+        where('categoryId', '==', filters.categoryId),
+        where('userId', '==', this._configService.userId),
+        orderBy('createdAt', 'desc'),
+        limit(filters.pageSize)
+      );
+    }
+
     if (filters?.categoryId && filters?.pageSize && this.lastDoc) {
       transactionQuery = query(
         collectionRef,
