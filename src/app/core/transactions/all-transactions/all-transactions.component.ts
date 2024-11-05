@@ -69,6 +69,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.filters.categoryId = this.categoryId;
+    this._transactionService.lastDoc = null;
     this.getAllTransactions();
   }
 
@@ -177,6 +178,5 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
-    this._transactionService.lastDoc = null;
   }
 }

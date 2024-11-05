@@ -141,7 +141,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         amount,
       });
     }
-    this.transactionItems = txns;
+    this.transactionItems = txns.sort((a, b) => b.amount - a.amount);
   }
 
   updateDayAmount() {
@@ -199,7 +199,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onCategoryClick(categoryId: string) {
-    this._transactionService.lastDoc = null;
     this._router.navigate(['core/all-transactions', categoryId]);
   }
 
