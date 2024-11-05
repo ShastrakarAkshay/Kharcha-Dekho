@@ -10,4 +10,5 @@ import { Component, Input } from '@angular/core';
 export class EmptyStateComponent {
   @Input() message: string = '';
   @Input() subText: string = '';
+  @Input() height: string = '';
 }

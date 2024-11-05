@@ -45,8 +45,9 @@
   </div>
   } @else if(!isLoading) {
   <app-empty-state
-    [message]="'No Categories available'"
+    [message]="'No Categories available.'"
     [subText]="'Please create category.'"
+    [height]="'60vh'"
   ></app-empty-state>
   }
 
