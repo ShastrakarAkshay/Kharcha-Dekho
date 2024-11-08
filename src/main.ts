@@ -46,11 +46,11 @@ bootstrapApplication(AppComponent, {
       FirestoreModule,
       AuthModule,
       AngularFireModule,
-      AngularFireAuthModule,
-      provideFirebaseApp(() => initializeApp(firebaseConfig)),
-      provideFirestore(() => getFirestore()),
-      provideAuth(() => getAuth())
+      AngularFireAuthModule
     ),
+    provideFirestore(() => getFirestore()),
+    provideFirebaseApp(() => initializeApp(firebaseConfig)),
+    provideAuth(() => getAuth()),
     ConfirmDialogComponent,
   ],
 }).catch((err) => console.log(err));
