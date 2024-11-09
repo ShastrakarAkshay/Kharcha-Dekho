@@ -12,17 +12,20 @@ import { SearchComponent } from 'src/app/common/components/search/search.compone
 import { ICategory } from '../category.interface';
 import { SearchPipe } from 'src/app/common/pipes/search.pipe';
 import { CategoryService } from '../service/category.service';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HeaderComponent } from 'src/app/common/components/header/header.component';
 import {
   DialogService,
   IConfirmData,
 } from 'src/app/common/service/dialog.service';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { EmptyStateComponent } from 'src/app/common/components/empty-state/empty-state.component';
+import { Select, Store } from '@ngxs/store';
+import { CategoryState } from 'src/app/store/states/category.state';
+import { GetCategory } from 'src/app/store/actions/category.action';
 
 @Component({
   selector: 'app-category-list',
@@ -49,31 +52,40 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   categories: ICategory[] = [];
   subscription: Subscription[] = [];
   isLoading: boolean = false;
+  @Select(CategoryState.getCategoryList) categories$!: Observable<ICategory[]>;
+  @Select(CategoryState.isCategoryLoaded)
+  isCategoryLoaded$!: Observable<boolean>;
 
   constructor(
     private _bottomSheet: MatBottomSheet,
     private _categoryService: CategoryService,
     private _dialogService: DialogService,
     private _toaster: ToasterService,
-    private _spinner: SpinnerService
+    private _spinner: SpinnerService,
+    private _store: Store
   ) {}
 
   ngOnInit(): void {
     this.getAllCategories();
+    this.getCategoriesFromStore();
   }
 
-  getAllCategories() {
-    this._spinner.show();
+  getCategoriesFromStore() {
     this.isLoading = true;
-    const sub$ = this._categoryService
-      .getAllCategories()
-      .pipe(finalize(() => this._spinner.hide()))
-      .subscribe({
-        next: (list) => {
-          this.categories = list;
-          this.isLoading = false;
-        },
+    const sub$ = this.categories$
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe((list) => {
+        this.categories = list;
       });
+    this.subscription.push(sub$);
+  }
+
+  getAllCategories(callAPI?: boolean) {
+    const sub$ = this.isCategoryLoaded$.subscribe((loaded) => {
+      if (!loaded || callAPI) {
+        this._store.dispatch(new GetCategory());
+      }
+    });
     this.subscription.push(sub$);
   }
 
@@ -86,7 +98,7 @@ export class CategoryListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (refresh: boolean) => {
           if (refresh) {
-            this.getAllCategories();
+            this.getAllCategories(true);
           }
         },
       });
@@ -119,7 +131,7 @@ export class CategoryListComponent implements OnInit, OnDestroy {
             this._spinner.show();
             this._categoryService.deleteCategory(category.id).then(() => {
               this._toaster.showSuccess('Category Deleted');
-              this.getAllCategories();
+              this.getAllCategories(true);
               this._spinner.hide();
             });
           }

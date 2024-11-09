@@ -24,11 +24,14 @@ import {
 } from '@angular/material/bottom-sheet';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { ConfigService } from 'src/app/common/service/config.service';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { Select, Store } from '@ngxs/store';
+import { CategoryState } from 'src/app/store/states/category.state';
+import { GetCategory } from 'src/app/store/actions/category.action';
 
 @Component({
   selector: 'app-add-transaction',
@@ -58,6 +61,12 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
   categories: ICategory[] = [];
   subscriptions: Subscription[] = [];
 
+  @Select(CategoryState.isCategoryLoaded)
+  isCategoryLoaded$!: Observable<boolean>;
+  @Select(CategoryState.getCategoryList) getCategoryList$!: Observable<
+    ICategory[]
+  >;
+
   form: FormGroup = this._fb.group({
     amount: ['', [Validators.required, Validators.min(1)]],
     createdAt: [new Date(), Validators.required],
@@ -77,13 +86,25 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: ITransaction,
     private _bottomSheetRef: MatBottomSheetRef<AddTransactionComponent>,
     private _toasterService: ToasterService,
-    private _configService: ConfigService
+    private _configService: ConfigService,
+    private _store: Store
   ) {
     this.onEdit(data);
   }
 
   ngOnInit(): void {
     this.getAllCategories();
+    this.getAllCategoriesFromStore();
+  }
+
+  getAllCategoriesFromStore() {
+    const sub$ = this.getCategoryList$.subscribe((data) => {
+      this.categories = data;
+      if (!this.isEdit) {
+        this.form.patchValue({ categoryId: data.at(0)?.id });
+      }
+    });
+    this.subscriptions.push(sub$);
   }
 
   onEdit(data: ITransaction) {
@@ -99,18 +120,11 @@ export class AddTransactionComponent implements OnInit, OnDestroy {
   }
 
   getAllCategories() {
-    this.isLoading = true;
-    const sub$ = this._categoryService
-      .getAllCategories()
-      .pipe(finalize(() => (this.isLoading = false)))
-      .subscribe({
-        next: (data) => {
-          this.categories = data;
-          if (!this.isEdit) {
-            this.form.patchValue({ categoryId: data.at(0)?.id });
-          }
-        },
-      });
+    const sub$ = this.isCategoryLoaded$.subscribe((loaded) => {
+      if (!loaded) {
+        this._store.dispatch(new GetCategory());
+      }
+    });
     this.subscriptions.push(sub$);
   }
 

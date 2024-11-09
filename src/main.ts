@@ -21,6 +21,11 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { ConfirmDialogComponent } from './app/common/components/confirm-dialog/confirm-dialog.component';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxsModule, provideStore } from '@ngxs/store';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { TransactionState } from './app/store/states/transaction.state';
+import { CategoryState } from './app/store/states/category.state';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyBCewB9DeINEAHb4xI7V8Rezzmb1HQtv2w',
@@ -46,11 +51,15 @@ bootstrapApplication(AppComponent, {
       FirestoreModule,
       AuthModule,
       AngularFireModule,
-      AngularFireAuthModule
+      AngularFireAuthModule,
+      NgxsModule,
+      NgxsLoggerPluginModule.forRoot(),
+      NgxsReduxDevtoolsPluginModule.forRoot()
     ),
     provideFirestore(() => getFirestore()),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideAuth(() => getAuth()),
+    provideStore([TransactionState, CategoryState]),
     ConfirmDialogComponent,
   ],
 }).catch((err) => console.log(err));
