@@ -2,7 +2,6 @@
   <app-header [heading]="'Categories'"></app-header>
   <app-search (searchTextChange)="onSearch($event)"></app-search>
 
-  @if(categories.length) {
   <div class="category-list">
     @for (cat of categories | search: searchText; track $index) {
     <ng-container>
@@ -41,15 +40,14 @@
       <span>test</span>
       }
     </ng-container>
+    } @empty {
+    <app-empty-state
+      [message]="'No Categories available.'"
+      [subText]="'Please create category.'"
+      [height]="'60vh'"
+    ></app-empty-state>
     }
   </div>
-  } @else if(!isLoading) {
-  <app-empty-state
-    [message]="'No Categories available.'"
-    [subText]="'Please create category.'"
-    [height]="'60vh'"
-  ></app-empty-state>
-  }
 
   <section id="new-transaction">
     <button mat-fab (click)="createCategory()">

@@ -5,6 +5,10 @@
   gap: 15px;
   padding: 0 10px;
 
+  &:has(app-empty-state) {
+    display: block;
+  }
+
   .category {
     width: 100%;
     padding: 15px 10px;
