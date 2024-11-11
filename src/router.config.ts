@@ -8,6 +8,7 @@ import { LoginComponent } from './app/login/login.component';
 import { AuthGuard } from './app/common/guards/auth.guard';
 import { EditProfileComponent } from './app/core/profile/edit-profile/edit-profile.component';
 import { CoreComponent } from './app/core/core.component';
+import { PageNotFoundComponent } from './app/common/components/page-not-found/page-not-found.component';
 
 export const ROUTES: Routes = [
   {
@@ -59,5 +60,9 @@ export const ROUTES: Routes = [
         component: EditProfileComponent,
       },
     ],
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent,
   },
 ];
