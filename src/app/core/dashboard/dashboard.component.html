@@ -3,7 +3,9 @@
     <app-dropdown (monthChange)="onMonthChange($event)"></app-dropdown>
   </app-header>
 
-  <div class="dashboard">Dashboard</div>
+  <div class="dashboard">
+    <app-bar-chart [transactionItems]="transactionItems"></app-bar-chart>
+  </div>
 
   <div class="report-container">
     @for (report of dwmReport; track $index) {
