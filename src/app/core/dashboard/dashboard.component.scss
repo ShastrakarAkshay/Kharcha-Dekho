@@ -3,11 +3,38 @@
   justify-content: center;
   align-items: center;
   height: 180px;
-  // background-color: rgb(244, 247, 213);
   background-color: #f4f7d508;
   border-radius: 15px;
   margin-bottom: 20px;
   margin-top: 10px;
+  position: relative;
+
+  .icon-group {
+    color: #ffffff;
+    background-color: #000000;
+    border-radius: 5px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    mat-icon {
+      font-size: 20px;
+      padding: 2px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &.active {
+        background-color: #3d3d3d;
+      }
+    }
+  }
 }
 
 .report-container {

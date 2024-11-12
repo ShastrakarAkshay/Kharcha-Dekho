@@ -4,7 +4,20 @@
   </app-header>
 
   <div class="dashboard">
-    <app-bar-chart [transactionItems]="transactionItems"></app-bar-chart>
+    <app-bar-chart
+      [type]="chartType"
+      [transactionItems]="transactionItems"
+    ></app-bar-chart>
+    <div class="icon-group">
+      <mat-icon (click)="chartType = 'bar'" [class.active]="chartType === 'bar'"
+        >bar_chart</mat-icon
+      >
+      <mat-icon
+        (click)="chartType = 'doughnut'"
+        [class.active]="chartType === 'doughnut'"
+        >donut_large</mat-icon
+      >
+    </div>
   </div>
 
   <div class="report-container">

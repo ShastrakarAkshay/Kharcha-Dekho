@@ -27,7 +27,7 @@ import { AmountPipe } from '../../common/pipes/amount.pipe';
 import { SpinnerService } from '../../common/service/spinner.service';
 import { Router } from '@angular/router';
 import { EmptyStateComponent } from '../../common/components/empty-state/empty-state.component';
-import { BarChartComponent } from './bar-chart/bar-chart.component';
+import { BarChartComponent, ChartType } from './bar-chart/bar-chart.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -59,6 +59,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
   filters: IFilter = {};
+  chartType: ChartType = 'bar';
 
   get currencySymbol() {
     return this._configService.currencySymbol;

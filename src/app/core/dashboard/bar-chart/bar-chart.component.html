@@ -1,9 +1,14 @@
-<div>
+<div class="charts">
+  @if (isDataAvailable) {
   <canvas
     baseChart
     [data]="barChartData"
     [options]="barChartOptions"
-    [type]="'bar'"
+    [type]="type"
+    [class.canvas-width]="type !== 'bar'"
   >
   </canvas>
+  } @else {
+  <span class="empty-message">Data is not available</span>
+  }
 </div>
