@@ -40,7 +40,7 @@ export class BarChartComponent {
     labels: [],
     datasets: [
       {
-        label: 'Amount',
+        label: '',
         data: [],
         borderWidth: 1,
         maxBarThickness: 20,

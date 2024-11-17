@@ -165,20 +165,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   updateWeekAmount() {
-    const currentDate = new Date();
+    const date = new Date();
+    // Get the day of the week (0 for Sunday, 1 for Monday, etc.)
+    const dayOfWeek = date.getDay();
+    // Calculate the difference to the Monday of the week
+    const startDiff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    // Calculate the difference to the Sunday of the week
+    const endDiff = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
 
-    const startOfWeek = new Date(currentDate);
-    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 1);
-    startOfWeek.setHours(0, 0, 0, 0);
+    // Create new Date objects for the start and end of the week
+    const monday = new Date(date);
+    monday.setDate(date.getDate() + startDiff);
+    monday.setHours(0, 0, 0, 0);
 
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6);
-    endOfWeek.setHours(23, 59, 59, 999);
+    const sunday = new Date(date);
+    sunday.setDate(date.getDate() + endDiff);
+    sunday.setHours(23, 59, 59, 999);
 
     const amount = this.transactions
       .filter((item) => {
         const itemDate = new Date(item.createdAt);
-        return itemDate >= startOfWeek && itemDate <= endOfWeek;
+        return itemDate >= monday && itemDate <= sunday;
       })
       .reduce((acc, item) => (acc += item.amount), 0);
 

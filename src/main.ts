@@ -38,6 +38,10 @@ export const firebaseConfig = {
   measurementId: 'G-C6WG9Y9Y41',
 };
 
+// platformBrowserDynamic()
+//   .bootstrapModule(AppModule)
+//   .catch((err) => console.error(err));
+
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: firebaseConfig },
