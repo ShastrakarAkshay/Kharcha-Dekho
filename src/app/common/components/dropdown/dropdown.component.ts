@@ -44,15 +44,14 @@ export class DropdownComponent implements OnInit {
   @Output() monthChange = new EventEmitter<IMonth>();
 
   ngOnInit(): void {
-    this.emitCurrentMonth();
+    this.setCurrentMonth();
   }
 
-  emitCurrentMonth() {
+  setCurrentMonth() {
     const currentMonth = new Date().getMonth();
     this.selectedMonth = this.months.find(
       (x) => x.id === currentMonth
     ) as IMonth;
-    this.monthChange.emit(this.selectedMonth);
   }
 
   onMonthSelect(month: IMonth) {

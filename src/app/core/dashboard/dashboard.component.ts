@@ -21,13 +21,16 @@ import {
 import { DMA_REPORT_CONFIG } from './dashboard.constant';
 import { ConfigService } from '../../common/service/config.service';
 import { IFilter, ITransaction } from '../transactions/transactions.interface';
-import { Subscription } from 'rxjs';
+import { finalize, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from '../../common/components/spinner/spinner.component';
 import { AmountPipe } from '../../common/pipes/amount.pipe';
 import { SpinnerService } from '../../common/service/spinner.service';
 import { Router } from '@angular/router';
 import { EmptyStateComponent } from '../../common/components/empty-state/empty-state.component';
 import { BarChartComponent, ChartType } from './bar-chart/bar-chart.component';
+import { Select, select, Store } from '@ngxs/store';
+import { GetDashboardTransaction } from 'src/app/store/actions/dashboard-transaction.action';
+import { DashboardTransactionState } from 'src/app/store/states/dashboard-transaction.state';
 
 @Component({
   selector: 'app-dashboard',
@@ -58,8 +61,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   transactionItems: ITransactionItem[] = [];
   subscriptions: Subscription[] = [];
 
-  filters: IFilter = {};
+  filters: IFilter = {
+    month: new Date().getMonth(),
+  };
   chartType: ChartType = 'bar';
+
+  @Select(DashboardTransactionState.getDashboardTransactions)
+  dashboardTransactions$!: Observable<ITransaction[]>;
+
+  @Select(DashboardTransactionState.isTransactionLoaded)
+  isTransactionLoaded$!: Observable<boolean>;
 
   get currencySymbol() {
     return this._configService.currencySymbol;
@@ -71,32 +82,42 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private _spinnerService: SpinnerService,
     private _datePipe: DatePipe,
     private _router: Router,
-    private _configService: ConfigService
+    private _configService: ConfigService,
+    private _store: Store
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getAllTransactions();
+    this.getTransactionFromStore();
+  }
 
   onMonthChange(month: IMonth) {
     this.filters.month = month.id;
-    this.getAllTransactions();
+    this.getAllTransactions(true);
   }
 
-  getAllTransactions() {
-    this._spinnerService.show();
+  getTransactionFromStore() {
     this.isLoading = true;
-    const sub$ = this._transactionService
-      .getAllTransactions(this.filters)
-      .subscribe({
-        next: (transactions) => {
+    const sub$ = this.dashboardTransactions$
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe((transactions) => {
+        if (transactions) {
           this.transactions = transactions;
           this.updateCategoryWiseTransactions();
           this.updateDayAmount();
           this.updateWeekAmount();
           this.updateMonthAmount();
-          this._spinnerService.hide();
-          this.isLoading = false;
-        },
+        }
       });
+    this.subscriptions.push(sub$);
+  }
+
+  getAllTransactions(refresh?: boolean) {
+    const sub$ = this.isTransactionLoaded$.subscribe((loaded) => {
+      if (!loaded || refresh) {
+        this._store.dispatch(new GetDashboardTransaction(this.filters));
+      }
+    });
     this.subscriptions.push(sub$);
   }
 
@@ -107,7 +128,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (refresh: boolean) => {
           if (refresh) {
-            this.getAllTransactions();
+            this.getAllTransactions(refresh);
           }
         },
       });

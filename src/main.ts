@@ -27,6 +27,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { TransactionState } from './app/store/states/transaction.state';
 import { CategoryState } from './app/store/states/category.state';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { DashboardTransactionState } from './app/store/states/dashboard-transaction.state';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyBCewB9DeINEAHb4xI7V8Rezzmb1HQtv2w',
@@ -64,7 +65,7 @@ bootstrapApplication(AppComponent, {
     provideFirestore(() => getFirestore()),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideAuth(() => getAuth()),
-    provideStore([TransactionState, CategoryState]),
+    provideStore([TransactionState, CategoryState, DashboardTransactionState]),
     provideCharts(withDefaultRegisterables()),
     ConfirmDialogComponent,
   ],

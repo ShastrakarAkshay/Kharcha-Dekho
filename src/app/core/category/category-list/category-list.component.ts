@@ -80,9 +80,9 @@ export class CategoryListComponent implements OnInit, OnDestroy {
     this.subscription.push(sub$);
   }
 
-  getAllCategories(callAPI?: boolean) {
+  getAllCategories(refresh?: boolean) {
     const sub$ = this.isCategoryLoaded$.subscribe((loaded) => {
-      if (!loaded || callAPI) {
+      if (!loaded || refresh) {
         this._store.dispatch(new GetCategory());
       }
     });
