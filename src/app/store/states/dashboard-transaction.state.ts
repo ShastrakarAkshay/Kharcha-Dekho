@@ -35,21 +35,15 @@ export class DashboardTransactionState {
     { getState, setState }: StateContext<DashboardTransactionModel>,
     { filters }: GetDashboardTransaction
   ) {
-    const state = getState();
-    if (state.transactionLoaded) {
-      return of(state.transactions);
-    } else {
-      // this._spinner.show();
-      return this._transactionService.getAllTransactions(filters).pipe(
-        tap((data) => {
-          setState({
-            ...state,
-            transactions: data,
-            transactionLoaded: true,
-          });
-        })
-        // finalize(() => this._spinner.hide())
-      );
-    }
+    return this._transactionService.getAllTransactions(filters).pipe(
+      tap((data) => {
+        const state = getState();
+        setState({
+          ...state,
+          transactions: data,
+          transactionLoaded: true,
+        });
+      })
+    );
   }
 }
