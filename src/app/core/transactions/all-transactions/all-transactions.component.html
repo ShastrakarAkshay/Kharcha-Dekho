@@ -3,6 +3,15 @@
     [heading]="'All Transactions'"
     [badge]="categoryName"
   ></app-header>
+
+  <div class="filter-container">
+    <app-filter
+      [label]="'Categories'"
+      [options]="this.filterOptions.categories"
+    >
+    </app-filter>
+  </div>
+
   @if (transactionList.length) {
   <div class="transaction-container">
     @for (item of transactionList; track $index) {

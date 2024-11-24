@@ -1,0 +1,31 @@
+.filter-values {
+  padding: 20px 0;
+
+  .filter-header {
+    display: flex;
+    justify-content: space-between;
+
+    label {
+      font-size: 17px;
+      font-weight: 400;
+    }
+  }
+
+  .filter-list {
+    margin-top: 10px;
+
+    ul {
+      list-style-type: none;
+      margin-top: 4px;
+      padding-left: 0;
+    }
+  }
+}
+
+:host {
+  ::ng-deep {
+    .mdc-label {
+      margin-bottom: 0 !important;
+    }
+  }
+}

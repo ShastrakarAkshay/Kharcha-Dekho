@@ -25,4 +25,12 @@
       color: white;
     }
   }
+
+  .filter-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    overflow: auto;
+    padding-bottom: 6px;
+  }
 }

@@ -21,13 +21,18 @@ import { ToasterService } from 'src/app/common/service/toaster.service';
 import { TransactionService } from '../service/transaction.service';
 import { IFilter, ITransaction } from '../transactions.interface';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { EmptyStateComponent } from 'src/app/common/components/empty-state/empty-state.component';
+import { FilterComponent } from 'src/app/common/components/filter/filter.component';
+import { Select, Store } from '@ngxs/store';
+import { GetCategory } from 'src/app/store/actions/category.action';
+import { CategoryState } from 'src/app/store/states/category.state';
+import { ICategory } from '../../category/category.interface';
 
 @Component({
   selector: 'app-all-transactions',
@@ -41,6 +46,7 @@ import { EmptyStateComponent } from 'src/app/common/components/empty-state/empty
     MatAccordion,
     MatChipsModule,
     EmptyStateComponent,
+    FilterComponent,
   ],
   providers: [DatePipe, provideNativeDateAdapter()],
   templateUrl: './all-transactions.component.html',
@@ -57,6 +63,13 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
   filters: IFilter = { categoryId: '', pageSize: 10 };
+  filterOptions: any = {
+    categories: [],
+  };
+
+  @Select(CategoryState.getCategoryList) categories$!: Observable<ICategory[]>;
+  @Select(CategoryState.isCategoryLoaded)
+  isCategoryLoaded!: Observable<boolean>;
 
   constructor(
     private _transactionService: TransactionService,
@@ -64,13 +77,35 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
     private _toasterService: ToasterService,
     private _dialogService: DialogService,
     private _spinnerService: SpinnerService,
-    private _datePipe: DatePipe
+    private _datePipe: DatePipe,
+    private _store: Store
   ) {}
 
   ngOnInit(): void {
     this.filters.categoryId = this.categoryId;
     this._transactionService.lastDoc = null;
+    this.loadCategoryFromStore();
     this.getAllTransactions();
+    this.getAllCategoryFromStore();
+  }
+
+  loadCategoryFromStore() {
+    this.isCategoryLoaded.subscribe((loaded) => {
+      if (!loaded) {
+        this._store.dispatch(new GetCategory());
+      }
+    });
+  }
+
+  getAllCategoryFromStore() {
+    const sub$ = this.categories$.subscribe({
+      next: (categories) => {
+        this.filterOptions.categories = categories.map((x) => {
+          return { id: x.id, label: x.name };
+        });
+      },
+    });
+    this.subscriptions.push(sub$);
   }
 
   getAllTransactions() {
