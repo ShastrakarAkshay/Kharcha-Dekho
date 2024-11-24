@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
@@ -7,7 +7,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { FilterValuesComponent } from './filter-values/filter-values.component';
-import { IFilterOption } from './filter.interface';
+import { FilterType, IFilterOption } from './filter.interface';
+import {
+  MatDatepicker,
+  MatDatepickerModule,
+} from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-filter',
@@ -19,6 +23,7 @@ import { IFilterOption } from './filter.interface';
     MatIconModule,
     MatRippleModule,
     MatSelectModule,
+    MatDatepickerModule,
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss',
@@ -26,10 +31,31 @@ import { IFilterOption } from './filter.interface';
 export class FilterComponent {
   @Input() label: string = 'Select';
   @Input() options: IFilterOption[] = [{ id: 1, label: 'test' }];
+  @Input() type: FilterType = FilterType.MultiSelect;
+
+  @ViewChild('picker') datePicker!: MatDatepicker<Date>;
 
   constructor(private _bottomSheet: MatBottomSheet) {}
 
-  openBottomSheet() {
-    this._bottomSheet.open(FilterValuesComponent, { data: this.options });
+  openFilterType() {
+    if (this.type === FilterType.MultiSelect) {
+      this._openBottomSheet();
+    }
+    if (this.type === FilterType.Date) {
+      this._openDatepicker();
+    }
+  }
+
+  private _openBottomSheet() {
+    this._bottomSheet.open(FilterValuesComponent, {
+      data: {
+        label: this.label,
+        options: this.options,
+      },
+    });
+  }
+
+  private _openDatepicker(): void {
+    this.datePicker?.open();
   }
 }

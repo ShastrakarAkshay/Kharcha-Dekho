@@ -3,9 +3,10 @@
     matRipple
     [matRippleCentered]="true"
     class="filter-trigger"
-    (click)="openBottomSheet()"
+    (click)="openFilterType()"
   >
-    <span class="trigger-label"> {{ label }} </span>
+    <div class="trigger-label">{{ label }}</div>
     <mat-icon class="trigger-icon">arrow_drop_down</mat-icon>
   </button>
+  <mat-datepicker #picker></mat-datepicker>
 </div>

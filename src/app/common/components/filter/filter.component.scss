@@ -17,6 +17,10 @@
       color: #c1c1c1;
       border: 1px solid;
 
+      .trigger-label {
+        white-space: nowrap;
+      }
+
       .trigger-icon {
         font-size: larger;
         display: flex;

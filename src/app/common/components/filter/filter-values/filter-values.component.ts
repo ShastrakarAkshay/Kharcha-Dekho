@@ -28,13 +28,15 @@ export class FilterValuesComponent {
     ],
   });
 
+  label: string = '';
   options: IFilterOption[] = [];
 
   constructor(
     private _ref: MatBottomSheetRef<FilterComponent>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: IFilterOption[]
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any
   ) {
-    this.options = data;
+    this.label = data.label;
+    this.options = data.options;
   }
 
   onClose() {

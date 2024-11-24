@@ -19,7 +19,7 @@ import {
 } from 'src/app/common/service/dialog.service';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { TransactionService } from '../service/transaction.service';
-import { IFilter, ITransaction } from '../transactions.interface';
+import { IFilter, ITransaction, MONTHS } from '../transactions.interface';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
 import { finalize, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
@@ -33,6 +33,7 @@ import { Select, Store } from '@ngxs/store';
 import { GetCategory } from 'src/app/store/actions/category.action';
 import { CategoryState } from 'src/app/store/states/category.state';
 import { ICategory } from '../../category/category.interface';
+import { FilterType } from 'src/app/common/components/filter/filter.interface';
 
 @Component({
   selector: 'app-all-transactions',
@@ -61,10 +62,12 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   transactions: ITransaction[] = [];
   transactionList: any[] = [];
   subscriptions: Subscription[] = [];
+  filterType = FilterType;
 
   filters: IFilter = { categoryId: '', pageSize: 10 };
   filterOptions: any = {
     categories: [],
+    months: MONTHS,
   };
 
   @Select(CategoryState.getCategoryList) categories$!: Observable<ICategory[]>;

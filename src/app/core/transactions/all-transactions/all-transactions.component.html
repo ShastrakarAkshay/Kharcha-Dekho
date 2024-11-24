@@ -7,7 +7,26 @@
   <div class="filter-container">
     <app-filter
       [label]="'Categories'"
+      [type]="filterType.MultiSelect"
       [options]="this.filterOptions.categories"
+    >
+    </app-filter>
+    <app-filter
+      [label]="'Month'"
+      [type]="filterType.MultiSelect"
+      [options]="this.filterOptions.months"
+    >
+    </app-filter>
+    <app-filter
+      [label]="'From Date'"
+      [type]="filterType.Date"
+      [options]="this.filterOptions.months"
+    >
+    </app-filter>
+    <app-filter
+      [label]="'To Date'"
+      [type]="filterType.Date"
+      [options]="this.filterOptions.months"
     >
     </app-filter>
   </div>
