@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, from, map, Observable, of } from 'rxjs';
+import { combineLatest, finalize, from, map, Observable, of, tap } from 'rxjs';
 import { IFilter, ITransaction } from '../transactions.interface';
 import {
   collection,
@@ -24,6 +24,9 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { ICategory } from 'src/app/core/category/category.interface';
+import { SpinnerService } from 'src/app/common/service/spinner.service';
+import { Store } from '@ngxs/store';
+import { RefreshTransaction } from 'src/app/store/actions/dashboard.action';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +37,9 @@ export class TransactionService {
 
   constructor(
     private _firestore: Firestore,
-    private _configService: ConfigService
+    private _configService: ConfigService,
+    private _spinner: SpinnerService,
+    private _store: Store
   ) {}
 
   private collectionRef(id?: any): CollectionReference {
@@ -189,6 +194,8 @@ export class TransactionService {
         createdAt: Timestamp.fromDate(data.createdAt),
         updatedAt: Timestamp.now(),
       })
+    ).pipe(
+      tap(() => this._store.dispatch(new RefreshTransaction()))
     ) as Observable<any>;
   }
 
@@ -199,10 +206,14 @@ export class TransactionService {
         updatedAt: Timestamp.now(),
         createdAt: Timestamp.fromDate(data.createdAt),
       })
+    ).pipe(
+      tap(() => this._store.dispatch(new RefreshTransaction()))
     ) as Observable<any>;
   }
 
   deleteTransaction(id: any): Observable<any> {
-    return from(deleteDoc(this.docRef(id)));
+    return from(deleteDoc(this.docRef(id))).pipe(
+      tap(() => this._store.dispatch(new RefreshTransaction()))
+    );
   }
 }

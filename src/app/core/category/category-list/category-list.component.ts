@@ -95,13 +95,7 @@ export class CategoryListComponent implements OnInit, OnDestroy {
         data,
       })
       .afterDismissed()
-      .subscribe({
-        next: (refresh: boolean) => {
-          if (refresh) {
-            this.getAllCategories(true);
-          }
-        },
-      });
+      .subscribe();
     this.subscription.push(sub$);
   }
 

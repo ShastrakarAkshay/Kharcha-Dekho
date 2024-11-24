@@ -9,3 +9,7 @@ export class DeleteCategory {
 export class UpdateCategory {
   static readonly type = '[Category] update';
 }
+
+export class RefreshCategory {
+  static readonly type = '[Category] refresh';
+}

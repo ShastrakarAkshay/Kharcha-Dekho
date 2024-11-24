@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { DashboardTransactionModel } from '../models/dashboard-transaction.model';
-import { GetDashboardTransaction } from '../actions/dashboard-transaction.action';
+import { DashboardTransactionModel } from '../models/dashboard.model';
+import {
+  GetDashboardTransaction,
+  RefreshTransaction,
+} from '../actions/dashboard.action';
 import { finalize, of, tap } from 'rxjs';
 import { TransactionService } from 'src/app/core/transactions/service/transaction.service';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
@@ -10,7 +13,7 @@ import { SpinnerService } from 'src/app/common/service/spinner.service';
   name: 'DashboardTransaction',
   defaults: {
     transactions: [],
-    transactionLoaded: false,
+    isLoaded: false,
   },
 })
 @Injectable()
@@ -26,8 +29,20 @@ export class DashboardTransactionState {
   }
 
   @Selector()
-  static isTransactionLoaded(state: DashboardTransactionModel) {
-    return state?.transactionLoaded;
+  static refreshTransaction(state: DashboardTransactionModel) {
+    return !(state && state.isLoaded && state.transactions?.length);
+  }
+
+  @Action(RefreshTransaction)
+  resetTransaction({
+    getState,
+    setState,
+  }: StateContext<DashboardTransactionModel>) {
+    const state = getState();
+    setState({
+      ...state,
+      isLoaded: false,
+    });
   }
 
   @Action(GetDashboardTransaction)
@@ -41,7 +56,7 @@ export class DashboardTransactionState {
         setState({
           ...state,
           transactions: data,
-          transactionLoaded: true,
+          isLoaded: true,
         });
       })
     );

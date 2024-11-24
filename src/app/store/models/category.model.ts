@@ -1,4 +1,4 @@
 export class CategoryModel {
   categories!: any[];
-  categoryLoaded?: boolean;
+  isLoaded?: boolean;
 }

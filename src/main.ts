@@ -27,7 +27,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { TransactionState } from './app/store/states/transaction.state';
 import { CategoryState } from './app/store/states/category.state';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { DashboardTransactionState } from './app/store/states/dashboard-transaction.state';
+import { DashboardTransactionState } from './app/store/states/dashboard.state';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyBCewB9DeINEAHb4xI7V8Rezzmb1HQtv2w',

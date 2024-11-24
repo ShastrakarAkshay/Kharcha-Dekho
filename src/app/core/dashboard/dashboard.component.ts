@@ -29,8 +29,11 @@ import { Router } from '@angular/router';
 import { EmptyStateComponent } from '../../common/components/empty-state/empty-state.component';
 import { BarChartComponent, ChartType } from './bar-chart/bar-chart.component';
 import { Select, select, Store } from '@ngxs/store';
-import { GetDashboardTransaction } from 'src/app/store/actions/dashboard-transaction.action';
-import { DashboardTransactionState } from 'src/app/store/states/dashboard-transaction.state';
+import {
+  GetDashboardTransaction,
+  RefreshTransaction,
+} from 'src/app/store/actions/dashboard.action';
+import { DashboardTransactionState } from 'src/app/store/states/dashboard.state';
 
 @Component({
   selector: 'app-dashboard',
@@ -69,7 +72,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   @Select(DashboardTransactionState.getDashboardTransactions)
   dashboardTransactions$!: Observable<ITransaction[]>;
 
-  @Select(DashboardTransactionState.isTransactionLoaded)
+  @Select(DashboardTransactionState.refreshTransaction)
   isTransactionLoaded$!: Observable<boolean>;
 
   get currencySymbol() {
@@ -107,14 +110,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.updateDayAmount();
           this.updateWeekAmount();
           this.updateMonthAmount();
+          this._spinnerService.hide();
         }
       });
     this.subscriptions.push(sub$);
   }
 
   getAllTransactions(refresh?: boolean) {
-    const sub$ = this.isTransactionLoaded$.subscribe((loaded) => {
-      if (!loaded || refresh) {
+    const sub$ = this.isTransactionLoaded$.subscribe((reload) => {
+      if (reload || refresh) {
+        this._spinnerService.show();
         this._store.dispatch(new GetDashboardTransaction(this.filters));
       }
     });
@@ -125,13 +130,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const sub$ = this._bottomSheet
       .open(AddTransactionComponent)
       .afterDismissed()
-      .subscribe({
-        next: (refresh: boolean) => {
-          if (refresh) {
-            this.getAllTransactions(refresh);
-          }
-        },
-      });
+      .subscribe();
     this.subscriptions.push(sub$);
   }
 
@@ -187,14 +186,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   updateWeekAmount() {
     const date = new Date();
-    // Get the day of the week (0 for Sunday, 1 for Monday, etc.)
     const dayOfWeek = date.getDay();
-    // Calculate the difference to the Monday of the week
     const startDiff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-    // Calculate the difference to the Sunday of the week
     const endDiff = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
 
-    // Create new Date objects for the start and end of the week
     const monday = new Date(date);
     monday.setDate(date.getDate() + startDiff);
     monday.setHours(0, 0, 0, 0);

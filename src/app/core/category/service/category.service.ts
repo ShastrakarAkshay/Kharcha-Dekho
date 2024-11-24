@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ICategory } from '../category.interface';
-import { from, map, Observable } from 'rxjs';
+import { from, map, Observable, tap } from 'rxjs';
 import { Firestore } from '@angular/fire/firestore';
 import {
   addDoc,
@@ -18,6 +18,8 @@ import {
 } from 'firebase/firestore';
 import { COLLECTIONS } from 'src/app/common/common.constants';
 import { ConfigService } from 'src/app/common/service/config.service';
+import { Store } from '@ngxs/store';
+import { RefreshCategory } from 'src/app/store/actions/category.action';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +27,8 @@ import { ConfigService } from 'src/app/common/service/config.service';
 export class CategoryService {
   constructor(
     private _firestore: Firestore,
-    private _configService: ConfigService
+    private _configService: ConfigService,
+    private _store: Store
   ) {}
 
   private collectionRef(id?: any): CollectionReference {
@@ -72,7 +75,7 @@ export class CategoryService {
         creationDate: Timestamp.fromDate(new Date()),
         updatedDate: Timestamp.fromDate(new Date()),
       })
-    );
+    ).pipe(tap(() => this._store.dispatch(new RefreshCategory())));
   }
 
   updateCategory(data: ICategory, id: string): Observable<any> {
@@ -81,7 +84,7 @@ export class CategoryService {
         ...data,
         updatedDate: Timestamp.fromDate(new Date()),
       })
-    );
+    ).pipe(tap(() => this._store.dispatch(new RefreshCategory())));
   }
 
   async deleteCategory(id: any): Promise<any> {
