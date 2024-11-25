@@ -109,11 +109,11 @@ export class TransactionService {
       }
     }
 
-    if (filters?.categories?.length) {
-      const categoryIds = filters.categories
-        .filter((x) => x.selected)
-        .map((x) => x.id);
+    const categoryIds = filters?.categories
+      ?.filter((x) => x.selected)
+      ?.map((x) => x.id);
 
+    if (categoryIds?.length) {
       transactionQuery = query(
         collectionRef,
         where('categoryId', 'in', categoryIds),

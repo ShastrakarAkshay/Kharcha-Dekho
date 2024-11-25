@@ -31,16 +31,16 @@ export interface IFilter {
 }
 
 export const MONTHS: IFilterOption[] = [
-  { id: 0, label: 'January', selected: true },
-  { id: 1, label: 'February', selected: true },
-  { id: 2, label: 'March', selected: true },
-  { id: 3, label: 'April', selected: true },
-  { id: 4, label: 'May', selected: true },
-  { id: 5, label: 'June', selected: true },
-  { id: 6, label: 'July', selected: true },
-  { id: 7, label: 'August', selected: true },
-  { id: 8, label: 'September', selected: true },
-  { id: 9, label: 'October', selected: true },
-  { id: 10, label: 'November', selected: true },
-  { id: 11, label: 'December', selected: true },
+  { id: 0, label: 'January', selected: false },
+  { id: 1, label: 'February', selected: false },
+  { id: 2, label: 'March', selected: false },
+  { id: 3, label: 'April', selected: false },
+  { id: 4, label: 'May', selected: false },
+  { id: 5, label: 'June', selected: false },
+  { id: 6, label: 'July', selected: false },
+  { id: 7, label: 'August', selected: false },
+  { id: 8, label: 'September', selected: false },
+  { id: 9, label: 'October', selected: false },
+  { id: 10, label: 'November', selected: false },
+  { id: 11, label: 'December', selected: false },
 ];
