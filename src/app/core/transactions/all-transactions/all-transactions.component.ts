@@ -33,7 +33,11 @@ import { Select, Store } from '@ngxs/store';
 import { GetCategory } from 'src/app/store/actions/category.action';
 import { CategoryState } from 'src/app/store/states/category.state';
 import { ICategory } from '../../category/category.interface';
-import { FilterType } from 'src/app/common/components/filter/filter.interface';
+import {
+  FilterType,
+  IFilterOption,
+} from 'src/app/common/components/filter/filter.interface';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-all-transactions',
@@ -48,12 +52,14 @@ import { FilterType } from 'src/app/common/components/filter/filter.interface';
     MatChipsModule,
     EmptyStateComponent,
     FilterComponent,
+    FormsModule,
   ],
   providers: [DatePipe, provideNativeDateAdapter()],
   templateUrl: './all-transactions.component.html',
   styleUrls: ['./all-transactions.component.scss'],
 })
 export class AllTransactionsComponent implements OnInit, OnDestroy {
+  // received from route path
   @Input('categoryId') categoryId?: string;
 
   categoryName: string = '';
@@ -64,10 +70,12 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   filterType = FilterType;
 
-  filters: IFilter = { categoryId: '', pageSize: 10 };
-  filterOptions: any = {
+  filters: IFilter = {
+    pageSize: 10,
     categories: [],
     months: MONTHS,
+    fromDate: null,
+    toDate: null,
   };
 
   @Select(CategoryState.getCategoryList) categories$!: Observable<ICategory[]>;
@@ -85,30 +93,32 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.filters.categoryId = this.categoryId;
     this._transactionService.lastDoc = null;
-    this.loadCategoryFromStore();
-    this.getAllTransactions();
+    this.transactions = [];
     this.getAllCategoryFromStore();
+    this.getAllTransactions();
   }
 
-  loadCategoryFromStore() {
-    this.isCategoryLoaded.subscribe((loaded) => {
+  getAllCategoryFromStore() {
+    const sub$1 = this.isCategoryLoaded.subscribe((loaded) => {
       if (!loaded) {
         this._store.dispatch(new GetCategory());
       }
     });
-  }
 
-  getAllCategoryFromStore() {
-    const sub$ = this.categories$.subscribe({
+    const sub$2 = this.categories$.subscribe({
       next: (categories) => {
-        this.filterOptions.categories = categories.map((x) => {
-          return { id: x.id, label: x.name };
+        this.filters.categories = categories.map((x) => {
+          return {
+            id: x.id,
+            label: x.name,
+            selected: this.categoryId ? x.id === this.categoryId : true,
+          } as IFilterOption;
         });
       },
     });
-    this.subscriptions.push(sub$);
+
+    this.subscriptions.push(sub$1, sub$2);
   }
 
   getAllTransactions() {
@@ -212,6 +222,12 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
     if (scrollPosition >= documentHeight - 100 && !this.collectionDataEnd) {
       this.getAllTransactions();
     }
+  }
+
+  onFilterValueChange() {
+    this.transactions = [];
+    this._transactionService.lastDoc = null;
+    this.getAllTransactions();
   }
 
   ngOnDestroy(): void {

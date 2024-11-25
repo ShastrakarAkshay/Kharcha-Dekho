@@ -109,34 +109,38 @@ export class TransactionService {
       }
     }
 
-    if (filters?.categoryId) {
+    if (filters?.categories?.length) {
+      const categoryIds = filters.categories
+        .filter((x) => x.selected)
+        .map((x) => x.id);
+
       transactionQuery = query(
         collectionRef,
-        where('categoryId', '==', filters.categoryId),
+        where('categoryId', 'in', categoryIds),
         orderBy('createdAt', 'desc'),
         where('userId', '==', this._configService.userId)
       );
-    }
 
-    if (filters?.categoryId && filters?.pageSize) {
-      transactionQuery = query(
-        collectionRef,
-        where('categoryId', '==', filters.categoryId),
-        where('userId', '==', this._configService.userId),
-        orderBy('createdAt', 'desc'),
-        limit(filters.pageSize)
-      );
-    }
+      if (filters?.pageSize) {
+        transactionQuery = query(
+          collectionRef,
+          where('categoryId', 'in', categoryIds),
+          where('userId', '==', this._configService.userId),
+          orderBy('createdAt', 'desc'),
+          limit(filters.pageSize)
+        );
 
-    if (filters?.categoryId && filters?.pageSize && this.lastDoc) {
-      transactionQuery = query(
-        collectionRef,
-        where('categoryId', '==', filters.categoryId),
-        where('userId', '==', this._configService.userId),
-        orderBy('createdAt', 'desc'),
-        limit(filters.pageSize),
-        startAfter(this.lastDoc)
-      );
+        if (this.lastDoc) {
+          transactionQuery = query(
+            collectionRef,
+            where('categoryId', 'in', categoryIds),
+            where('userId', '==', this._configService.userId),
+            orderBy('createdAt', 'desc'),
+            limit(filters.pageSize),
+            startAfter(this.lastDoc)
+          );
+        }
+      }
     }
 
     return transactionQuery;

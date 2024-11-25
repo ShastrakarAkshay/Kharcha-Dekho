@@ -5,13 +5,15 @@
     class="filter-trigger"
     (click)="openFilterType()"
   >
-    <div class="trigger-label">{{ label }}</div>
+    <div class="trigger-label">{{ label() }}</div>
     <mat-icon class="trigger-icon">arrow_drop_down</mat-icon>
     <input
       *ngIf="type === FilterType.Date"
       class="date-input"
       matInput
       [matDatepicker]="picker"
+      (dateChange)="onDateChange()"
+      [(ngModel)]="value"
     />
   </button>
   <mat-datepicker touchUi #picker></mat-datepicker>

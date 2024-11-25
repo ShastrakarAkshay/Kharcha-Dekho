@@ -1,6 +1,7 @@
 export interface IFilterOption {
   id: any;
   label: string;
+  selected: boolean;
 }
 
 export enum FilterType {
@@ -11,3 +12,5 @@ export enum FilterType {
   Number = 'Number',
   Boolean = 'Boolean',
 }
+
+export type Filter = IFilterOption[] | Date;

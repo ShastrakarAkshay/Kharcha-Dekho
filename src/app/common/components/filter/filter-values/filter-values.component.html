@@ -1,13 +1,13 @@
 <div class="filter-values">
   <div class="filter-header">
-    <label> {{ label }} </label>
+    <label> {{ label() }} </label>
     <mat-icon (click)="onClose()"> close </mat-icon>
   </div>
   <div class="filter-list">
     <ul>
       @for (option of options; track option; let i = $index) {
       <li>
-        <mat-checkbox [checked]="option.id">
+        <mat-checkbox [(ngModel)]="option.selected">
           {{ option.label }}
         </mat-checkbox>
       </li>
