@@ -3,7 +3,6 @@
     position: relative;
 
     .filter-trigger {
-      background: white;
       border-radius: 6px;
       outline: none;
       border: none;
@@ -17,6 +16,10 @@
       color: #c1c1c1;
       border: 1px solid;
 
+      &:active {
+        background-color: #749abf;
+      }
+
       .trigger-label {
         white-space: nowrap;
       }
@@ -26,6 +29,14 @@
         display: flex;
         align-items: center;
         font-size: 20px;
+      }
+
+      .date-input {
+        width: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+        visibility: hidden;
       }
     }
   }

@@ -1,4 +1,6 @@
 :host {
+  position: relative;
+
   ::ng-deep {
     mat-expansion-panel {
       background-color: #121e29;
@@ -26,11 +28,18 @@
     }
   }
 
-  .filter-container {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    overflow: auto;
-    padding-bottom: 6px;
+  .sticky-header {
+    position: static;
+    top: 0;
+    z-index: 1;
+    padding-bottom: 20px;
+    background-color: #131e29;
+
+    .filter-container {
+      display: flex;
+      gap: 10px;
+      overflow: auto;
+      padding-bottom: 6px;
+    }
   }
 }

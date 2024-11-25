@@ -12,6 +12,7 @@ import {
   MatDatepicker,
   MatDatepickerModule,
 } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-filter',
@@ -24,11 +25,14 @@ import {
     MatRippleModule,
     MatSelectModule,
     MatDatepickerModule,
+    MatInputModule,
   ],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss',
 })
 export class FilterComponent {
+  readonly FilterType = FilterType;
+
   @Input() label: string = 'Select';
   @Input() options: IFilterOption[] = [{ id: 1, label: 'test' }];
   @Input() type: FilterType = FilterType.MultiSelect;
