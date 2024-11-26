@@ -59,6 +59,7 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   formSubmitted: boolean = false;
   selectedIcon?: IIcon;
+  selectedId?: string;
   categoryList: ICategory[] = [];
 
   @Select(CategoryState.getCategoryList) categoryList$!: Observable<
@@ -106,6 +107,7 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
   onEdit(data: ICategory) {
     if (!data) return;
     this.isEdit = true;
+    this.selectedId = data.id;
     this.form.setValue({
       name: data.name,
       description: data.description || '',
@@ -157,7 +159,10 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
 
   private _duplicateNameValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const hasName = this.categoryList.some((x) => {
+      const list = this.isEdit
+        ? this.categoryList.filter((x) => x.id !== this.selectedId)
+        : this.categoryList;
+      const hasName = list.some((x) => {
         return (
           x?.name?.toLowerCase()?.trim() ===
           control?.value?.toLowerCase()?.trim()

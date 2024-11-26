@@ -13,13 +13,19 @@
       </li>
       }
     </ul> -->
-    <mat-selection-list [multiple]="multi">
+    <mat-selection-list [multiple]="multi" [color]="'primary'">
       <mat-list-option
         *ngFor="let option of options"
         [(selected)]="option.selected"
       >
         <div class="option-container">
+          @if (multi) {
           <mat-icon class="material-icons-outlined">{{ option.icon }}</mat-icon>
+          } @else {
+          <mat-icon class="material-icons-outlined">{{
+            option.selected ? "checked" : ""
+          }}</mat-icon>
+          }
           <span> {{ option.label }}</span>
         </div>
       </mat-list-option>
