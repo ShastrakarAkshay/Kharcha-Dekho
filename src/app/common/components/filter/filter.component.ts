@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { FilterValuesComponent } from './filter-values/filter-values.component';
-import { Filter, FilterType } from './filter.interface';
+import { Filter, FilterType, IFilterOption } from './filter.interface';
 import {
   MatDatepicker,
   MatDatepickerModule,
@@ -59,7 +59,8 @@ export class FilterComponent implements OnInit, ControlValueAccessor {
   private onTouched: () => void = () => {};
   private oldValue!: Filter;
 
-  label = input<string>('Select');
+  // label = input<string>('Select');
+  @Input() label: string = 'Select';
   @Input() value!: Filter;
   @Input() type: FilterType = FilterType.MultiSelect;
 
@@ -104,7 +105,7 @@ export class FilterComponent implements OnInit, ControlValueAccessor {
     this._bottomSheet
       .open(FilterValuesComponent, {
         data: {
-          label: this.label(),
+          label: this.label,
           options: this.value,
           multi,
         },
@@ -112,10 +113,13 @@ export class FilterComponent implements OnInit, ControlValueAccessor {
         disableClose: true,
       })
       .afterDismissed()
-      .subscribe((res) => {
+      .subscribe((res: IFilterOption[]) => {
         if (JSON.stringify(res) !== JSON.stringify(this.oldValue)) {
           this.onChange(this.value);
           this.valueChange.emit();
+        }
+        if (this.type === FilterType.SingleSelect) {
+          this.label = res.find((x) => x.selected)?.label || this.label;
         }
       });
   }

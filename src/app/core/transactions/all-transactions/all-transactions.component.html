@@ -14,6 +14,13 @@
       >
       </app-filter>
       <app-filter
+        [label]="'Modified'"
+        [type]="filterType.SingleSelect"
+        [(ngModel)]="this.filters.modified"
+        (valueChange)="onFilterValueChange()"
+      >
+      </app-filter>
+      <!-- <app-filter
         [label]="'Month'"
         [type]="filterType.SingleSelect"
         [(ngModel)]="this.filters.months"
@@ -33,7 +40,7 @@
         [(ngModel)]="this.filters.toDate"
         (valueChange)="onFilterValueChange()"
       >
-      </app-filter>
+      </app-filter> -->
     </div>
   </div>
 

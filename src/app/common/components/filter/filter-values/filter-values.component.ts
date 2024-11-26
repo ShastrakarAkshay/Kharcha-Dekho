@@ -49,7 +49,7 @@ export class FilterValuesComponent implements OnInit {
   }
 
   showClearBtn() {
-    return this.options.some((x) => x.selected) && this.multi;
+    return this.options.some((x) => x.selected);
   }
 
   onClear() {

@@ -19,7 +19,12 @@ import {
 } from 'src/app/common/service/dialog.service';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { TransactionService } from '../service/transaction.service';
-import { IFilter, ITransaction, MONTHS } from '../transactions.interface';
+import {
+  IFilter,
+  ITransaction,
+  MODIFIED,
+  MONTHS,
+} from '../transactions.interface';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
 import { finalize, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
@@ -76,6 +81,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
     months: MONTHS,
     fromDate: null,
     toDate: null,
+    modified: MODIFIED,
   };
 
   @Select(CategoryState.getCategoryList) categories$!: Observable<ICategory[]>;

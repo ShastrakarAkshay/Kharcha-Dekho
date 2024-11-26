@@ -28,7 +28,21 @@ export interface IFilter {
   months?: IFilterOption[];
   fromDate?: Date | null;
   toDate?: Date | null;
+  modified?: IFilterOption[];
 }
+
+export const MODIFIED: IFilterOption[] = [
+  { id: 1, label: 'Today', selected: false },
+  { id: 2, label: 'Last 7 days', selected: false },
+  { id: 3, label: 'Last 30 days', selected: false },
+  { id: 4, label: `This year (${new Date().getFullYear()})`, selected: false },
+  {
+    id: 5,
+    label: `Last year (${new Date().getFullYear() - 1})`,
+    selected: false,
+  },
+  { id: 6, label: 'Custom', selected: false },
+];
 
 export const MONTHS: IFilterOption[] = [
   { id: 0, label: 'January', selected: false },
