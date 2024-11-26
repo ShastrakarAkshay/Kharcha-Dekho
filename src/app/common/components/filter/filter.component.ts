@@ -87,7 +87,8 @@ export class FilterComponent implements OnInit, ControlValueAccessor {
 
   openFilterType() {
     const typeMap: any = {
-      [FilterType.MultiSelect]: this._openBottomSheet.bind(this),
+      [FilterType.MultiSelect]: this._openBottomSheet.bind(this, true),
+      [FilterType.SingleSelect]: this._openBottomSheet.bind(this, false),
       [FilterType.Date]: this._openDatepicker.bind(this),
     };
     typeMap[this.type]();
@@ -98,13 +99,14 @@ export class FilterComponent implements OnInit, ControlValueAccessor {
     this.valueChange.emit();
   }
 
-  private _openBottomSheet() {
+  private _openBottomSheet(multi?: boolean) {
     this.oldValue = structuredClone(this.value);
     this._bottomSheet
       .open(FilterValuesComponent, {
         data: {
           label: this.label(),
           options: this.value,
+          multi,
         },
         hasBackdrop: true,
         disableClose: true,

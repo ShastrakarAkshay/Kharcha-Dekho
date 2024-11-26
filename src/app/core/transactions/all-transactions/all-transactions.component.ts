@@ -113,6 +113,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
             id: x.id,
             label: x.name,
             selected: this.categoryId ? x.id === this.categoryId : false,
+            icon: x.icon?.name,
           } as IFilterOption;
         });
       },

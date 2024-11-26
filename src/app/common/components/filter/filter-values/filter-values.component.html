@@ -4,7 +4,7 @@
     <mat-icon (click)="onClose()"> close </mat-icon>
   </div>
   <div class="filter-list">
-    <ul>
+    <!-- <ul>
       @for (option of options; track option; let i = $index) {
       <li>
         <mat-checkbox [(ngModel)]="option.selected">
@@ -12,6 +12,17 @@
         </mat-checkbox>
       </li>
       }
-    </ul>
+    </ul> -->
+    <mat-selection-list [multiple]="multi">
+      <mat-list-option
+        *ngFor="let option of options"
+        [(selected)]="option.selected"
+      >
+        <div class="option-container">
+          <mat-icon class="material-icons-outlined">{{ option.icon }}</mat-icon>
+          <span> {{ option.label }}</span>
+        </div>
+      </mat-list-option>
+    </mat-selection-list>
   </div>
 </div>
