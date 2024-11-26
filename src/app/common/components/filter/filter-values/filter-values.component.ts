@@ -10,6 +10,7 @@ import { FilterComponent } from '../filter.component';
 import { IFilterOption } from '../filter.interface';
 import { FormsModule } from '@angular/forms';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-filter-values',
@@ -21,6 +22,7 @@ import { MatListOption, MatSelectionList } from '@angular/material/list';
     FormsModule,
     MatSelectionList,
     MatListOption,
+    MatButtonModule,
   ],
 
   templateUrl: './filter-values.component.html',
@@ -44,6 +46,14 @@ export class FilterValuesComponent implements OnInit {
     this._ref.backdropClick().subscribe(() => {
       this.onClose();
     });
+  }
+
+  showClearBtn() {
+    return this.options.some((x) => x.selected) && this.multi;
+  }
+
+  onClear() {
+    this.options.forEach((x) => (x.selected = false));
   }
 
   onClose() {

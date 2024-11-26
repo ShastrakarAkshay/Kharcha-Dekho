@@ -4,22 +4,30 @@
 
   .filter-header {
     display: flex;
+    margin: 0 0 0 16px;
+    align-items: center;
     justify-content: space-between;
 
-    label {
-      font-size: 17px;
-      font-weight: 400;
+    .left {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+
+      .label {
+        font-size: 17px;
+        font-weight: 400;
+      }
+    }
+
+    .right {
+      button {
+        height: 24px;
+      }
     }
   }
 
   .filter-list {
     margin-top: 10px;
-
-    ul {
-      list-style-type: none;
-      margin-top: 4px;
-      padding-left: 0;
-    }
 
     .option-container {
       display: flex;
