@@ -8,7 +8,7 @@
         <app-icon
           [name]="selectedIcon?.name || 'upload'"
           [bgColor]="selectedIcon?.bgColor || '#ececec'"
-          [label]="selectedIcon?.label || 'Select Icon'"
+          [label]="selectedIcon?.label ? 'Change Icon' : 'Select Icon'"
           (click)="openIconList()"
         >
         </app-icon>
