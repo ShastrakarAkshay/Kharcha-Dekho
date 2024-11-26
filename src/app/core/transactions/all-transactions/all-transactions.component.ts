@@ -180,6 +180,8 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (refresh: boolean) => {
           if (refresh) {
+            this.transactions = [];
+            this._transactionService.lastDoc = null;
             this.getAllTransactions();
           }
         },
@@ -205,6 +207,8 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
               .subscribe({
                 next: () => {
                   this._toasterService.showSuccess('Transaction Deleted');
+                  this.transactions = [];
+                  this._transactionService.lastDoc = null;
                   this.getAllTransactions();
                 },
               });
