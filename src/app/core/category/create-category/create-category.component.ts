@@ -2,9 +2,12 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {
+  AbstractControl,
   FormBuilder,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,10 +26,12 @@ import { IIcon } from '../icon-list/icon-list.interface';
 import { CategoryService } from '../service/category.service';
 import { ICategory } from '../category.interface';
 import { ToasterService } from 'src/app/common/service/toaster.service';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { emptySpaceValidator } from 'src/app/common/validators/empty-space.validator';
 import { MatDialog } from '@angular/material/dialog';
+import { Select } from '@ngxs/store';
+import { CategoryState } from 'src/app/store/states/category.state';
 
 @Component({
   selector: 'app-create-category',
@@ -54,15 +59,25 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   formSubmitted: boolean = false;
   selectedIcon?: IIcon;
+  categoryList: ICategory[] = [];
+
+  @Select(CategoryState.getCategoryList) categoryList$!: Observable<
+    ICategory[]
+  >;
 
   form = this._fb.group({
-    name: ['', [Validators.required, emptySpaceValidator()]],
+    name: [
+      '',
+      [
+        Validators.required,
+        emptySpaceValidator(),
+        this._duplicateNameValidator(),
+      ],
+    ],
     description: ['', emptySpaceValidator()],
   });
 
   subscription: Subscription[] = [];
-
-  ngOnInit(): void {}
 
   constructor(
     private _categoryService: CategoryService,
@@ -73,6 +88,19 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
     private _dialog: MatDialog
   ) {
     this.onEdit(data);
+  }
+
+  ngOnInit(): void {
+    this.getCategoryListFromStore();
+  }
+
+  getCategoryListFromStore() {
+    const sub$ = this.categoryList$.subscribe({
+      next: (data) => {
+        this.categoryList = data;
+      },
+    });
+    this.subscription.push(sub$);
   }
 
   onEdit(data: ICategory) {
@@ -125,6 +153,18 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
       },
     });
     this.subscription.push(sub$);
+  }
+
+  private _duplicateNameValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const hasName = this.categoryList.some((x) => {
+        return (
+          x?.name?.toLowerCase()?.trim() ===
+          control?.value?.toLowerCase()?.trim()
+        );
+      });
+      return hasName ? { duplicateName: true } : null;
+    };
   }
 
   ngOnDestroy(): void {

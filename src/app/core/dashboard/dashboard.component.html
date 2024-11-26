@@ -41,7 +41,7 @@
       (itemClick)="onCategoryClick($event)"
     >
     </app-transactions>
-    } @else if(!isLoading) {
+    } @else {
     <app-empty-state
       [message]="'No Transactions available.'"
       [subText]="'Please add some transactions against category.'"
