@@ -143,6 +143,40 @@ export class TransactionService {
       }
     }
 
+    const dateRange = filters?.modified?.find((x) => x.selected)?.dateRange;
+    if (dateRange) {
+      transactionQuery = query(
+        collectionRef,
+        where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
+        where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
+        where('userId', '==', this._configService.userId),
+        orderBy('createdAt', 'desc')
+      );
+
+      if (filters?.pageSize) {
+        transactionQuery = query(
+          collectionRef,
+          where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
+          where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
+          where('userId', '==', this._configService.userId),
+          orderBy('createdAt', 'desc'),
+          limit(filters.pageSize)
+        );
+
+        if (this.lastDoc) {
+          transactionQuery = query(
+            collectionRef,
+            where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
+            where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
+            where('userId', '==', this._configService.userId),
+            orderBy('createdAt', 'desc'),
+            limit(filters.pageSize),
+            startAfter(this.lastDoc)
+          );
+        }
+      }
+    }
+
     return transactionQuery;
   }
 

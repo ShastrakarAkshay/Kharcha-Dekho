@@ -4,7 +4,6 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  viewChild,
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HeaderComponent } from 'src/app/common/components/header/header.component';
@@ -19,12 +18,7 @@ import {
 } from 'src/app/common/service/dialog.service';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { TransactionService } from '../service/transaction.service';
-import {
-  IFilter,
-  ITransaction,
-  MODIFIED,
-  MONTHS,
-} from '../transactions.interface';
+import { IFilter, ITransaction } from '../transactions.interface';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
 import { finalize, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
@@ -43,6 +37,7 @@ import {
   IFilterOption,
 } from 'src/app/common/components/filter/filter.interface';
 import { FormsModule } from '@angular/forms';
+import { MONTHS, MODIFIED } from '../transactions.constant';
 
 @Component({
   selector: 'app-all-transactions',
@@ -51,7 +46,6 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     HeaderComponent,
     TransactionComponent,
-    SpinnerComponent,
     MatExpansionModule,
     MatAccordion,
     MatChipsModule,
@@ -237,6 +231,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
 
   onFilterValueChange() {
     this.transactions = [];
+    this.transactionList = [];
     this._transactionService.lastDoc = null;
     this.getAllTransactions();
   }

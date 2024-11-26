@@ -1,8 +1,11 @@
+import { IDateRange } from '../../date-utils.constant';
+
 export interface IFilterOption {
   id: any;
   label: string;
   icon?: string;
   selected: boolean;
+  dateRange?: IDateRange;
 }
 
 export enum FilterType {
