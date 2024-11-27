@@ -27,6 +27,7 @@ import {
   FormsModule,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
+import { getDDMMYYYYDate } from '../../date-utils.constant';
 
 @Component({
   selector: 'app-filter',
@@ -59,6 +60,8 @@ export class FilterComponent implements OnInit, ControlValueAccessor {
   private onTouched: () => void = () => {};
   private oldValue!: Filter;
 
+  labelText: string = '';
+
   // label = input<string>('Select');
   @Input() label: string = 'Select';
   @Input() value!: Filter;
@@ -69,7 +72,9 @@ export class FilterComponent implements OnInit, ControlValueAccessor {
 
   constructor(private _bottomSheet: MatBottomSheet) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.labelText = this.label;
+  }
 
   writeValue(value: Filter): void {
     if (this.type === FilterType.MultiSelect && !value) {
@@ -119,7 +124,21 @@ export class FilterComponent implements OnInit, ControlValueAccessor {
           this.valueChange.emit();
         }
         if (this.type === FilterType.SingleSelect) {
-          this.label = res.find((x) => x.selected)?.label || this.label;
+          const selectedOption = res.find((x) => x.selected);
+          if (selectedOption) {
+            this.labelText = selectedOption.label;
+            if (selectedOption.type === FilterType.DateRange) {
+              const fromDate = getDDMMYYYYDate(
+                selectedOption.value?.fromDate as Date
+              );
+              const toDate = getDDMMYYYYDate(
+                selectedOption.value?.toDate as Date
+              );
+              this.labelText = `${fromDate} - ${toDate}`;
+            }
+          } else {
+            this.labelText = this.label;
+          }
         }
       });
   }

@@ -37,6 +37,10 @@
   }
 }
 
+.date-input {
+  display: none;
+}
+
 :host {
   ::ng-deep {
     .mdc-label {

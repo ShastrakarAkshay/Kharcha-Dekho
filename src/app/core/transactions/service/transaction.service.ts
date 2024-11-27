@@ -111,7 +111,7 @@ export class TransactionService {
 
     const categoryIds = filters?.categories
       ?.filter((x) => x.selected)
-      ?.map((x) => x.id);
+      ?.map((x) => x.value);
 
     if (categoryIds?.length) {
       transactionQuery = query(
@@ -143,7 +143,7 @@ export class TransactionService {
       }
     }
 
-    const dateRange = filters?.modified?.find((x) => x.selected)?.dateRange;
+    const dateRange = filters?.modified?.find((x) => x.selected)?.value;
     if (dateRange) {
       transactionQuery = query(
         collectionRef,

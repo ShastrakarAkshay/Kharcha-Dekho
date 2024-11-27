@@ -20,18 +20,35 @@
       <mat-list-option
         *ngFor="let option of options"
         [(selected)]="option.selected"
+        (click)="onOptionClick(option.type === filterType.DateRange && !multi)"
       >
         <div class="option-container">
           @if (multi) {
           <mat-icon class="material-icons-outlined">{{ option.icon }}</mat-icon>
           } @else {
-          <mat-icon class="material-icons-outlined">{{
-            option.selected ? "checked" : ""
-          }}</mat-icon>
+          <mat-icon class="material-icons-outlined">
+            {{ option.selected ? "checked" : "" }}
+          </mat-icon>
           }
           <span> {{ option.label }}</span>
         </div>
       </mat-list-option>
     </mat-selection-list>
   </div>
+</div>
+
+<div class="date-input">
+  <mat-date-range-input [rangePicker]="picker">
+    <input
+      matStartDate
+      [(ngModel)]="dateRange.fromDate"
+      (dateChange)="onDateRangeChange()"
+    />
+    <input
+      matEndDate
+      [(ngModel)]="dateRange.toDate"
+      (dateChange)="onDateRangeChange()"
+    />
+  </mat-date-range-input>
+  <mat-date-range-picker touchUi #picker></mat-date-range-picker>
 </div>

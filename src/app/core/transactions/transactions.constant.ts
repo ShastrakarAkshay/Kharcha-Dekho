@@ -1,4 +1,7 @@
-import { IFilterOption } from 'src/app/common/components/filter/filter.interface';
+import {
+  FilterType,
+  IFilterOption,
+} from 'src/app/common/components/filter/filter.interface';
 import {
   getTodayDateRange,
   getLast7DayDateRange,
@@ -12,33 +15,39 @@ export const MODIFIED: IFilterOption[] = [
     id: 1,
     label: 'Today',
     selected: false,
-    dateRange: getTodayDateRange(),
+    value: getTodayDateRange(),
   },
   {
     id: 2,
     label: 'Last 7 days',
     selected: false,
-    dateRange: getLast7DayDateRange(),
+    value: getLast7DayDateRange(),
   },
   {
     id: 3,
     label: 'Last 30 days',
     selected: false,
-    dateRange: getLast30DayDateRange(),
+    value: getLast30DayDateRange(),
   },
   {
     id: 4,
     label: `This year (${new Date().getFullYear()})`,
     selected: false,
-    dateRange: getCurrentYearDateRange(),
+    value: getCurrentYearDateRange(),
   },
   {
     id: 5,
     label: `Last year (${new Date().getFullYear() - 1})`,
     selected: false,
-    dateRange: getLastYearDateRange(),
+    value: getLastYearDateRange(),
   },
-  { id: 6, label: 'Custom', selected: false },
+  {
+    id: 6,
+    label: 'Custom',
+    selected: false,
+    value: null as any,
+    type: FilterType.DateRange,
+  },
 ];
 
 export const MONTHS: IFilterOption[] = [

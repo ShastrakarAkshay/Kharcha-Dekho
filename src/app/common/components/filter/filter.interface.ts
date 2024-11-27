@@ -5,13 +5,15 @@ export interface IFilterOption {
   label: string;
   icon?: string;
   selected: boolean;
-  dateRange?: IDateRange;
+  value?: IDateRange;
+  type?: FilterType;
 }
 
 export enum FilterType {
   MultiSelect = 'MultiSelect',
   SingleSelect = 'SingleSelect',
   Date = 'Date',
+  DateRange = 'DateRange',
   Text = 'Text',
   Number = 'Number',
   Boolean = 'Boolean',

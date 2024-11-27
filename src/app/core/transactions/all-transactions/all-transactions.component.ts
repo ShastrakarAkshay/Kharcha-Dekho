@@ -75,7 +75,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
     months: MONTHS,
     fromDate: null,
     toDate: null,
-    modified: MODIFIED,
+    modified: [],
   };
 
   @Select(CategoryState.getCategoryList) categories$!: Observable<ICategory[]>;
@@ -95,6 +95,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._transactionService.lastDoc = null;
     this.transactions = [];
+    this.filters.modified = structuredClone(MODIFIED);
     this.getAllCategoryFromStore();
     this.getAllTransactions();
   }
@@ -114,6 +115,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
             label: x.name,
             selected: this.categoryId ? x.id === this.categoryId : false,
             icon: x.icon?.name,
+            value: x.id,
           } as IFilterOption;
         });
       },

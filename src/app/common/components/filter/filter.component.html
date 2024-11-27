@@ -5,7 +5,7 @@
     class="filter-trigger"
     (click)="openFilterType()"
   >
-    <div class="trigger-label">{{ label }}</div>
+    <div class="trigger-label">{{ labelText }}</div>
     <mat-icon class="trigger-icon">arrow_drop_down</mat-icon>
     <input
       *ngIf="type === FilterType.Date"
