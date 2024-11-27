@@ -72,113 +72,160 @@ export class TransactionService {
   }
 
   getFilteredQuery(collectionRef: CollectionReference, filters?: IFilter) {
-    let transactionQuery = query(
-      collectionRef,
+    let queryConstraints: any[] = [
       where('userId', '==', this._configService.userId),
-      orderBy('createdAt', 'desc')
-    );
+      orderBy('createdAt', 'desc'),
+    ];
 
+    // month filter
     if (Number(filters?.month) >= 0) {
       const monthFilter: any = this.getCurrentMonth(Number(filters?.month));
       if (monthFilter?.startDate && monthFilter?.endDate) {
-        transactionQuery = query(
-          collectionRef,
+        queryConstraints.push(
           where('createdAt', '>=', monthFilter?.startDate),
-          where('createdAt', '<=', monthFilter?.endDate),
-          where('userId', '==', this._configService.userId)
+          where('createdAt', '<=', monthFilter?.endDate)
         );
       }
     }
 
-    if (filters?.pageSize) {
-      transactionQuery = query(
-        collectionRef,
-        orderBy('createdAt', 'desc'),
-        where('userId', '==', this._configService.userId),
-        limit(filters.pageSize)
-      );
-
-      if (this.lastDoc) {
-        transactionQuery = query(
-          collectionRef,
-          orderBy('createdAt', 'desc'),
-          where('userId', '==', this._configService.userId),
-          limit(filters.pageSize),
-          startAfter(this.lastDoc)
-        );
-      }
-    }
-
+    // Category ids filter
     const categoryIds = filters?.categories
       ?.filter((x) => x.selected)
       ?.map((x) => x.value);
-
     if (categoryIds?.length) {
-      transactionQuery = query(
-        collectionRef,
-        where('categoryId', 'in', categoryIds),
-        orderBy('createdAt', 'desc'),
-        where('userId', '==', this._configService.userId)
-      );
-
-      if (filters?.pageSize) {
-        transactionQuery = query(
-          collectionRef,
-          where('categoryId', 'in', categoryIds),
-          where('userId', '==', this._configService.userId),
-          orderBy('createdAt', 'desc'),
-          limit(filters.pageSize)
-        );
-
-        if (this.lastDoc) {
-          transactionQuery = query(
-            collectionRef,
-            where('categoryId', 'in', categoryIds),
-            where('userId', '==', this._configService.userId),
-            orderBy('createdAt', 'desc'),
-            limit(filters.pageSize),
-            startAfter(this.lastDoc)
-          );
-        }
-      }
+      queryConstraints.push(where('categoryId', 'in', categoryIds));
     }
 
+    // Date range filter
     const dateRange = filters?.modified?.find((x) => x.selected)?.value;
     if (dateRange) {
-      transactionQuery = query(
-        collectionRef,
+      queryConstraints.push(
         where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
-        where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
-        where('userId', '==', this._configService.userId),
-        orderBy('createdAt', 'desc')
+        where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate))
       );
+    }
 
-      if (filters?.pageSize) {
-        transactionQuery = query(
-          collectionRef,
-          where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
-          where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
-          where('userId', '==', this._configService.userId),
-          orderBy('createdAt', 'desc'),
-          limit(filters.pageSize)
-        );
-
-        if (this.lastDoc) {
-          transactionQuery = query(
-            collectionRef,
-            where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
-            where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
-            where('userId', '==', this._configService.userId),
-            orderBy('createdAt', 'desc'),
-            limit(filters.pageSize),
-            startAfter(this.lastDoc)
-          );
-        }
+    // pagination filter
+    if (filters?.pageSize) {
+      queryConstraints.push(limit(filters.pageSize));
+      if (this.lastDoc) {
+        queryConstraints.push(startAfter(this.lastDoc));
       }
     }
+
+    let transactionQuery = query(collectionRef, ...queryConstraints);
 
     return transactionQuery;
   }
+
+  // getFilteredQuery(collectionRef: CollectionReference, filters?: IFilter) {
+  //   let transactionQuery = query(
+  //     collectionRef,
+  //     where('userId', '==', this._configService.userId),
+  //     orderBy('createdAt', 'desc')
+  //   );
+
+  //   if (Number(filters?.month) >= 0) {
+  //     const monthFilter: any = this.getCurrentMonth(Number(filters?.month));
+  //     if (monthFilter?.startDate && monthFilter?.endDate) {
+  //       transactionQuery = query(
+  //         collectionRef,
+  //         where('createdAt', '>=', monthFilter?.startDate),
+  //         where('createdAt', '<=', monthFilter?.endDate),
+  //         where('userId', '==', this._configService.userId)
+  //       );
+  //     }
+  //   }
+
+  //   if (filters?.pageSize) {
+  //     transactionQuery = query(
+  //       collectionRef,
+  //       orderBy('createdAt', 'desc'),
+  //       where('userId', '==', this._configService.userId),
+  //       limit(filters.pageSize)
+  //     );
+
+  //     if (this.lastDoc) {
+  //       transactionQuery = query(
+  //         collectionRef,
+  //         orderBy('createdAt', 'desc'),
+  //         where('userId', '==', this._configService.userId),
+  //         limit(filters.pageSize),
+  //         startAfter(this.lastDoc)
+  //       );
+  //     }
+  //   }
+
+  //   const categoryIds = filters?.categories
+  //     ?.filter((x) => x.selected)
+  //     ?.map((x) => x.value);
+
+  //   if (categoryIds?.length) {
+  //     transactionQuery = query(
+  //       collectionRef,
+  //       where('categoryId', 'in', categoryIds),
+  //       orderBy('createdAt', 'desc'),
+  //       where('userId', '==', this._configService.userId)
+  //     );
+
+  //     if (filters?.pageSize) {
+  //       transactionQuery = query(
+  //         collectionRef,
+  //         where('categoryId', 'in', categoryIds),
+  //         where('userId', '==', this._configService.userId),
+  //         orderBy('createdAt', 'desc'),
+  //         limit(filters.pageSize)
+  //       );
+
+  //       if (this.lastDoc) {
+  //         transactionQuery = query(
+  //           collectionRef,
+  //           where('categoryId', 'in', categoryIds),
+  //           where('userId', '==', this._configService.userId),
+  //           orderBy('createdAt', 'desc'),
+  //           limit(filters.pageSize),
+  //           startAfter(this.lastDoc)
+  //         );
+  //       }
+  //     }
+  //   }
+
+  //   const dateRange = filters?.modified?.find((x) => x.selected)?.value;
+  //   if (dateRange) {
+  //     transactionQuery = query(
+  //       collectionRef,
+  //       where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
+  //       where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
+  //       where('userId', '==', this._configService.userId),
+  //       orderBy('createdAt', 'desc')
+  //     );
+
+  //     if (filters?.pageSize) {
+  //       transactionQuery = query(
+  //         collectionRef,
+  //         where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
+  //         where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
+  //         where('userId', '==', this._configService.userId),
+  //         orderBy('createdAt', 'desc'),
+  //         limit(filters.pageSize)
+  //       );
+
+  //       if (this.lastDoc) {
+  //         transactionQuery = query(
+  //           collectionRef,
+  //           where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
+  //           where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
+  //           where('userId', '==', this._configService.userId),
+  //           orderBy('createdAt', 'desc'),
+  //           limit(filters.pageSize),
+  //           startAfter(this.lastDoc)
+  //         );
+  //       }
+  //     }
+  //   }
+
+  //   return transactionQuery;
+  // }
 
   getAllTransactions(filters?: IFilter): Observable<ITransaction[]> {
     const transactionRef = collection(
