@@ -4,8 +4,6 @@ import { from, map, Observable, of, tap } from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { ConfigService } from './config.service';
 import { Store } from '@ngxs/store';
-import { ResetStore } from 'src/app/store/actions/app.actions';
-import { AppState } from 'src/app/store/states/app.state';
 import { TransactionState } from 'src/app/store/states/transaction.state';
 import { CategoryState } from 'src/app/store/states/category.state';
 import { DashboardTransactionState } from 'src/app/store/states/dashboard.state';
