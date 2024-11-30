@@ -9,6 +9,18 @@ export const Links: ILinks[] = [
     icon: 'swap_horiz',
   },
   { id: 3, label: 'Icons', path: 'core/icons', icon: 'interests' },
+  {
+    id: 4,
+    label: 'Yearly Report',
+    path: 'core/yearly-report',
+    icon: 'bar_chart',
+  },
+  {
+    id: 5,
+    label: 'Monthly Report',
+    path: 'core/monthly-report',
+    icon: 'pie_chart',
+  },
 ];
 
 export const Currencies = [

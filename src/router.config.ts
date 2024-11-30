@@ -9,6 +9,8 @@ import { AuthGuard } from './app/common/guards/auth.guard';
 import { EditProfileComponent } from './app/core/profile/edit-profile/edit-profile.component';
 import { CoreComponent } from './app/core/core.component';
 import { PageNotFoundComponent } from './app/common/components/page-not-found/page-not-found.component';
+import { YearlyReportComponent } from './app/core/reports/yearly-report/yearly-report.component';
+import { MonthlyReportComponent } from './app/core/reports/monthly-report/monthly-report.component';
 
 export const ROUTES: Routes = [
   {
@@ -58,6 +60,14 @@ export const ROUTES: Routes = [
       {
         path: 'edit-profile',
         component: EditProfileComponent,
+      },
+      {
+        path: 'yearly-report',
+        component: YearlyReportComponent,
+      },
+      {
+        path: 'monthly-report',
+        component: MonthlyReportComponent,
       },
     ],
   },

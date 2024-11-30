@@ -3,12 +3,18 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { from, map, Observable, of, tap } from 'rxjs';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { ConfigService } from './config.service';
+import { Store } from '@ngxs/store';
+import { ResetStore } from 'src/app/store/actions/app.actions';
+import { AppState } from 'src/app/store/states/app.state';
+import { TransactionState } from 'src/app/store/states/transaction.state';
+import { CategoryState } from 'src/app/store/states/category.state';
+import { DashboardTransactionState } from 'src/app/store/states/dashboard.state';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private afAuth: AngularFireAuth) {}
+  constructor(private afAuth: AngularFireAuth, private store: Store) {}
 
   async getUid() {
     const user = await this.afAuth.currentUser;
@@ -20,7 +26,10 @@ export class AuthService {
 
   loginWithEmail(email: string, pass: string) {
     return from(this.afAuth.signInWithEmailAndPassword(email, pass)).pipe(
-      tap(() => localStorage.removeItem('uid'))
+      tap(() => {
+        localStorage.removeItem('uid');
+        this.resetAllStates();
+      })
     );
   }
 
@@ -37,10 +46,20 @@ export class AuthService {
   }
 
   logout() {
-    return from(this.afAuth.signOut()).pipe(tap(() => localStorage.clear()));
+    return from(this.afAuth.signOut()).pipe(
+      tap(() => {
+        this.resetAllStates();
+        localStorage.clear();
+      })
+    );
   }
 
   resetPassword(email: string) {
     return from(this.afAuth.sendPasswordResetEmail(email));
+  }
+
+  resetAllStates() {
+    const states = [TransactionState, CategoryState, DashboardTransactionState];
+    states.forEach((state) => this.store.reset(state));
   }
 }
