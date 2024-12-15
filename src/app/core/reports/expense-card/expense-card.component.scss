@@ -1,0 +1,37 @@
+.expense-card {
+  color: #ffffff;
+  background-color: #8c8c8c4d;
+  margin: 20px;
+  border-radius: 13px;
+  padding: 20px;
+
+  .header-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+
+    .heading {
+      font-size: 20px;
+    }
+
+    mat-icon {
+      font-size: 16px;
+      margin-top: 2px;
+    }
+  }
+
+  .label {
+    font-size: 10px;
+    color: gray;
+  }
+
+  .amount-container {
+    display: flex;
+    font-size: 18px;
+
+    mat-icon {
+      font-size: 20px;
+      display: inline;
+    }
+  }
+}

@@ -35,25 +35,11 @@ export const getLast30DayDateRange = (): IDateRange => {
   return { fromDate, toDate };
 };
 
-export const getCurrentYearDateRange = (): IDateRange => {
-  const currentYear = new Date().getFullYear();
-  const fromDate = new Date(currentYear, 0, 1);
+export const getDateRangeOfYear = (year: number) => {
+  const fromDate = new Date(year, 0, 1);
   fromDate.setHours(0, 0, 0, 0);
-
-  const toDate = new Date(currentYear, 11, 31);
+  const toDate = new Date(year, 11, 31);
   toDate.setHours(23, 59, 59, 999);
-
-  return { fromDate, toDate };
-};
-
-export const getLastYearDateRange = (): IDateRange => {
-  const currentYear = new Date().getFullYear() - 1;
-  const fromDate = new Date(currentYear, 0, 1);
-  fromDate.setHours(0, 0, 0, 0);
-
-  const toDate = new Date(currentYear, 11, 31);
-  toDate.setHours(23, 59, 59, 999);
-
   return { fromDate, toDate };
 };
 

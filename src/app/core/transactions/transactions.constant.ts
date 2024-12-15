@@ -6,8 +6,7 @@ import {
   getTodayDateRange,
   getLast7DayDateRange,
   getLast30DayDateRange,
-  getCurrentYearDateRange,
-  getLastYearDateRange,
+  getDateRangeOfYear,
 } from 'src/app/common/date-utils.constant';
 
 export const MODIFIED: IFilterOption[] = [
@@ -33,13 +32,13 @@ export const MODIFIED: IFilterOption[] = [
     id: 4,
     label: `This year (${new Date().getFullYear()})`,
     selected: false,
-    value: getCurrentYearDateRange(),
+    value: getDateRangeOfYear(new Date().getFullYear()),
   },
   {
     id: 5,
     label: `Last year (${new Date().getFullYear() - 1})`,
     selected: false,
-    value: getLastYearDateRange(),
+    value: getDateRangeOfYear(new Date().getFullYear() - 1),
   },
   {
     id: 6,

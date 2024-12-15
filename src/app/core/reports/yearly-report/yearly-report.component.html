@@ -1,1 +1,15 @@
-<h3>Work in progress...</h3>
+<app-expense-card
+  [amount]="totalAmount"
+  [label]="'Yearly Report'"
+></app-expense-card>
+<div class="bottom">
+  @if (transactionItems.length) {
+  <app-transactions [transactions]="transactionItems"> </app-transactions>
+  } @else if(!isLoading) {
+  <app-empty-state
+    [message]="'No Transactions available.'"
+    [subText]="'Please add some transactions against category.'"
+    [height]="'50vh'"
+  ></app-empty-state>
+  }
+</div>
