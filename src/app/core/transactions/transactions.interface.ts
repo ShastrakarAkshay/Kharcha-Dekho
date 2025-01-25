@@ -1,5 +1,6 @@
 import { IFilterOption } from 'src/app/common/components/filter/filter.interface';
 import { ICategory } from '../category/category.interface';
+import { IDateRange } from 'src/app/common/date-utils.constant';
 
 export interface ITransaction {
   id?: any;
@@ -21,12 +22,8 @@ export enum TransactionMethod {
   CHEQUE = 'Cheque',
 }
 
-export interface IFilter {
-  month?: number;
+export interface ITransactionFilter {
   pageSize?: number | undefined | null;
-  categories?: IFilterOption[];
-  months?: IFilterOption[];
-  fromDate?: Date | null;
-  toDate?: Date | null;
-  modified?: IFilterOption[];
+  dateRange?: IDateRange;
+  categoryIds?: string[];
 }

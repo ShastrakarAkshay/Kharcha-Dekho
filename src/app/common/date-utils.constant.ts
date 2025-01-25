@@ -35,6 +35,18 @@ export const getLast30DayDateRange = (): IDateRange => {
   return { fromDate, toDate };
 };
 
+export const getMonthsDateRange = (month: number): IDateRange => {
+  const year = new Date().getFullYear();
+
+  const fromDate = new Date(year, month, 1);
+  fromDate.setHours(0, 0, 0, 0);
+
+  const toDate = new Date(year, month + 1, 0);
+  toDate.setHours(23, 59, 59, 999);
+
+  return { fromDate, toDate };
+};
+
 export const getDateRangeOfYear = (year: number) => {
   const fromDate = new Date(year, 0, 1);
   fromDate.setHours(0, 0, 0, 0);

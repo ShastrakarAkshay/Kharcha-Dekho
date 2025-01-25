@@ -18,7 +18,7 @@ import {
 } from 'src/app/common/service/dialog.service';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { TransactionService } from '../service/transaction.service';
-import { IFilter, ITransaction } from '../transactions.interface';
+import { ITransaction, ITransactionFilter } from '../transactions.interface';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
 import { finalize, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
@@ -69,13 +69,14 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   filterType = FilterType;
 
-  filters: IFilter = {
-    pageSize: 10,
+  filterOptions: any = {
     categories: [],
-    months: MONTHS,
-    fromDate: null,
-    toDate: null,
     modified: [],
+  };
+
+  filters: ITransactionFilter = {
+    pageSize: 10,
+    categoryIds: [],
   };
 
   @Select(CategoryState.getCategoryList) categories$!: Observable<ICategory[]>;
@@ -95,7 +96,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._transactionService.lastDoc = null;
     this.transactions = [];
-    this.filters.modified = structuredClone(MODIFIED);
+    this.filterOptions.modified = structuredClone(MODIFIED);
     this.getAllCategoryFromStore();
     this.getAllTransactions();
   }
@@ -109,7 +110,7 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
 
     const sub$2 = this.categories$.subscribe({
       next: (categories) => {
-        this.filters.categories = categories.map((x) => {
+        this.filterOptions.categories = categories.map((x) => {
           return {
             id: x.id,
             label: x.name,
@@ -231,11 +232,25 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFilterValueChange() {
+  private _onFilterValueChange() {
     this.transactions = [];
     this.transactionList = [];
     this._transactionService.lastDoc = null;
     this.getAllTransactions();
+  }
+
+  onModifiedFilterChange(values: any[]) {
+    const dateRange = values.filter((x: any) => x.selected)?.at(0)?.value;
+    this.filters.dateRange = dateRange;
+    this._onFilterValueChange();
+  }
+
+  onCategoryFilterChange(values: any[]) {
+    const categoryIds = values
+      .filter((x: any) => x.selected)
+      ?.map((x: any) => x.id);
+    this.filters.categoryIds = categoryIds;
+    this._onFilterValueChange();
   }
 
   ngOnDestroy(): void {

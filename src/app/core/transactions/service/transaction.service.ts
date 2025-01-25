@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, finalize, from, map, Observable, of, tap } from 'rxjs';
-import { IFilter, ITransaction } from '../transactions.interface';
+import { ITransaction, ITransactionFilter } from '../transactions.interface';
 import {
   collection,
   CollectionReference,
@@ -71,38 +71,26 @@ export class TransactionService {
     return { startDate: null, endDate: null };
   }
 
-  getFilteredQuery(collectionRef: CollectionReference, filters?: IFilter) {
+  getFilteredQuery(
+    collectionRef: CollectionReference,
+    filters?: ITransactionFilter
+  ) {
     let queryConstraints: any[] = [
       where('userId', '==', this._configService.userId),
       orderBy('createdAt', 'desc'),
     ];
 
-    // month filter
-    if (Number(filters?.month) >= 0) {
-      const monthFilter: any = this.getCurrentMonth(Number(filters?.month));
-      if (monthFilter?.startDate && monthFilter?.endDate) {
-        queryConstraints.push(
-          where('createdAt', '>=', monthFilter?.startDate),
-          where('createdAt', '<=', monthFilter?.endDate)
-        );
-      }
-    }
-
-    // Category ids filter
-    const categoryIds = filters?.categories
-      ?.filter((x) => x.selected)
-      ?.map((x) => x.value);
-    if (categoryIds?.length) {
-      queryConstraints.push(where('categoryId', 'in', categoryIds));
-    }
-
-    // Date range filter
-    const dateRange = filters?.modified?.find((x) => x.selected)?.value;
-    if (dateRange) {
+    // Date Range Filter
+    if (filters?.dateRange?.fromDate && filters?.dateRange?.toDate) {
       queryConstraints.push(
-        where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
-        where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate))
+        where('createdAt', '>=', filters.dateRange.fromDate),
+        where('createdAt', '<=', filters.dateRange.toDate)
       );
+    }
+
+    // Category Ids filter
+    if (filters?.categoryIds?.length) {
+      queryConstraints.push(where('categoryId', 'in', filters?.categoryIds));
     }
 
     // pagination filter
@@ -227,7 +215,7 @@ export class TransactionService {
   //   return transactionQuery;
   // }
 
-  getAllTransactions(filters?: IFilter): Observable<ITransaction[]> {
+  getAllTransactions(filters?: ITransactionFilter): Observable<ITransaction[]> {
     const transactionRef = collection(
       this._firestore,
       COLLECTIONS.Transactions

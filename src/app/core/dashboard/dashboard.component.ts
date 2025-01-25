@@ -20,7 +20,10 @@ import {
 } from '../../common/components/transaction/transaction.component';
 import { DMA_REPORT_CONFIG } from './dashboard.constant';
 import { ConfigService } from '../../common/service/config.service';
-import { IFilter, ITransaction } from '../transactions/transactions.interface';
+import {
+  ITransaction,
+  ITransactionFilter,
+} from '../transactions/transactions.interface';
 import { finalize, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from '../../common/components/spinner/spinner.component';
 import { AmountPipe } from '../../common/pipes/amount.pipe';
@@ -34,6 +37,7 @@ import {
   RefreshTransaction,
 } from 'src/app/store/actions/dashboard.action';
 import { DashboardTransactionState } from 'src/app/store/states/dashboard.state';
+import { getMonthsDateRange } from 'src/app/common/date-utils.constant';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,12 +49,10 @@ import { DashboardTransactionState } from 'src/app/store/states/dashboard.state'
     MatIconModule,
     MatButtonModule,
     MatBottomSheetModule,
-    AddTransactionComponent,
     MatButtonModule,
     HeaderComponent,
     DropdownComponent,
     TransactionComponent,
-    SpinnerComponent,
     AmountPipe,
     EmptyStateComponent,
     BarChartComponent,
@@ -64,8 +66,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   transactionItems: ITransactionItem[] = [];
   subscriptions: Subscription[] = [];
 
-  filters: IFilter = {
-    month: new Date().getMonth(),
+  filters: ITransactionFilter = {
+    dateRange: getMonthsDateRange(new Date().getMonth()),
   };
   chartType: ChartType = 'bar';
 
@@ -95,7 +97,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onMonthChange(month: IMonth) {
-    this.filters.month = month.id;
+    this.filters.dateRange = getMonthsDateRange(month.id);
     this.getAllTransactions(true);
   }
 

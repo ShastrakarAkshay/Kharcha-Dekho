@@ -102,7 +102,7 @@ export class FilterComponent implements OnInit, ControlValueAccessor {
 
   onDateChange() {
     this.onChange(this.value);
-    this.valueChange.emit();
+    this.valueChange.emit(this.value);
   }
 
   private _openBottomSheet(multi?: boolean) {
@@ -121,7 +121,7 @@ export class FilterComponent implements OnInit, ControlValueAccessor {
       .subscribe((res: IFilterOption[]) => {
         if (JSON.stringify(res) !== JSON.stringify(this.oldValue)) {
           this.onChange(this.value);
-          this.valueChange.emit();
+          this.valueChange.emit(this.value);
         }
         if (this.type === FilterType.SingleSelect) {
           const selectedOption = res.find((x) => x.selected);

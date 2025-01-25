@@ -8,7 +8,10 @@ import {
 import { EmptyStateComponent } from 'src/app/common/components/empty-state/empty-state.component';
 import { TransactionService } from '../../transactions/service/transaction.service';
 import { ITransaction } from '../../transactions/transactions.interface';
-import { getDateRangeOfYear } from 'src/app/common/date-utils.constant';
+import {
+  getDateRangeOfYear,
+  IDateRange,
+} from 'src/app/common/date-utils.constant';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { finalize } from 'rxjs';
 
@@ -41,9 +44,9 @@ export class YearlyReportComponent implements OnInit {
   getYearWiseTransactions() {
     this._spinner.show();
     this.isLoading = true;
-    const { fromDate, toDate } = getDateRangeOfYear(new Date().getFullYear());
+    const dateRange: IDateRange = getDateRangeOfYear(new Date().getFullYear());
     this._transactionService
-      .getAllTransactions({ fromDate, toDate })
+      .getAllTransactions({ dateRange })
       .pipe(finalize(() => this._spinner.hide()))
       .subscribe({
         next: (res) => {
