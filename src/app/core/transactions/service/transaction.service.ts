@@ -56,22 +56,7 @@ export class TransactionService {
     return doc(this._firestore, collectionName);
   }
 
-  private getCurrentMonth(month: number) {
-    if (month >= 0) {
-      const year = new Date().getFullYear();
-      const firstDay = new Date(year, month, 1).getDate();
-      const lastDay = new Date(year, month + 1, 0).getDate();
-
-      const startDate = Timestamp.fromDate(new Date(year, month, firstDay));
-      const endDate = Timestamp.fromDate(
-        new Date(year, month, lastDay, 23, 59, 59)
-      );
-      return { startDate, endDate };
-    }
-    return { startDate: null, endDate: null };
-  }
-
-  getFilteredQuery(
+  private _getFilteredQuery(
     collectionRef: CollectionReference,
     filters?: ITransactionFilter
   ) {
@@ -93,7 +78,7 @@ export class TransactionService {
       queryConstraints.push(where('categoryId', 'in', filters?.categoryIds));
     }
 
-    // pagination filter
+    // Pagination filter
     if (filters?.pageSize) {
       queryConstraints.push(limit(filters.pageSize));
       if (this.lastDoc) {
@@ -106,122 +91,13 @@ export class TransactionService {
     return transactionQuery;
   }
 
-  // getFilteredQuery(collectionRef: CollectionReference, filters?: IFilter) {
-  //   let transactionQuery = query(
-  //     collectionRef,
-  //     where('userId', '==', this._configService.userId),
-  //     orderBy('createdAt', 'desc')
-  //   );
-
-  //   if (Number(filters?.month) >= 0) {
-  //     const monthFilter: any = this.getCurrentMonth(Number(filters?.month));
-  //     if (monthFilter?.startDate && monthFilter?.endDate) {
-  //       transactionQuery = query(
-  //         collectionRef,
-  //         where('createdAt', '>=', monthFilter?.startDate),
-  //         where('createdAt', '<=', monthFilter?.endDate),
-  //         where('userId', '==', this._configService.userId)
-  //       );
-  //     }
-  //   }
-
-  //   if (filters?.pageSize) {
-  //     transactionQuery = query(
-  //       collectionRef,
-  //       orderBy('createdAt', 'desc'),
-  //       where('userId', '==', this._configService.userId),
-  //       limit(filters.pageSize)
-  //     );
-
-  //     if (this.lastDoc) {
-  //       transactionQuery = query(
-  //         collectionRef,
-  //         orderBy('createdAt', 'desc'),
-  //         where('userId', '==', this._configService.userId),
-  //         limit(filters.pageSize),
-  //         startAfter(this.lastDoc)
-  //       );
-  //     }
-  //   }
-
-  //   const categoryIds = filters?.categories
-  //     ?.filter((x) => x.selected)
-  //     ?.map((x) => x.value);
-
-  //   if (categoryIds?.length) {
-  //     transactionQuery = query(
-  //       collectionRef,
-  //       where('categoryId', 'in', categoryIds),
-  //       orderBy('createdAt', 'desc'),
-  //       where('userId', '==', this._configService.userId)
-  //     );
-
-  //     if (filters?.pageSize) {
-  //       transactionQuery = query(
-  //         collectionRef,
-  //         where('categoryId', 'in', categoryIds),
-  //         where('userId', '==', this._configService.userId),
-  //         orderBy('createdAt', 'desc'),
-  //         limit(filters.pageSize)
-  //       );
-
-  //       if (this.lastDoc) {
-  //         transactionQuery = query(
-  //           collectionRef,
-  //           where('categoryId', 'in', categoryIds),
-  //           where('userId', '==', this._configService.userId),
-  //           orderBy('createdAt', 'desc'),
-  //           limit(filters.pageSize),
-  //           startAfter(this.lastDoc)
-  //         );
-  //       }
-  //     }
-  //   }
-
-  //   const dateRange = filters?.modified?.find((x) => x.selected)?.value;
-  //   if (dateRange) {
-  //     transactionQuery = query(
-  //       collectionRef,
-  //       where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
-  //       where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
-  //       where('userId', '==', this._configService.userId),
-  //       orderBy('createdAt', 'desc')
-  //     );
-
-  //     if (filters?.pageSize) {
-  //       transactionQuery = query(
-  //         collectionRef,
-  //         where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
-  //         where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
-  //         where('userId', '==', this._configService.userId),
-  //         orderBy('createdAt', 'desc'),
-  //         limit(filters.pageSize)
-  //       );
-
-  //       if (this.lastDoc) {
-  //         transactionQuery = query(
-  //           collectionRef,
-  //           where('createdAt', '>=', Timestamp.fromDate(dateRange?.fromDate)),
-  //           where('createdAt', '<=', Timestamp.fromDate(dateRange?.toDate)),
-  //           where('userId', '==', this._configService.userId),
-  //           orderBy('createdAt', 'desc'),
-  //           limit(filters.pageSize),
-  //           startAfter(this.lastDoc)
-  //         );
-  //       }
-  //     }
-  //   }
-
-  //   return transactionQuery;
-  // }
-
   getAllTransactions(filters?: ITransactionFilter): Observable<ITransaction[]> {
     const transactionRef = collection(
       this._firestore,
       COLLECTIONS.Transactions
     );
 
-    const transactionQuery = this.getFilteredQuery(transactionRef, filters);
+    const transactionQuery = this._getFilteredQuery(transactionRef, filters);
 
     const transactions$ = from(getDocs(transactionQuery)).pipe(
       map((snapshot) =>
