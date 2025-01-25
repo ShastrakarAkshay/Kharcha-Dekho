@@ -21,7 +21,6 @@ import { TransactionService } from '../service/transaction.service';
 import { ITransaction, ITransactionFilter } from '../transactions.interface';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
 import { finalize, Observable, Subscription } from 'rxjs';
-import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
@@ -37,7 +36,7 @@ import {
   IFilterOption,
 } from 'src/app/common/components/filter/filter.interface';
 import { FormsModule } from '@angular/forms';
-import { MONTHS, MODIFIED } from '../transactions.constant';
+import { MODIFIED } from '../transactions.constant';
 
 @Component({
   selector: 'app-all-transactions',
@@ -97,6 +96,9 @@ export class AllTransactionsComponent implements OnInit, OnDestroy {
     this._transactionService.lastDoc = null;
     this.transactions = [];
     this.filterOptions.modified = structuredClone(MODIFIED);
+    if (this.categoryId) {
+      this.filters.categoryIds = [this.categoryId];
+    }
     this.getAllCategoryFromStore();
     this.getAllTransactions();
   }
