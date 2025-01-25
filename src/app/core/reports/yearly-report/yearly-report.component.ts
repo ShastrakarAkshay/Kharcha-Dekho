@@ -14,6 +14,7 @@ import {
 } from 'src/app/common/date-utils.constant';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
 import { finalize } from 'rxjs';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-yearly-report',
@@ -23,12 +24,14 @@ import { finalize } from 'rxjs';
     TransactionComponent,
     EmptyStateComponent,
     ExpenseCardComponent,
+    MatTabsModule,
   ],
   templateUrl: './yearly-report.component.html',
   styleUrl: './yearly-report.component.scss',
 })
 export class YearlyReportComponent implements OnInit {
-  transactionItems: ITransactionItem[] = [];
+  categoryTransactions: ITransactionItem[] = [];
+  monthTransactions: ITransactionItem[] = [];
   totalAmount: number = 0;
   isLoading: boolean = false;
 
@@ -50,13 +53,43 @@ export class YearlyReportComponent implements OnInit {
       .pipe(finalize(() => this._spinner.hide()))
       .subscribe({
         next: (res) => {
-          this.updateCategoryWiseTransactions(res);
+          this.groupTransactionsByMonth(res);
+          this.groupCategoryWiseTransactions(res);
           this.isLoading = false;
         },
       });
   }
 
-  updateCategoryWiseTransactions(transactions: ITransaction[]) {
+  groupTransactionsByMonth(transactions: any[]) {
+    const grouped: any = transactions.reduce((acc, transaction) => {
+      const createdAt = new Date(transaction.createdAt);
+      const monthKey = new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+      }).format(createdAt);
+      // Initialize the group if it doesn't exist
+      if (!acc[monthKey]) {
+        acc[monthKey] = {
+          transactions: [],
+          totalAmount: 0,
+        };
+      }
+      // Add the transaction to the group and update the total amount
+      acc[monthKey].transactions.push(transaction);
+      acc[monthKey].totalAmount += transaction.amount;
+
+      return acc;
+    }, {});
+
+    this.monthTransactions = Object.entries(grouped).map(
+      ([monthName, details]: any, index) => ({
+        id: index + 1,
+        label: monthName,
+        amount: details.totalAmount,
+      })
+    ) as ITransactionItem[];
+  }
+
+  groupCategoryWiseTransactions(transactions: ITransaction[]) {
     const categories: any = {};
     transactions.forEach((item) => {
       if (categories[item.categoryId as any]) {
@@ -86,8 +119,8 @@ export class YearlyReportComponent implements OnInit {
         amount,
       });
     }
-    this.transactionItems = txns.sort((a, b) => b.amount - a.amount);
-    this.totalAmount = this.transactionItems.reduce((total, item) => {
+    this.categoryTransactions = txns.sort((a, b) => b.amount - a.amount);
+    this.totalAmount = this.categoryTransactions.reduce((total, item) => {
       total += item.amount;
       return total;
     }, 0);
