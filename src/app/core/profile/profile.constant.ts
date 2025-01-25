@@ -15,12 +15,12 @@ export const Links: ILinks[] = [
     path: 'core/yearly-report',
     icon: 'bar_chart',
   },
-  {
-    id: 5,
-    label: 'Monthly Report',
-    path: 'core/monthly-report',
-    icon: 'pie_chart',
-  },
+  // {
+  //   id: 5,
+  //   label: 'Monthly Report',
+  //   path: 'core/monthly-report',
+  //   icon: 'pie_chart',
+  // },
 ];
 
 export const Currencies = [
