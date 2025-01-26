@@ -6,3 +6,11 @@
     margin-bottom: 80px;
   }
 }
+
+:host {
+  ::ng-deep {
+    .mat-mdc-tab .mdc-tab__text-label {
+      color: white !important;
+    }
+  }
+}
