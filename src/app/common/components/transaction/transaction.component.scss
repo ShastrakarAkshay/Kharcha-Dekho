@@ -10,12 +10,16 @@
 
     .label {
       font-size: 15px;
-      font-weight: 300;
+      font-weight: 500;
       margin: 0;
       line-height: 22px;
       display: flex;
       color: white;
       text-transform: capitalize;
+
+      .amount {
+        font-weight: 300;
+      }
 
       .currency {
         display: flex;
