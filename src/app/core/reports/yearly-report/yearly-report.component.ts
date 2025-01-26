@@ -80,13 +80,13 @@ export class YearlyReportComponent implements OnInit {
       return acc;
     }, {});
 
-    this.monthTransactions = Object.entries(grouped).map(
-      ([monthName, details]: any, index) => ({
+    this.monthTransactions = Object.entries(grouped)
+      .map(([monthName, details]: any, index) => ({
         id: index + 1,
         label: monthName,
         amount: details.totalAmount,
-      })
-    ) as ITransactionItem[];
+      }))
+      .reverse() as ITransactionItem[];
   }
 
   groupCategoryWiseTransactions(transactions: ITransaction[]) {
