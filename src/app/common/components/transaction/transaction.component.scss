@@ -10,18 +10,27 @@
 
     .label {
       font-size: 15px;
-      font-weight: 500;
+      font-weight: 300;
       margin: 0;
       line-height: 22px;
       display: flex;
       color: white;
       text-transform: capitalize;
 
-      .currency > mat-icon {
-        color: #747474;
-        font-size: 12px;
-        font-weight: 400.5;
-        display: inline;
+      .currency {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 14px;
+
+        mat-icon {
+          color: #747474;
+          font-size: 15px;
+          font-weight: 400.5;
+          display: inline;
+          margin-top: 3px;
+          margin-left: 2px;
+        }
       }
     }
 

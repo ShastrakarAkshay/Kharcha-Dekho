@@ -22,12 +22,12 @@
     </div>
     <div class="right">
       <div class="d-flex flex-column">
-        <h3 class="label">
-          {{ txn.amount | amount }}
+        <div class="label">
+          <span> {{ txn.amount | amount }}</span>
           <span class="currency">
             <mat-icon>{{ currencySymbol }}</mat-icon>
           </span>
-        </h3>
+        </div>
         <p class="sub-label">{{ txn.rightSubText }}</p>
       </div>
       <div *ngIf="showActions">
