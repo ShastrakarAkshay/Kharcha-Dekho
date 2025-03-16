@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -18,7 +18,7 @@ import {
   DialogService,
   IConfirmData,
 } from 'src/app/common/service/dialog.service';
-import { finalize, Observable, Subscription } from 'rxjs';
+import { finalize, Observable, Subscription, take } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { ToasterService } from 'src/app/common/service/toaster.service';
 import { SpinnerService } from 'src/app/common/service/spinner.service';
@@ -26,6 +26,7 @@ import { EmptyStateComponent } from 'src/app/common/components/empty-state/empty
 import { Select, Store } from '@ngxs/store';
 import { CategoryState } from 'src/app/store/states/category.state';
 import { GetCategory } from 'src/app/store/actions/category.action';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-category-list',
@@ -47,14 +48,15 @@ import { GetCategory } from 'src/app/store/actions/category.action';
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
 })
-export class CategoryListComponent implements OnInit, OnDestroy {
+export class CategoryListComponent implements OnInit {
   searchText: string = '';
   categories: ICategory[] = [];
-  subscription: Subscription[] = [];
   isLoading: boolean = false;
   @Select(CategoryState.getCategoryList) categories$!: Observable<ICategory[]>;
   @Select(CategoryState.isCategoryLoaded)
   isCategoryLoaded$!: Observable<boolean>;
+
+  destroyRef$ = inject(DestroyRef);
 
   constructor(
     private _bottomSheet: MatBottomSheet,
@@ -72,31 +74,34 @@ export class CategoryListComponent implements OnInit, OnDestroy {
 
   getCategoriesFromStore() {
     this.isLoading = true;
-    const sub$ = this.categories$
-      .pipe(finalize(() => (this.isLoading = false)))
+    this.categories$
+      .pipe(
+        finalize(() => (this.isLoading = false)),
+        takeUntilDestroyed(this.destroyRef$)
+      )
       .subscribe((list) => {
         this.categories = list;
       });
-    this.subscription.push(sub$);
   }
 
   getAllCategories(refresh?: boolean) {
-    const sub$ = this.isCategoryLoaded$.subscribe((loaded) => {
-      if (!loaded || refresh) {
-        this._store.dispatch(new GetCategory());
-      }
-    });
-    this.subscription.push(sub$);
+    this.isCategoryLoaded$
+      .pipe(takeUntilDestroyed(this.destroyRef$))
+      .subscribe((loaded) => {
+        if (!loaded || refresh) {
+          this._store.dispatch(new GetCategory());
+        }
+      });
   }
 
   openCreateCategoryComponent(data?: ICategory) {
-    const sub$ = this._bottomSheet
+    this._bottomSheet
       .open(CreateCategoryComponent, {
         data,
       })
       .afterDismissed()
+      .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe();
-    this.subscription.push(sub$);
   }
 
   onSearch(searchText: string) {
@@ -116,9 +121,10 @@ export class CategoryListComponent implements OnInit, OnDestroy {
       heading: 'Delete',
       message: 'Do you want to delete?',
     };
-    const sub$ = this._dialogService
+    this._dialogService
       .confirm(data)
       .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (isConfirm) => {
           if (isConfirm) {
@@ -131,10 +137,5 @@ export class CategoryListComponent implements OnInit, OnDestroy {
           }
         },
       });
-    this.subscription.push(sub$);
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.forEach((sub) => sub.unsubscribe());
   }
 }
