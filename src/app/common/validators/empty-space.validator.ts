@@ -9,3 +9,9 @@ export function emptySpaceValidator(): ValidatorFn {
     return null;
   };
 }
+
+export function emptyArrayValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    return control?.value?.length ? null : { required: true };
+  };
+}
