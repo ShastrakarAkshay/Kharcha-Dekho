@@ -1,41 +1,45 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  Component,
+  ElementRef,
+  input,
+  output,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatIconModule, MatInputModule],
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    FormsModule,
+  ],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
-export class SearchComponent implements OnInit {
-  private _inputChange = new Subject<string>();
+export class SearchComponent {
+  searchText = signal<string>('');
 
-  searchText: string = '';
+  placeholder = input<string>('Search');
+  searchTextChange = output<string>();
 
-  @Input() placeholder = 'Search';
-  @Output() searchTextChange = new EventEmitter<string>();
+  @ViewChild('searchInput') inputRef!: ElementRef<HTMLElement>;
 
-  ngOnInit(): void {
-    this._inputChange
-      .asObservable()
+  constructor() {
+    toObservable(this.searchText)
       .pipe(debounceTime(500))
-      .subscribe((searchText) => {
-        this.searchText = searchText;
-        this.searchTextChange.emit(searchText);
+      .subscribe(() => {
+        this.searchTextChange.emit(this.searchText());
       });
-  }
-
-  onInput(text: string) {
-    this._inputChange.next(text);
-  }
-
-  onClear() {
-    this.searchText = '';
-    this.searchTextChange.emit('');
   }
 }

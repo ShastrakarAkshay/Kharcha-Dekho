@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -50,7 +50,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class CategoryListComponent implements OnInit {
   searchText: string = '';
-  categories: ICategory[] = [];
+  categoriesSignal = signal<ICategory[]>([]);
   isLoading: boolean = false;
   @Select(CategoryState.getCategoryList) categories$!: Observable<ICategory[]>;
   @Select(CategoryState.isCategoryLoaded)
@@ -80,7 +80,7 @@ export class CategoryListComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef$)
       )
       .subscribe((list) => {
-        this.categories = list;
+        this.categoriesSignal.set(list);
       });
   }
 

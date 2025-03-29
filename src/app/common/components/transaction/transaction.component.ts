@@ -1,15 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, input, output } from '@angular/core';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { AddTransactionComponent } from 'src/app/core/transactions/add-transaction/add-transaction.component';
 import { AmountPipe } from '../../pipes/amount.pipe';
-import { DropdownComponent } from '../dropdown/dropdown.component';
-import { HeaderComponent } from '../header/header.component';
 import { ConfigService } from '../../service/config.service';
-import { ITransaction } from 'src/app/core/transactions/transactions.interface';
 
 export interface ITransactionItem {
   id: any;
@@ -31,9 +27,6 @@ export interface ITransactionItem {
     MatMenuModule,
     MatButtonModule,
     MatBottomSheetModule,
-    AddTransactionComponent,
-    DropdownComponent,
-    HeaderComponent,
   ],
   templateUrl: './transaction.component.html',
   styleUrls: ['./transaction.component.scss'],
@@ -41,12 +34,12 @@ export interface ITransactionItem {
 export class TransactionComponent {
   currencySymbol = '';
 
-  @Input() transactions: ITransactionItem[] = [];
-  @Input() showActions: boolean = false;
+  showActions = input<boolean>(false);
+  transactions = input<ITransactionItem[]>([]);
 
-  @Output() editClick = new EventEmitter<string>();
-  @Output() deleteClick = new EventEmitter<string>();
-  @Output() itemClick = new EventEmitter<string>();
+  itemClick = output<string>();
+  editClick = output<string>();
+  deleteClick = output<string>();
 
   constructor(private _configService: ConfigService) {
     this.currencySymbol = this._configService.currencySymbol;

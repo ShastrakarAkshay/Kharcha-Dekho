@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, Inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -14,7 +14,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { ScrollToTopOnFocusDirective } from 'src/app/common/directives/scroll-to-top.directive';
 import { IconComponent } from 'src/app/common/components/icon/icon.component';
 import {
   MAT_BOTTOM_SHEET_DATA,
@@ -26,12 +25,13 @@ import { IIcon } from '../icon-list/icon-list.interface';
 import { CategoryService } from '../service/category.service';
 import { ICategory } from '../category.interface';
 import { ToasterService } from 'src/app/common/service/toaster.service';
-import { finalize, Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SpinnerComponent } from 'src/app/common/components/spinner/spinner.component';
 import { emptySpaceValidator } from 'src/app/common/validators/empty-space.validator';
 import { MatDialog } from '@angular/material/dialog';
 import { Select } from '@ngxs/store';
 import { CategoryState } from 'src/app/store/states/category.state';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-create-category',
@@ -44,23 +44,23 @@ import { CategoryState } from 'src/app/store/states/category.state';
     MatIconModule,
     MatButtonModule,
     FormsModule,
-    ScrollToTopOnFocusDirective,
     IconComponent,
     MatBottomSheetModule,
-    IconListComponent,
     ReactiveFormsModule,
     SpinnerComponent,
   ],
   templateUrl: './create-category.component.html',
   styleUrls: ['./create-category.component.scss'],
 })
-export class CreateCategoryComponent implements OnInit, OnDestroy {
+export class CreateCategoryComponent implements OnInit {
   isEdit: boolean = false;
   isLoading: boolean = false;
   formSubmitted: boolean = false;
   selectedIcon?: IIcon;
   selectedId?: string;
-  categoryList: ICategory[] = [];
+
+  private _destroyRef$ = Inject(DestroyRef);
+  private _categoryList = signal<ICategory[]>([]);
 
   @Select(CategoryState.getCategoryList) categoryList$!: Observable<
     ICategory[]
@@ -78,8 +78,6 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
     description: ['', emptySpaceValidator()],
   });
 
-  subscription: Subscription[] = [];
-
   constructor(
     private _categoryService: CategoryService,
     private _fb: FormBuilder,
@@ -96,12 +94,11 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
   }
 
   getCategoryListFromStore() {
-    const sub$ = this.categoryList$.subscribe({
+    this.categoryList$.pipe(takeUntilDestroyed(this._destroyRef$)).subscribe({
       next: (data) => {
-        this.categoryList = data;
+        this._categoryList.set(data);
       },
     });
-    this.subscription.push(sub$);
   }
 
   onEdit(data: ICategory) {
@@ -116,7 +113,7 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
   }
 
   openIconList() {
-    const dialogRef = this._dialog
+    this._dialog
       .open(IconListComponent, {
         maxWidth: '100vw',
         maxHeight: '100vh',
@@ -146,7 +143,7 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
       ? this._categoryService.updateCategory(category, this.data.id)
       : this._categoryService.createCategory(category);
     this.isLoading = true;
-    const sub$ = $api.subscribe({
+    $api.pipe(takeUntilDestroyed(this._destroyRef$)).subscribe({
       next: (res) => {
         const message = this.isEdit ? 'Category Updated' : 'Category Created';
         this._toasterService.showSuccess(message);
@@ -154,14 +151,13 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
     });
-    this.subscription.push(sub$);
   }
 
   private _duplicateNameValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const list = this.isEdit
-        ? this.categoryList.filter((x) => x.id !== this.selectedId)
-        : this.categoryList;
+        ? this._categoryList().filter((x) => x.id !== this.selectedId)
+        : this._categoryList();
       const hasName = list.some((x) => {
         return (
           x?.name?.toLowerCase()?.trim() ===
@@ -170,9 +166,5 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
       });
       return hasName ? { duplicateName: true } : null;
     };
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.forEach((sub) => sub.unsubscribe());
   }
 }

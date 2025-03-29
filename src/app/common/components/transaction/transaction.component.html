@@ -1,5 +1,6 @@
 <div class="transaction-list">
-  <div class="transaction" *ngFor="let txn of transactions">
+  @for (txn of transactions(); track txn.id) {
+  <div class="transaction">
     <div class="left">
       <div
         class="icon"
@@ -30,21 +31,23 @@
         </div>
         <p class="sub-label">{{ txn.rightSubText }}</p>
       </div>
-      <div *ngIf="showActions">
-        <mat-icon [matMenuTriggerFor]="menu" class="action-icon">
-          more_vert
-        </mat-icon>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="onEdit(txn.id)">
-            <mat-icon class="material-icons-outlined">edit</mat-icon>
-            <span>Edit</span>
-          </button>
-          <button mat-menu-item (click)="onDelete(txn.id)">
-            <mat-icon class="material-icons-outlined">delete</mat-icon>
-            <span>Delete</span>
-          </button>
-        </mat-menu>
-      </div>
+
+      @if (showActions()) {
+      <mat-icon [matMenuTriggerFor]="menu" class="action-icon">
+        more_vert
+      </mat-icon>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onEdit(txn.id)">
+          <mat-icon class="material-icons-outlined">edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        <button mat-menu-item (click)="onDelete(txn.id)">
+          <mat-icon class="material-icons-outlined">delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+      }
     </div>
   </div>
+  }
 </div>

@@ -3,14 +3,14 @@
     <mat-icon matPrefix>search</mat-icon>
     <input
       matInput
-      [placeholder]="placeholder"
-      [value]="searchText"
-      autofocus="false"
+      [autofocus]="false"
+      [placeholder]="placeholder()"
+      [value]="searchText()"
       #searchInput
-      (input)="onInput(searchInput.value)"
+      (input)="searchText.set(searchInput.value)"
     />
   </mat-form-field>
-  <mat-icon *ngIf="searchText" class="close-icon" (click)="onClear()">
-    close
-  </mat-icon>
+  @if (searchText()) {
+  <mat-icon class="close-icon" (click)="searchText.set('')"> close </mat-icon>
+  }
 </div>

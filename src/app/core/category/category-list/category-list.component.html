@@ -3,7 +3,7 @@
   <app-search (searchTextChange)="onSearch($event)"></app-search>
 
   <div class="category-list">
-    @for (cat of categories | search: searchText; track $index) {
+    @for (cat of categoriesSignal() | search: searchText; track $index) {
     <ng-container>
       @defer(on viewport) {
       <div class="category">
